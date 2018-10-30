@@ -1,0 +1,27 @@
+#mainNav .navbar-collapse .navbar-sidenav .nav-link-collapse:after {
+    content: '\f107';
+    font-family: 'Font Awesome\ 5 Free';
+    font-weight: 900;
+
+}
+
+body.admin-body {
+    padding-top: 65px;
+    margin-bottom: 0;
+}
+
+.content-wrapper {
+    min-height: calc(100vh - 65px);
+    padding-top: 1rem;
+}
+
+#mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item>.nav-link:hover {
+    color: #fff;
+}
+
+#mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item .sidenav-second-level>li>a:focus,
+#mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item .sidenav-second-level>li>a:hover,
+#mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item .sidenav-third-level>li>a:focus,
+#mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item .sidenav-third-level>li>a:hover {
+    color: #fff;
+}

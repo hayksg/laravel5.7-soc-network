@@ -1,0 +1,12 @@
+@mixin app-transition($attr, $time) {
+    transition: $attr, $time;
+    -webkit-transition: $attr, $time;
+    -moz-transition: $attr, $time;
+    -o-transition: $attr, $time;
+    -ms-transition: $attr, $time;
+}
+
+@mixin google-font($font) {
+    $font: unquote($font);
+    @import url(https://fonts.googleapis.com/css?family=#{$font});
+}

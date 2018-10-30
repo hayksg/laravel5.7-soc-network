@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>{{ title }}</h2>
+        <h5>{{ title }}</h5>
     </div>
 </template>
 
@@ -8,7 +8,7 @@
 export default {
     data () {
         return {
-            title: 'Hello world!'
+            title: 'Hi from Vue component'
         }
     }
 }

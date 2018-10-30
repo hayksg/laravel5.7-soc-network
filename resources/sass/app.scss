@@ -1,12 +1,17 @@
 // Variables
 @import 'variables';
+// Mixins
+@import 'mixins';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+// Bootswatch Flatly
+@import '~bootswatch/dist/flatly/bootstrap'; /* npm package */
 
-.navbar-laravel {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+/* For Admin Panel */
+@import '../css/sb-admin.min.css';
+@import "~toastr/toastr.scss"; /* npm package */
+@import "~@fortawesome/fontawesome-free/css/all.min.css"; /* npm package */
 
-
+/* Main Styles */
+@import 'media';
+@import 'admin';
+@import 'main';

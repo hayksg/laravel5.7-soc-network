@@ -25,7 +25,11 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files": [
+            "app/Helpers/getYear.php",
+            "app/Helpers/onlyName.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

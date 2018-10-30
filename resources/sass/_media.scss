@@ -1,0 +1,24 @@
+@media only screen and (min-width: 992px){
+    #mainNav.navbar-dark .navbar-collapse .navbar-sidenav li.active a {
+        color: #fff !important;
+        background-color: transparent;
+    }
+
+    #mainNav.fixed-top .navbar-sidenav {
+        height: calc(100vh);
+    }
+
+    #mainNav.fixed-top .sidenav-toggler {
+        top: 4px;
+    }
+
+    #mainNav.navbar-dark .navbar-collapse .navbar-sidenav {
+        background: #343a40;
+        margin-top: 75px;
+    }
+
+    #mainNav .navbar-collapse .navbar-sidenav>.nav-item .sidenav-second-level>li>a,
+    #mainNav .navbar-collapse .navbar-sidenav>.nav-item .sidenav-third-level>li>a {
+        padding-top: 0em;
+    }
+}
