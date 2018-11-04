@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'gender', 'slug', 'email', 'password',
+        'name', 'gender', 'slug', 'pic', 'email', 'password',
     ];
 
     /**
@@ -30,5 +30,10 @@ class User extends Authenticatable
 
     public function getNameAttribute($value) {
         return ucwords($value);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
     }
 }

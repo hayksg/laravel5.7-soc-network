@@ -16,7 +16,9 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth', 'web']], function () {
-	Route::get('/profile/{slug}', 'ProfileController@index')->name('profile');
+	Route::get('/profiles/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
+	Route::resource('/profile', 'ProfileController');
+
 
 	Route::get('/admin', 'Admin\AdminController@index')->name('admin');
 });

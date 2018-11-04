@@ -11,20 +11,15 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-            <ul class="navbar-nav mr-auto">
 
-                @auth
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile', [Auth::user()->slug]) }}">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin') }}">Admin</a>
-                    </li>
-                @else
-
-                @endauth
-
-            </ul>
+            <form class="top-search-form mr-auto">
+                <input class="form-control top-search-input"
+                       type="search"
+                       placeholder="Type and press enter to search"
+                       name="search"
+                       aria-label="Search"
+                       autocomplete="off">
+            </form>
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -44,14 +39,23 @@
                     </li>
                 @else
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Hi {{ onlyName() }} <span class="caret"></span>
+                        <a id="navbarDropdown" class="nav-link app-thubnail-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <span class="app-thubnail-wrapper">
+                                @include('layouts.profile-pic')
+                            </span>&nbsp;<span>{{ onlyName(false) }}</span> <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('getWithSlug', [Auth::user()->slug]) }}">
+                                <i class="fas fa-fw fa-user"></i> {{ __('Profile') }}
+                            </a>
+
+                            <a class="dropdown-item" href="{{ route('admin') }}">
+                                <i class="fas fa-fw fa-user-cog"></i> {{ __('Admin') }}</a>
+                            </a>
+
                             <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="fas fa-fw fa-sign-out-alt"></i> {{ __('Logout') }}
                             </a>
 

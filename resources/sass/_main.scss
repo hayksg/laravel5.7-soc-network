@@ -8,6 +8,10 @@ body {
     margin-bottom: 100px; /* Margin bottom by footer height */
 }
 
+#app {
+    margin-bottom: 200px;
+}
+
 h1.app-header {
     font-size: 1rem;
     position: relative;
@@ -29,8 +33,47 @@ h1.app-header {
     }
 }
 
+/* Top search */
+
+form.top-search-form {
+    margin-left: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+input.top-search-input {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('/css-img/searchicon.png');
+    background-position: 10px 6px;
+    background-repeat: no-repeat;
+    padding: 8px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input.top-search-input:focus {
+    width: 100%;
+}
+
 a {
     @include app-transition(color, 320ms);
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+.app-thubnail-wrapper img {
+    margin-right: 10px;
+    width: auto;
+    height: 38px;
 }
 
 i.app-user-plus-icon {
@@ -40,6 +83,37 @@ i.app-user-plus-icon {
     bottom: 1px;
 }
 
+div.custom-file .custom-file-input{
+    cursor: pointer;
+}
+
+.app-user-profile {
+    width: 14rem;
+}
+
+.app-message {
+    animation-name: animateHeight;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+    
+/* For button back to top */
+
+#back-to-top {
+	cursor: pointer;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	display:none;
+}
+
+.app-edit-user-profile {
+    //margin-bottom: 100px;
+    textarea {
+        resize: vertical;
+        min-height: 200px;
+    }
+}
 
 
 

@@ -29,13 +29,18 @@
                             <label for="gender" class="col-md-4 col-form-label text-md-right">{{ __('Gender') }}</label>
 
                             <div class="col-md-6">
-                                <select name="gender" class="form-control">
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input{{ $errors->has('gender') ? ' is-invalid' : '' }}" id="male" name="gender" value="male" @if(old('gender') == 'male') checked @endif>
+                                    <label class="custom-control-label" for="male">Male</label>
+                                </div>
+
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input{{ $errors->has('gender') ? ' is-invalid' : '' }}" id="female" name="gender" value="female" @if(old('gender') == 'female') checked @endif>
+                                    <label class="custom-control-label" for="female">Female</label>
+                                </div>
 
                                 @if ($errors->has('gender'))
-                                    <span class="invalid-feedback" role="alert">
+                                    <span class="invalid-feedback" role="alert" style="display: block;">
                                         <strong>{{ $errors->first('gender') }}</strong>
                                     </span>
                                 @endif
@@ -85,6 +90,7 @@
                                 </button>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>

@@ -1,4 +1,5 @@
-@media only screen and (min-width: 992px){
+@media only screen
+and (min-width: 992px){
     #mainNav.navbar-dark .navbar-collapse .navbar-sidenav li.active a {
         color: #fff !important;
         background-color: transparent;
@@ -14,11 +15,51 @@
 
     #mainNav.navbar-dark .navbar-collapse .navbar-sidenav {
         background: #343a40;
-        margin-top: 75px;
+        margin-top: 70px;
     }
 
     #mainNav .navbar-collapse .navbar-sidenav>.nav-item .sidenav-second-level>li>a,
     #mainNav .navbar-collapse .navbar-sidenav>.nav-item .sidenav-third-level>li>a {
         padding-top: 0em;
     }
+
+    input.top-search-input:focus {
+        width: 200%;
+    }
+
+    form.top-search-form {
+        margin-left: 20px;
+    }
 }
+
+@media only screen
+and (min-width: 768px){
+    form.top-search-form {
+        margin-left: 10px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .app-thubnail-nav-link {
+        position: relative;
+    }
+
+    .app-thubnail-wrapper {
+        position: absolute;
+        top: 0;
+        left: -38px;
+
+        img {
+            margin-right: 0;
+        }
+    }
+}
+
+@media only screen
+and (min-width: 768px)
+and (max-width: 992px){
+    input.top-search-input:focus {
+        width: 150%;
+    }
+}
+
