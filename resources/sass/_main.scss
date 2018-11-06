@@ -76,6 +76,11 @@ a:focus {
     height: 38px;
 }
 
+// .app-thubnail-wrapper {
+//     position: static;
+//     left: 100px;
+// }
+
 i.app-user-plus-icon {
     font-size: 0.8em;
     position: relative;
@@ -113,6 +118,18 @@ div.custom-file .custom-file-input{
         resize: vertical;
         min-height: 200px;
     }
+}
+
+.app-user-profile {
+    //text-align: center;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.app-form-required::after {
+    content: ' *';
+    font-size: 18px;
+    color: #d00;
 }
 
 

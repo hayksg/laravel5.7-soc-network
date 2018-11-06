@@ -7,6 +7,8 @@ use App\User;
 use App\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\PasswordsMatch;
+use App\Rules\OldAndNewPasswordsTheSame;
 
 class ProfileController extends Controller
 {
@@ -57,8 +59,7 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
-
-
+        //
     }
 
     /**
@@ -89,10 +90,12 @@ class ProfileController extends Controller
         $successMessage = 'Dear ' . $user->name . '! Your profile information successfully updated!';
 
         $this->validate(request(), [
-            'city'    => 'regex:/^[^<>]+$/u|max:100',
-            'country' => 'regex:/^[^<>]+$/u|max:100',
-            'about'   => 'regex:/^[^<>]+$/u',
+            'city'    => 'nullable|regex:/^[^<>]*$/u|max:200',
+            'country' => 'nullable|regex:/^[^<>]*$/u|max:200',
+            'about'   => 'nullable|regex:/^[^<>]*$/u',
             'image'   => 'image|max:3000',
+            //'current-password' => ['nullable', new PasswordsMatch],
+            //'new-password' => ['nullable', 'string', 'min:6', 'confirmed', new OldAndNewPasswordsTheSame],
         ]);
 
         if (request()->hasFile('image')) {
@@ -113,22 +116,26 @@ class ProfileController extends Controller
         $profile = Profile::where('user_id', $user->id)->firstOrFail();
 
         if ($profile) {
-            
 
-            if (request('city')) {
-                $profile->city = request('city');
-            }
-
-            if (request('country')) {
-                $profile->country = request('country');
-            }
-
-            if (request('about')) {
-                $profile->about = request('about');
-            }
+            $profile->city = request('city') ? request('city') : '';
+            $profile->country = request('country') ? request('country') : '';
+            $profile->about = request('about') ? request('about') : '';
 
             $profile->update();
 
+        }
+        
+        if (request('current-password') || request('new-password') || request('new-password_confirmation')) {
+
+            $this->validate(request(), [
+                'current-password' => ['required', new PasswordsMatch],
+                'new-password' => ['required', 'string', 'min:6', 'confirmed', new OldAndNewPasswordsTheSame],
+                'new-password_confirmation' => 'required',
+            ]);
+
+            $user->password = bcrypt(request('new-password'));
+            $user->save();
+            
         }
 
         session()->flash('message', $successMessage);

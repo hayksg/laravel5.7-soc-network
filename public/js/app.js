@@ -35988,39 +35988,22 @@ $(function () {
         }, 800);
         return false;
     });
+
+    /*  */
 });
 
 $(window).on('load', function () {
 
-    var pathname = window.location.pathname;
+    /* In order for a thumbnail of any size to be displayed normally */
 
-    /*  */
-    var thumbnail = $('.app-thubnail-nav-link .app-thubnail-wrapper');
+    if ($(document).width() > 767) {
 
-    if (thumbnail) {
-        var thumbnailWidth = thumbnail.outerWidth();
-        thumbnail.css('left', -thumbnailWidth);
-    }
+        var thumbnail = $('.app-thubnail-nav-link .app-thubnail-wrapper');
 
-    /*  */
-
-    var i = 0;
-    var txt = $('.app-message').data('message');
-    var txtLength = txt.length;
-    var speed = 50;
-    var output = '';
-
-    function typeWriter() {
-        if (txt && i < txtLength) {
-            output += txt.charAt(i);
-            $('.app-message').text(output);
-            i++;
-            setTimeout(typeWriter, speed);
+        if (thumbnail) {
+            var thumbnailWidth = thumbnail.outerWidth();
+            thumbnail.css('left', -thumbnailWidth);
         }
-    }
-
-    if (pathname.search('profiles') === 1) {
-        typeWriter();
     }
 });
 

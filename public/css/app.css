@@ -11067,6 +11067,17 @@ div.custom-file .custom-file-input {
   min-height: 200px;
 }
 
+.app-user-profile {
+  margin: auto;
+  margin-bottom: 30px;
+}
+
+.app-form-required::after {
+  content: ' *';
+  font-size: 18px;
+  color: #d00;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -11114,6 +11125,10 @@ div.custom-file .custom-file-input {
 
   form.top-search-form {
     margin-left: 20px;
+  }
+
+  .app-user-profile {
+    margin-bottom: 0;
   }
 }
 

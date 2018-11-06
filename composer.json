@@ -28,7 +28,8 @@
         },
         "files": [
             "app/Helpers/getYear.php",
-            "app/Helpers/onlyName.php"
+            "app/Helpers/onlyName.php",
+            "app/Helpers/cityAndCountry.php"
         ]
     },
     "autoload-dev": {
