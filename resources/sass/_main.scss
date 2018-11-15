@@ -132,6 +132,16 @@ div.custom-file .custom-file-input{
     color: #d00;
 }
 
+.profile-forms-box {
+    position: relative;
+
+    .app-delete-user-profile {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
 
 
 

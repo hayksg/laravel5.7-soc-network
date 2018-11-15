@@ -50,6 +50,14 @@
                                 <i class="fas fa-fw fa-user"></i> {{ __('Profile') }}
                             </a>
 
+                            <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
+                                <i class="fas fa-fw fa-user-edit"></i> {{ __('Edit Profile') }}
+                            </a>
+
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-fw fa-user-friends"></i> {{ __('Find Friends') }}
+                            </a>
+
                             <a class="dropdown-item" href="{{ route('admin') }}">
                                 <i class="fas fa-fw fa-user-cog"></i> {{ __('Admin') }}</a>
                             </a>

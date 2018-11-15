@@ -26,7 +26,6 @@
                                     <strong class="card-text">{!! cityAndCountry($profile->city, $profile->country) !!}</strong>
                                 </p>
                                 <hr>
-                                <a href="{{ route('profile.edit', ['id' => $user->id]) }}" class="btn btn-primary">Edit profile</a>
                             </div>
                         </div>
 

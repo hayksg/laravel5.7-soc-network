@@ -11,7 +11,7 @@
                 <a href="{{ route('getWithSlug', [$user->slug]) }}" class="float-right">Back To Profile &raquo;</a>
             </div>
 
-            <div class="card-body">
+            <div class="card-body profile-forms-box">
                 <form action="{{ route('profile.update', ['id' => $user->id]) }}" class="app-edit-user-profile" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('put')
@@ -24,7 +24,8 @@
                                 name="city" 
                                 id="city" 
                                 value="{{ $profile->city }}" 
-                                class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}">
+                                class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}"
+                                autofocus>
 
                             @if ($errors->has('city'))
                                 <span class="invalid-feedback" role="alert">
@@ -93,12 +94,14 @@
                            href="#collapseExample" 
                            role="button" 
                            aria-expanded="false" 
-                           aria-controls="collapseExample">You can change your password
+                           aria-controls="collapseExample">Password section
                         </a>
                     </p>
-
+                
                     <div class="collapse {{ $errors->has('current-password') || $errors->has('new-password') || $errors->has('new-password_confirmation')? 'show' : '' }}" id="collapseExample">
-
+                        
+                        <p>You can change your password</p>
+                        
                         <div class="form-row">
                             
                             <div class="form-group col-md-4">
@@ -152,7 +155,18 @@
 
                     </div>
 
-                    <button type="submit" name="button" class="btn btn-primary mt-3">Update</button>
+                    <button type="submit" name="button" class="btn btn-success mt-3">Update</button>
+                    
+                </form>
+                <form action="{{ route('profile.destroy', ['id' => $user->id]) }}" 
+                      class="app-delete-user-profile confirm-plugin-delete" 
+                      method="post" 
+                      enctype="multipart/form-data">
+
+                    @csrf
+                    @method('delete')
+
+                    <button type="submit" name="button" class="btn btn-danger mt-3">Delete</button>
                 </form>
             </div>
         </div>

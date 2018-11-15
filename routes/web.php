@@ -17,6 +17,7 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth', 'web']], function () {
 	Route::get('/profiles/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
+	Route::get('/profile/findFriends', 'ProfileController@findFriends')->name('findFriends');
 	Route::resource('/profile', 'ProfileController');
 
 

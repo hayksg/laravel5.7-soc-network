@@ -2,6 +2,7 @@ import $ from 'jquery'
 
 require('./bootstrap');
 require('./app-script');
+require('./j-confirm-action');
 
 // For Admin Panel
 require('./sb-admin');

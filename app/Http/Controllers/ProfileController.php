@@ -94,8 +94,6 @@ class ProfileController extends Controller
             'country' => 'nullable|regex:/^[^<>]*$/u|max:200',
             'about'   => 'nullable|regex:/^[^<>]*$/u',
             'image'   => 'image|max:3000',
-            //'current-password' => ['nullable', new PasswordsMatch],
-            //'new-password' => ['nullable', 'string', 'min:6', 'confirmed', new OldAndNewPasswordsTheSame],
         ]);
 
         if (request()->hasFile('image')) {
@@ -151,7 +149,25 @@ class ProfileController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $id = abs((int)$id);
+        $user = User::find($id);
+        $profile = Profile::where('user_id', $id)->firstOrFail();
+
+        if ($user) {
+            Storage::delete('public/users-images/' . $user->pic);
+            $user->delete();
+            $profile->delete();
+        }
+        
+        return redirect('/');
+    }
+
+    public function findFriends()
+    {
+        $userId = Auth::user()->id;
+        $allFriends = User::where('id', '!=', $userId)->get();
+
+        return view('profile.findFriends', compact('allFriends'));
     }
 }
 

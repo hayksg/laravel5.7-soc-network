@@ -8,6 +8,9 @@
 // Bootswatch Flatly
 @import '~bootswatch/dist/flatly/bootstrap'; /* npm package */
 
+/* Front */
+@import '../css/j-confirm-action.css';
+
 /* For Admin Panel */
 @import '../css/sb-admin.min.css';
 @import "~toastr/toastr.scss"; /* npm package */

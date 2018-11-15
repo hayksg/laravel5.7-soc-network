@@ -31,7 +31,12 @@ $(function(){
 		return false;
     });
 
-    /*  */
+    /* For confirm plugin */
+
+    $('.confirm-plugin-delete').jConfirmAction({
+        question: 'Are you sure?',
+        noText: 'Cancel'
+    });
 
 
 });
