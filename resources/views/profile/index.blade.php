@@ -6,7 +6,9 @@
 <div class="row justify-content-center">
     <div class="col-12 col-xl-10">
         <div class="card">
-            <div class="card-header">Welcome to your profile</div>
+            <div class="card-header find-friends-card-header">
+                <h5 class="d-inline-block">{{ $user->name }}</h5>
+            </div>
             <div class="card-body">
 
                 <div class="text-success">
@@ -18,21 +20,19 @@
 
                         <div class="card text-center app-user-profile">
                             <div class="p-2">
-                                @include('layouts.profile-pic')
+                                @include('layouts.profile-pic', ['user' => $user])
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ $user->name }}</h5>
                                 <p>
                                     <strong class="card-text">{!! cityAndCountry($profile->city, $profile->country) !!}</strong>
                                 </p>
-                                <hr>
                             </div>
                         </div>
 
                     </div>
 
                     <div class="col-sm-12 col-lg-8">
-                        <h5 class="text-center">About</h5>
+                        <h5 class="text-left">About</h5>
                         @if($profile->about)
                         <div>{!! nl2br($profile->about) !!}</div>
                         @endif

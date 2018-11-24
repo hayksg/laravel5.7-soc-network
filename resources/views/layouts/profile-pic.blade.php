@@ -1,5 +1,5 @@
-@if(Auth::user()->pic == 'boy.png' || Auth::user()->pic == 'girl.png')
-    <img src="{{ asset('storage/profile-images/' . Auth::user()->pic) }}" alt="{{ onlyName() }}" class="img-fluid">
+@if($user->pic == 'boy.png' || $user->pic == 'girl.png')
+    <img src="{{ asset('storage/profile-images/' . $user->pic) }}" alt="{{ onlyName() }}" class="img-fluid">
 @else
-    <img src="{{ asset('storage/users-images/' . Auth::user()->pic) }}" alt="{{ onlyName() }}" class="img-fluid">
+    <img src="{{ asset('storage/users-images/' . $user->pic) }}" alt="{{ onlyName() }}" class="img-fluid">
 @endif

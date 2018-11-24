@@ -41,30 +41,30 @@
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link app-thubnail-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             <span class="app-thubnail-wrapper">
-                                @include('layouts.profile-pic')
+                                @include('layouts.profile-pic', ['user' => Auth::user()])
                             </span>&nbsp;<span>{{ onlyName(false) }}</span> <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('getWithSlug', [Auth::user()->slug]) }}">
-                                <i class="fas fa-fw fa-user"></i> {{ __('Profile') }}
+                            <a class="dropdown-item" href="{{ route('getWithSlug', ['id' => Auth::user()->id, 'slug' => Auth::user()->slug]) }}">
+                                <i class="fas fa-fw fa-user mr-2"></i>{{ __('Profile') }}
                             </a>
 
                             <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
-                                <i class="fas fa-fw fa-user-edit"></i> {{ __('Edit Profile') }}
+                                <i class="fas fa-fw fa-user-edit mr-2"></i>{{ __('Edit Profile') }}
                             </a>
 
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-fw fa-user-friends"></i> {{ __('Find Friends') }}
+                            <a class="dropdown-item" href="{{ route('findFriends') }}">
+                                <i class="fas fa-fw fa-user-friends mr-2"></i>{{ __('Find Friends') }}
                             </a>
 
                             <a class="dropdown-item" href="{{ route('admin') }}">
-                                <i class="fas fa-fw fa-user-cog"></i> {{ __('Admin') }}</a>
+                                <i class="fas fa-fw fa-user-cog mr-2"></i>{{ __('Admin') }}</a>
                             </a>
 
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-fw fa-sign-out-alt"></i> {{ __('Logout') }}
+                                <i class="fas fa-fw fa-sign-out-alt mr-2"></i>{{ __('Logout') }}
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

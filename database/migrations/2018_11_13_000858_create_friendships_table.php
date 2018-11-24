@@ -17,7 +17,7 @@ class CreateFriendshipsTable extends Migration
             $table->increments('id');
             $table->integer('requester');
             $table->integer('user_requested');
-            $table->boolean('status');
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
     }

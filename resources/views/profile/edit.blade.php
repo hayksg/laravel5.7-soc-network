@@ -8,11 +8,12 @@
         <div class="card">
             <div class="card-header">
                 {{ __('Edit your profile information') }}
-                <a href="{{ route('getWithSlug', [$user->slug]) }}" class="float-right">Back To Profile &raquo;</a>
+                <a href="{{ route('getWithSlug', ['id' => $user->id, 'slug' => $user->slug]) }}" class="float-right">Back To Profile &raquo;</a>
             </div>
 
             <div class="card-body profile-forms-box">
                 <form action="{{ route('profile.update', ['id' => $user->id]) }}" class="app-edit-user-profile" method="post" enctype="multipart/form-data">
+                    
                     @csrf
                     @method('put')
 
@@ -70,7 +71,7 @@
                     <div class="form-group">
 
                         <div class="my-4 text-center d-inline-block app-user-profile">
-                            @include('layouts.profile-pic')
+                            @include('layouts.profile-pic', ['user' => $user])
                         </div>
                         <div class="mb-2">Change image</div>
                         <div class="custom-file">
@@ -155,7 +156,7 @@
 
                     </div>
 
-                    <button type="submit" name="button" class="btn btn-success mt-3">Update</button>
+                    <button type="submit" name="update" class="btn btn-success mt-3">Update</button>
                     
                 </form>
                 <form action="{{ route('profile.destroy', ['id' => $user->id]) }}" 
@@ -166,7 +167,7 @@
                     @csrf
                     @method('delete')
 
-                    <button type="submit" name="button" class="btn btn-danger mt-3">Delete</button>
+                    <button type="submit" name="delete" class="btn btn-danger mt-3">Delete</button>
                 </form>
             </div>
         </div>

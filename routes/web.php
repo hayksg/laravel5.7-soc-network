@@ -16,10 +16,14 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth', 'web']], function () {
-	Route::get('/profiles/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
-	Route::get('/profile/findFriends', 'ProfileController@findFriends')->name('findFriends');
-	Route::resource('/profile', 'ProfileController');
-
+	
+	Route::get('/find-friends',        'FriendshipController@findFriends')->name('findFriends');
+	Route::resource('/profile',        'ProfileController');
+	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
+	Route::resource('/friendship',     'FriendshipController');
 
 	Route::get('/admin', 'Admin\AdminController@index')->name('admin');
+
+	Route::get('/admin/favicon',        'Admin\FaviconController@index')->name('admin.favicon');
+    Route::post('/admin/favicon/store', 'Admin\FaviconController@store')->name('admin.favicon.store');
 });

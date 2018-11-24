@@ -42,7 +42,7 @@ form.top-search-form {
 }
 
 input.top-search-input {
-    width: 130px;
+    width: 0px;
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
@@ -51,7 +51,7 @@ input.top-search-input {
     background-image: url('/css-img/searchicon.png');
     background-position: 10px 6px;
     background-repeat: no-repeat;
-    padding: 8px 20px 12px 40px;
+    padding: 8px 0 12px 40px;
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
 }
@@ -75,11 +75,6 @@ a:focus {
     width: auto;
     height: 38px;
 }
-
-// .app-thubnail-wrapper {
-//     position: static;
-//     left: 100px;
-// }
 
 i.app-user-plus-icon {
     font-size: 0.8em;
@@ -141,6 +136,23 @@ div.custom-file .custom-file-input{
         right: 20px;
     }
 }
+
+.find-friends-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h5 {
+        margin-bottom: 0;
+    }
+}
+
+.find-friends-items {
+    img {
+        width: 100px;
+    }
+}
+
 
 
 

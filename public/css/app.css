@@ -11062,7 +11062,7 @@ form.top-search-form {
 }
 
 input.top-search-input {
-  width: 130px;
+  width: 0px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border: 2px solid #ccc;
@@ -11072,7 +11072,7 @@ input.top-search-input {
   background-image: url("/css-img/searchicon.png");
   background-position: 10px 6px;
   background-repeat: no-repeat;
-  padding: 8px 20px 12px 40px;
+  padding: 8px 0 12px 40px;
   -webkit-transition: width 0.4s ease-in-out;
   transition: width 0.4s ease-in-out;
 }
@@ -11159,6 +11159,26 @@ div.custom-file .custom-file-input {
   position: absolute;
   bottom: 20px;
   right: 20px;
+}
+
+.find-friends-card-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.find-friends-card-header h5 {
+  margin-bottom: 0;
+}
+
+.find-friends-items img {
+  width: 100px;
 }
 
 .footer {

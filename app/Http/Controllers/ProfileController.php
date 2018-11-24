@@ -6,20 +6,13 @@ use Storage;
 use App\User;
 use App\Profile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Rules\PasswordsMatch;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Rules\OldAndNewPasswordsTheSame;
 
 class ProfileController extends Controller
 {
-    public function getWithSlug($slug)
-    {
-        $user = Auth::user();
-        $profile = Auth::user()->profile;
-
-        return view('profile.index', compact('user', 'profile'));
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -137,8 +130,8 @@ class ProfileController extends Controller
         }
 
         session()->flash('message', $successMessage);
-
-        return redirect('/profiles/' . $user->slug);
+        
+        return redirect()->route('getWithSlug', ['id' => Auth::user()->id, 'slug' => Auth::user()->slug]);
     }
 
     /**
@@ -162,12 +155,13 @@ class ProfileController extends Controller
         return redirect('/');
     }
 
-    public function findFriends()
+    public function getWithSlug($id, $slug)
     {
-        $userId = Auth::user()->id;
-        $allFriends = User::where('id', '!=', $userId)->get();
+        $id = abs((int)$id);
+        $user = User::find($id);
+        $profile = $user->profile;
 
-        return view('profile.findFriends', compact('allFriends'));
+        return view('profile.index', compact('user', 'profile'));
     }
 }
 

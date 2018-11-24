@@ -34,6 +34,13 @@
           </ul>
         </li>
 
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Favicon">
+          <a class="nav-link" href="{{ route('admin.favicon') }}">
+            <i class="fa fa-fw fa-flag"></i>
+            <span class="nav-link-text">Set Favicon</span>
+          </a>
+        </li>
+
 
 
       </ul>

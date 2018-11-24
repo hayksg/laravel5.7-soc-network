@@ -13879,7 +13879,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(48);
+module.exports = __webpack_require__(49);
 
 
 /***/ }),
@@ -13890,22 +13890,22 @@ module.exports = __webpack_require__(48);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free__);
 
 
 __webpack_require__(13);
 __webpack_require__(36);
-__webpack_require__(71);
+__webpack_require__(37);
 
 // For Admin Panel
-__webpack_require__(37);
-window.toastr = __webpack_require__(38);
+__webpack_require__(38);
+window.toastr = __webpack_require__(39);
 
 
-window.Vue = __webpack_require__(41);
+window.Vue = __webpack_require__(42);
 
-Vue.component('vue-message', __webpack_require__(44));
+Vue.component('vue-message', __webpack_require__(45));
 
 var app = new Vue({
     el: '#app'
@@ -36017,6 +36017,99 @@ $(window).on('load', function () {
 /* 37 */
 /***/ (function(module, exports) {
 
+(function ($, window) {
+    'use strict';
+
+    $.fn.jConfirmAction = function (options) {
+
+        //Set default options
+        var defaults = {
+            question: 'Are You Sure ?',
+            yesText: 'Yes',
+            noText: 'No',
+            confirm: false, //yes callback
+            cancel: false //no callback
+        };
+
+        options = $.extend(defaults, options);
+
+        this.bind('click.jConfirmAction', function (evt) {
+
+            //Prevent default events
+            evt.stopPropagation();
+            evt.preventDefault();
+
+            var $this = $(this),
+                $body = $('body');
+
+            //Build up html
+            var $popUP = $('<div class="jc-box"><span class="jc-question">' + options.question + '</span><br/> <div class="jc-btn-wrap"><span class="jc-yes">' + options.yesText + '</span><span class="jc-no">' + options.noText + "</span></div></div>");
+
+            //Some dynamic css
+            fixPosition($popUP);
+            $popUP.animate({ opacity: .96 }, 300);
+
+            //Append html next to current item
+            $body.append($popUP);
+
+            //Unbind previous and bind new
+            $('.jc-yes', $popUP).unbind('click.jConfirmAction').bind('click.jConfirmAction', function () {
+                //call callback function
+                if ($.isFunction(options.confirm)) {
+                    options.confirm($this);
+                } else {
+                    $this.submit();
+                }
+                removePopUp();
+            });
+
+            //NO Button click event
+            $('.jc-no', $popUP).unbind('click.jConfirmAction').bind('click.jConfirmAction', function () {
+                if ($.isFunction(options.cancel)) {
+                    options.cancel($this);
+                }
+                removePopUp();
+            });
+
+            //Change dialog position on resize and scroll event
+            $(window).on('resize scroll', function (e) {
+                var jcBox = $('.jc-box:visible');
+                if (jcBox.length) {
+                    fixPosition(jcBox);
+                }
+            });
+
+            //Hide any opened dialog if user clicks on body but not on dialog itself
+            $body.bind('mouseup', function (event) {
+                var jcBox = $('.jc-box:visible');
+
+                if (jcBox.is(event.target) === false && jcBox.has(event.target).length === 0 && jcBox.length) {
+                    removePopUp();
+                }
+            });
+
+            //Add some dynamic css
+            function fixPosition($item) {
+                $item.css({
+                    top: $this.offset().top - $(window).scrollTop() + 40 + 'px',
+                    left: $this.offset().left - $(window).scrollLeft() - 100 + 'px'
+                });
+            }
+
+            //Remove popup from dom
+            function removePopUp() {
+                $popUP.fadeOut(300, function () {
+                    $popUP.remove();
+                });
+            }
+        });
+    };
+})(jQuery, window);
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports) {
+
 (function ($) {
   "use strict"; // Start of use strict
   // Configure tooltips for collapsed side navigation
@@ -36046,7 +36139,7 @@ $(window).on('load', function () {
 })(jQuery); // End of use strict
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -36519,11 +36612,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
         })();
     }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-}(__webpack_require__(39)));
+}(__webpack_require__(40)));
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -36532,7 +36625,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 /*!
@@ -38519,7 +38612,7 @@ bunker(bootstrap);
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -49482,10 +49575,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(42).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(43).setImmediate))
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -49541,7 +49634,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(43);
+__webpack_require__(44);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -49555,7 +49648,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -49748,15 +49841,15 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(45)
+var normalizeComponent = __webpack_require__(46)
 /* script */
-var __vue_script__ = __webpack_require__(46)
+var __vue_script__ = __webpack_require__(47)
 /* template */
-var __vue_template__ = __webpack_require__(47)
+var __vue_template__ = __webpack_require__(48)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -49795,7 +49888,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -49904,7 +49997,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49943,7 +50036,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -49965,125 +50058,10 @@ if (false) {
 }
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */
-/***/ (function(module, exports) {
-
-(function ($, window) {
-    'use strict';
-
-    $.fn.jConfirmAction = function (options) {
-
-        //Set default options
-        var defaults = {
-            question: 'Are You Sure ?',
-            yesText: 'Yes',
-            noText: 'No',
-            confirm: false, //yes callback
-            cancel: false //no callback
-        };
-
-        options = $.extend(defaults, options);
-
-        this.bind('click.jConfirmAction', function (evt) {
-
-            //Prevent default events
-            evt.stopPropagation();
-            evt.preventDefault();
-
-            var $this = $(this),
-                $body = $('body');
-
-            //Build up html
-            var $popUP = $('<div class="jc-box"><span class="jc-question">' + options.question + '</span><br/> <div class="jc-btn-wrap"><span class="jc-yes">' + options.yesText + '</span><span class="jc-no">' + options.noText + "</span></div></div>");
-
-            //Some dynamic css
-            fixPosition($popUP);
-            $popUP.animate({ opacity: .96 }, 300);
-
-            //Append html next to current item
-            $body.append($popUP);
-
-            //Unbind previous and bind new
-            $('.jc-yes', $popUP).unbind('click.jConfirmAction').bind('click.jConfirmAction', function () {
-                //call callback function
-                if ($.isFunction(options.confirm)) {
-                    options.confirm($this);
-                } else {
-                    $this.submit();
-                }
-                removePopUp();
-            });
-
-            //NO Button click event
-            $('.jc-no', $popUP).unbind('click.jConfirmAction').bind('click.jConfirmAction', function () {
-                if ($.isFunction(options.cancel)) {
-                    options.cancel($this);
-                }
-                removePopUp();
-            });
-
-            //Change dialog position on resize and scroll event
-            $(window).on('resize scroll', function (e) {
-                var jcBox = $('.jc-box:visible');
-                if (jcBox.length) {
-                    fixPosition(jcBox);
-                }
-            });
-
-            //Hide any opened dialog if user clicks on body but not on dialog itself
-            $body.bind('mouseup', function (event) {
-                var jcBox = $('.jc-box:visible');
-
-                if (jcBox.is(event.target) === false && jcBox.has(event.target).length === 0 && jcBox.length) {
-                    removePopUp();
-                }
-            });
-
-            //Add some dynamic css
-            function fixPosition($item) {
-                $item.css({
-                    top: $this.offset().top - $(window).scrollTop() + 40 + 'px',
-                    left: $this.offset().left - $(window).scrollLeft() - 100 + 'px'
-                });
-            }
-
-            //Remove popup from dom
-            function removePopUp() {
-                $popUP.fadeOut(300, function () {
-                    $popUP.remove();
-                });
-            }
-        });
-    };
-})(jQuery, window);
 
 /***/ })
 /******/ ]);

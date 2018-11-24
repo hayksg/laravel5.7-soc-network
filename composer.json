@@ -29,7 +29,8 @@
         "files": [
             "app/Helpers/getYear.php",
             "app/Helpers/onlyName.php",
-            "app/Helpers/cityAndCountry.php"
+            "app/Helpers/cityAndCountry.php",
+            "app/Helpers/friendsStatus.php"
         ]
     },
     "autoload-dev": {
