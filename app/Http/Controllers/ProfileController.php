@@ -20,7 +20,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //
+        // Page not used
+        return abort(404);
     }
 
     /**
@@ -30,7 +31,8 @@ class ProfileController extends Controller
      */
     public function create()
     {
-        //
+        // Page not used
+        return abort(404);
     }
 
     /**
@@ -41,7 +43,8 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Page not used
+        return abort(404);
     }
 
     /**
@@ -52,19 +55,24 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
-        //
+        // Page not used
+        return abort(404);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  string $slug
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $id = abs((int)$id);
-        $user = User::find($id);
+    public function edit($slug)
+    {        
+        $user = Auth::user();
+
+        if ($slug !== Auth::user()->slug) {
+            return abort(404);
+        }
+
         $profile = $user->profile;
         return view('profile.edit', compact('user', 'profile'));
     }
@@ -79,7 +87,12 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         $id = abs((int)$id);
-        $user = User::find($id);
+        $user = Auth::user();
+
+        if ($id !== $user->id) {
+            return abort(404);
+        }
+
         $successMessage = 'Dear ' . $user->name . '! Your profile information successfully updated!';
 
         $this->validate(request(), [
@@ -146,6 +159,10 @@ class ProfileController extends Controller
         $user = User::find($id);
         $profile = Profile::where('user_id', $id)->firstOrFail();
 
+        if ($id !== Auth::user()->id) {
+            return abort(404);
+        }
+
         if ($user) {
             Storage::delete('public/users-images/' . $user->pic);
             $user->delete();
@@ -159,13 +176,13 @@ class ProfileController extends Controller
     {
         $id = abs((int)$id);
         $user = User::find($id);
+        
+        if (!$user || $user->slug != $slug) {
+            return abort(404);
+        }
+
         $profile = $user->profile;
 
         return view('profile.index', compact('user', 'profile'));
     }
 }
-
-
-
-
-

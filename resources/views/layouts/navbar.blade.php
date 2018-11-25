@@ -2,7 +2,7 @@
     <div class="container">
         <h1 class="app-header">
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
+                {{ config('app.name', 'Social Network') }}
             </a>
         </h1>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -50,7 +50,7 @@
                                 <i class="fas fa-fw fa-user mr-2"></i>{{ __('Profile') }}
                             </a>
 
-                            <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
+                            <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->slug]) }}">
                                 <i class="fas fa-fw fa-user-edit mr-2"></i>{{ __('Edit Profile') }}
                             </a>
 
