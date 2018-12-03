@@ -54,10 +54,6 @@
                                 <i class="fas fa-fw fa-user-edit mr-2"></i>{{ __('Edit Profile') }}
                             </a>
 
-                            <a class="dropdown-item" href="{{ route('findFriends') }}">
-                                <i class="fas fa-fw fa-user-friends mr-2"></i>{{ __('Find Friends') }}
-                            </a>
-
                             <a class="dropdown-item" href="{{ route('admin') }}">
                                 <i class="fas fa-fw fa-user-cog mr-2"></i>{{ __('Admin') }}</a>
                             </a>

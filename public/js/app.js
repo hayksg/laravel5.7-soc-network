@@ -35961,19 +35961,19 @@ $(function () {
 
     var href = window.location.href;
 
-    /* Highlighting navbar */
-
+    /* Highlighting admin navbar */
     $('.navbar-nav > li > a[href="' + href + '"]').parent().addClass('active');
 
-    /* Change the value of Choose file after the file has been chosen */
+    /* Highlighting admin navbar */
+    $('.app-left-sidebar-ul > li > a[href="' + href + '"]').parent().addClass('active');
 
+    /* Change the value of Choose file after the file has been chosen */
     $('.custom-file-input').on('change', function () {
         var fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
 
     /* For button back to top */
-
     $(window).scroll(function () {
         if ($(this).scrollTop() > 1000) {
             $('#back-to-top').fadeIn();
@@ -35991,7 +35991,6 @@ $(function () {
     });
 
     /* For confirm plugin */
-
     $('.confirm-plugin-delete').jConfirmAction({
         question: 'Are you sure?',
         noText: 'Cancel'
@@ -36000,8 +35999,7 @@ $(function () {
 
 $(window).on('load', function () {
 
-    /* In order for a thumbnail of any size to be displayed normally */
-
+    /* In order a thumbnail of any size to be displayed normally */
     if ($(document).width() > 767) {
 
         var thumbnail = $('.app-thubnail-nav-link .app-thubnail-wrapper');

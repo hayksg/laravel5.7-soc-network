@@ -12,6 +12,10 @@ body {
     margin-bottom: 200px;
 }
 
+li.active a {
+    color: #fff;
+}
+
 h1.app-header {
     font-size: 1rem;
     position: relative;
@@ -87,10 +91,6 @@ div.custom-file .custom-file-input{
     cursor: pointer;
 }
 
-.app-user-profile {
-    width: 14rem;
-}
-
 .app-message {
     animation-name: animateHeight;
     animation-duration: 1s;
@@ -108,7 +108,6 @@ div.custom-file .custom-file-input{
 }
 
 .app-edit-user-profile {
-    //margin-bottom: 100px;
     textarea {
         resize: vertical;
         min-height: 200px;
@@ -116,7 +115,6 @@ div.custom-file .custom-file-input{
 }
 
 .app-user-profile {
-    //text-align: center;
     margin: auto;
     margin-bottom: 30px;
 }
@@ -151,6 +149,10 @@ div.custom-file .custom-file-input{
     img {
         width: 100px;
     }
+}
+
+.user-image img {
+    width: 200px;
 }
 
 

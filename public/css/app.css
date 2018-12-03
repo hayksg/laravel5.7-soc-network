@@ -11029,6 +11029,10 @@ body {
   margin-bottom: 200px;
 }
 
+li.active a {
+  color: #fff;
+}
+
 h1.app-header {
   font-size: 1rem;
   position: relative;
@@ -11112,10 +11116,6 @@ div.custom-file .custom-file-input {
   cursor: pointer;
 }
 
-.app-user-profile {
-  width: 14rem;
-}
-
 .app-message {
   -webkit-animation-name: animateHeight;
           animation-name: animateHeight;
@@ -11179,6 +11179,10 @@ div.custom-file .custom-file-input {
 
 .find-friends-items img {
   width: 100px;
+}
+
+.user-image img {
+  width: 200px;
 }
 
 .footer {
