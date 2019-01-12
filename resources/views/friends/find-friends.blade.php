@@ -42,7 +42,7 @@
                         <div class="col-9 col-sm-9 col-md-10 text-left pl-4">
                             <h5>About</h5>
                             @if($friend->profile->about)
-                            <div>{!! nl2br($friend->profile->about) !!}</div>
+                            <div class="about-user">{!! nl2br($friend->profile->about) !!}</div>
                             @endif
                         </div>
                     </div>

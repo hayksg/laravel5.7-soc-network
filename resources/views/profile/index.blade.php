@@ -46,6 +46,26 @@
                                     @endif
                                 </div>
 
+
+                                <hr>
+                                <p>{{ $user->name }}'s friends</p>
+                                <hr>
+
+                                @if(!$user->friends()->count())
+                                    <hr>
+                                    <p>{{ $user->name }} has no friends</p>
+                                @else
+                                    <ul>
+                                    @foreach($user->friends() as $user)
+                                        <li>{{ $user->name }}</li>
+                                    @endforeach
+                                    </ul>
+                                @endif
+
+
+
+
+
                             </div>
 
                         </div>

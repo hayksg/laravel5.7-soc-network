@@ -13,8 +13,13 @@
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="#">
+                    <a href="{{ route('friends') }}">
                         <i class="fas fa-fw fa-users mr-2"></i>{{ __('Friends') }}
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ route('requests') }}">
+                        <i class="fas fa-fw fa-exchange-alt mr-2"></i>{{ __('Requests') }}
                     </a>
                 </li>
             </ul>

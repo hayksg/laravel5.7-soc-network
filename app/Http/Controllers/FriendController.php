@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Friendship;
-use App\User;
+use Auth;
 
-class FriendshipController extends Controller
+class FriendController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +14,8 @@ class FriendshipController extends Controller
      */
     public function index()
     {
-        //
+        $friends = Auth::user()->friends();
+        return view('friends.index', compact('friends'));
     }
 
     /**
@@ -37,16 +36,7 @@ class FriendshipController extends Controller
      */
     public function store(Request $request)
     {
-        $friendId = abs((int)$request->id);
-        $userId   = Auth::user()->id;
-
-        Friendship::create([
-            'requester' => $userId,
-            'user_requested' => $friendId,
-        ]);
-
-        //return redirect()->route('getWithSlug', [Auth::user()->slug]);
-        return back();
+        //
     }
 
     /**
@@ -92,24 +82,5 @@ class FriendshipController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function findFriends()
-    {
-        $userId = Auth::user()->id;
-        $allFriends = User::with('profile')->where('id', '!=', $userId)->get();
-        //$allFriends = DB::table('users')->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')->where('users.id', '!=', $userId)->get();
-
-        return view('friends.find-friends', compact('allFriends'));
-    }
-
-    public function requests()
-    {
-        $userId = Auth::user()->id;
-        $friendRequests = Friendship::with('friends')->where('user_requested', '=', $userId)->get();
-
-        //dd($friendRequests);
-
-        return view('friends.friend-requests', compact('friendRequests'));
     }
 }

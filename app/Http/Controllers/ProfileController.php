@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\OldAndNewPasswordsTheSame;
 
+use Illuminate\Support\Facades\Event;
+
 class ProfileController extends Controller
 {
     /**
@@ -94,6 +96,7 @@ class ProfileController extends Controller
         }
 
         $successMessage = 'Dear ' . $user->name . '! Your profile information successfully updated!';
+        $sessionFlash = false;
 
         $this->validate(request(), [
             'city'    => 'nullable|regex:/^[^<>]*$/u|max:200',
@@ -113,8 +116,10 @@ class ProfileController extends Controller
 
             if ($res) {
                 $user->pic = $imageName;
+                $sessionFlash = true;
                 $user->update();
             }
+
         }
 
         $profile = Profile::where('user_id', $user->id)->firstOrFail();
@@ -125,7 +130,11 @@ class ProfileController extends Controller
             $profile->country = request('country') ? request('country') : '';
             $profile->about = request('about') ? request('about') : '';
 
-            $profile->update();
+            if($profile->isDirty()){
+                // changes have been made
+                $sessionFlash = true;
+                $profile->update();
+            }
 
         }
         
@@ -138,11 +147,18 @@ class ProfileController extends Controller
             ]);
 
             $user->password = bcrypt(request('new-password'));
-            $user->save();
+
+            if($user->isDirty()){
+                // changes have been made
+                $sessionFlash = true;
+                $user->update();
+            }
             
         }
 
-        session()->flash('message', $successMessage);
+        if ($sessionFlash) {
+            session()->flash('message', $successMessage);
+        }
         
         return redirect()->route('getWithSlug', ['id' => Auth::user()->id, 'slug' => Auth::user()->slug]);
     }

@@ -16,10 +16,17 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth', 'web']], function () {
+
+	Route::resource('/friend', 'FriendController', [
+		'names' => [
+			'index' => 'friends',
+		]
+	]);
 	
 	Route::get('/find-friends',        'FriendshipController@findFriends')->name('findFriends');
+	Route::get('/friend-requests',     'FriendshipController@requests')->name('requests');
 	Route::resource('/friendship',     'FriendshipController');
-
+	
 	Route::resource('/profile',        'ProfileController');
 	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
 

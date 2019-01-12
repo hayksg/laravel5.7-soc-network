@@ -10,3 +10,11 @@
     $font: unquote($font);
     @import url(https://fonts.googleapis.com/css?family=#{$font});
 }
+
+@mixin visible-lines-count($cnt) {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: $cnt;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

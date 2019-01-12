@@ -22,5 +22,9 @@ function cityAndCountry($city, $country) {
         $output = $city . "<br>" . $country;
     }
 
-    return  $output;
+    if (! empty($output)) {
+        return  '<i class="fas fa-globe-americas"></i> ' . $output;
+    }
+
+    return false;
 }

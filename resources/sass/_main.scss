@@ -155,6 +155,11 @@ div.custom-file .custom-file-input{
     width: 200px;
 }
 
+.about-user {
+    @include visible-lines-count(3);
+}
+
+
 
 
 
