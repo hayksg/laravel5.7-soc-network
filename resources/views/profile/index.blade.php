@@ -51,15 +51,33 @@
                                 <p>{{ $user->name }}'s friends</p>
                                 <hr>
 
+
                                 @if(!$user->friends()->count())
                                     <hr>
                                     <p>{{ $user->name }} has no friends</p>
                                 @else
                                     <ul>
-                                    @foreach($user->friends() as $user)
-                                        <li>{{ $user->name }}</li>
+                                    @foreach($user->friends() as $friend)
+                                        <li>{{ $friend->name }}</li>
                                     @endforeach
                                     </ul>
+                                @endif
+
+                                
+
+
+
+
+                                <hr>
+                                
+                                @if (Auth::user()->hasFriendRequestPending($user))
+                                    <p>Waiting for {{ $user->name }} to accept your request.</p>
+                                @elseif (Auth::user()->hasFriendRequestReceived($user))
+                                    <p><a href="{{ route('friends.accept', ['user' => $user]) }}" class="btn btn-warning">Accept friend request</a></p>
+                                @elseif (Auth::user()->isFriendsWith($user))
+                                    <p class="text-success">You and {{ $user->name }} are friends.</p>
+                                @elseif (Auth::user()->id !== $user->id)
+                                    <p><a href="{{ route('friends.add', ['user' => $user]) }}" class="btn btn-primary">Add as friend</a></p>
                                 @endif
 
 

@@ -4,83 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App\User;
 
 class FriendController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $friends = Auth::user()->friends();
         return view('friends.index', compact('friends'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function requests()
     {
-        //
+        $requests = Auth::user()->friendRequests();
+        return view('friends.requests', compact('requests'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function add(User $user)
     {
-        //
+        if (Auth::user()->hasFriendRequestPending($user) || $user->hasFriendRequestPending(Auth::user())) {
+            return redirect()->route('getWithSlug', ['id' => $user->id, 'slug' => $user->slug]);
+        }
+
+        if (Auth::user()->id === $user->id) {
+            return redirect()->route('home');
+        }
+
+        if (Auth::user()->isFriendsWith($user)) {
+            return redirect()->route('getWithSlug', ['id' => $user->id, 'slug' => $user->slug]);
+        }
+
+        Auth::user()->addFriend($user);
+        return redirect()->route('getWithSlug', ['id' => $user->id, 'slug' => $user->slug]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function accept(User $user)
     {
-        //
-    }
+        if (!Auth::user()->hasFriendRequestReceived($user)) {
+            return redirect()->route('home');
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        Auth::user()->acceptFriendRequest($user);
+        return redirect()->route('getWithSlug', ['id' => $user->id, 'slug' => $user->slug]);
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+ 
+    
 }
