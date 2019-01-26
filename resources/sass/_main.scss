@@ -159,6 +159,29 @@ div.custom-file .custom-file-input{
     @include visible-lines-count(3);
 }
 
+.user-has-friends-block {
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    span.user-friend-thumbnail {
+        width: 50px;
+        margin-right: 10px;
+    }
+
+    span.user-friend-name {
+        margin-right: auto;
+    }
+
+    span.badge-pill {
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+        border-radius: 10rem;
+    }
+}
+
 
 
 

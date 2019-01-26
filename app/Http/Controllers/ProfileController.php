@@ -8,10 +8,11 @@ use App\Profile;
 use Illuminate\Http\Request;
 use App\Rules\PasswordsMatch;
 use Illuminate\Support\Facades\DB;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
-use App\Rules\OldAndNewPasswordsTheSame;
 
 use Illuminate\Support\Facades\Event;
+use App\Rules\OldAndNewPasswordsTheSame;
 
 class ProfileController extends Controller
 {
@@ -160,7 +161,7 @@ class ProfileController extends Controller
             session()->flash('message', $successMessage);
         }
         
-        return redirect()->route('getWithSlug', ['id' => Auth::user()->id, 'slug' => Auth::user()->slug]);
+        return redirect()->route('getWithSlug', ['id' => Hashids::encode(Auth::user()->id), 'slug' => Auth::user()->slug]);
     }
 
     /**
@@ -190,7 +191,7 @@ class ProfileController extends Controller
 
     public function getWithSlug($id, $slug)
     {
-        $id = abs((int)$id);
+        $id = Hashids::decode($id)[0];
         $user = User::find($id);
         
         if (!$user || $user->slug != $slug) {

@@ -17,14 +17,12 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/search', 'SearchController@index')->name('search');
 
 Route::group(['middleware' => ['auth', 'web']], function () {
-
-	Route::get('/friend',                'FriendController@index')->name('friends');
-	Route::get('/friend-requests',       'FriendController@requests')->name('requests');
-	Route::get('/friends/add/{user}',    'FriendController@add')->name('friends.add');
-	Route::get('/friends/accept/{user}', 'FriendController@accept')->name('friends.accept');
-	
-	Route::get('/find-friends',        'FriendshipController@findFriends')->name('findFriends');
-	Route::resource('/friendship',     'FriendshipController');
+	Route::get('/friend',                 'FriendController@index')->name('friends');
+	Route::get('/find-friends',           'FriendController@findFriends')->name('findFriends');
+	Route::get('/friend-requests',        'FriendController@requests')->name('requests');
+	Route::get('/friends/add/{user}',     'FriendController@add')->name('friends.add');
+	Route::get('/friends/accept/{user}',  'FriendController@accept')->name('friends.accept');
+	Route::post('/friends/delete/{user}', 'FriendController@delete')->name('friends.delete');
 	
 	Route::resource('/profile',        'ProfileController');
 	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
@@ -33,5 +31,4 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 	Route::get('/admin/favicon',        'Admin\FaviconController@index')->name('admin.favicon');
 	Route::post('/admin/favicon/store', 'Admin\FaviconController@store')->name('admin.favicon.store');
-	
 });

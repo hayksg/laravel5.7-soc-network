@@ -11193,6 +11193,33 @@ div.custom-file .custom-file-input {
   text-overflow: ellipsis;
 }
 
+.user-has-friends-block a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.user-has-friends-block span.user-friend-thumbnail {
+  width: 50px;
+  margin-right: 10px;
+}
+
+.user-has-friends-block span.user-friend-name {
+  margin-right: auto;
+}
+
+.user-has-friends-block span.badge-pill {
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+  border-radius: 10rem;
+}
+
 .footer {
   position: absolute;
   bottom: 0;

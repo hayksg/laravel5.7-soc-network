@@ -16,7 +16,9 @@
 
                 @foreach($friends as $friend)
 
-                <div class="card mb-3">
+                    @include('layouts.user-profile-small', ['user' => $friend, 'delete' => true])
+
+                <!-- <div class="card mb-3">
                     <div class="card-header find-friends-card-header">
 
                         <h5 class="d-inline-block">
@@ -46,7 +48,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 @endforeach
 

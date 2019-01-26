@@ -46,7 +46,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('getWithSlug', ['id' => Auth::user()->id, 'slug' => Auth::user()->slug]) }}">
+                            <a class="dropdown-item" href="{{ route('getWithSlug', ['id' => Hashids::encode(Auth::user()->id), 'slug' => Auth::user()->slug]) }}">
                                 <i class="fas fa-fw fa-user mr-2"></i>{{ __('Profile') }}
                             </a>
 

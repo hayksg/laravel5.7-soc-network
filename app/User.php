@@ -3,10 +3,10 @@
 namespace App;
 
 use App\Traits\Friendable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 
 class User extends Authenticatable
 {
@@ -52,7 +52,7 @@ class User extends Authenticatable
     public function friends()
     {
         return $this->friendsOfMine()->wherePivot('accepted', true)->get()
-           ->merge($this->friendOf()->wherePivot('accepted', true)->get());
+            ->merge($this->friendOf()->wherePivot('accepted', true)->get());
     }
 
     public function friendRequests()
@@ -77,7 +77,13 @@ class User extends Authenticatable
 
     public function addFriend(User $user)
     {
-        return $this->friendOf()->attach($user->id);
+        $this->friendOf()->attach($user->id);
+    }
+
+    public function deleteFriend(User $user)
+    {
+        $this->friendOf()->detach($user->id);
+        $this->friendsOfMine()->detach($user->id);
     }
 
     public function acceptFriendRequest(User $user)
@@ -90,5 +96,9 @@ class User extends Authenticatable
     public function isFriendsWith(User $user)
     {
         return (bool) $this->friends()->where('id', $user->id)->count();
+    }
+
+    public function isOnline() {
+        return Cache::has('active-user-' . $this->id);
     }
 }

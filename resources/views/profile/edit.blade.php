@@ -17,7 +17,7 @@
                 <div class="card">
                     <div class="card-header">
                         {{ __('Edit your profile information') }}
-                        <a href="{{ route('getWithSlug', ['id' => $user->id, 'slug' => $user->slug]) }}" class="float-right">Back To Profile &raquo;</a>
+                        <a href="{{ route('getWithSlug', ['id' => Hashids::encode($user->id), 'slug' => $user->slug]) }}" class="float-right">Back To Profile &raquo;</a>
                     </div>
 
                     <div class="card-body profile-forms-box">
