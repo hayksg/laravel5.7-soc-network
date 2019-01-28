@@ -14,7 +14,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header find-friends-card-header">
-                            <h5 class="d-inline-block">{{ $user->name }}</h5>
+                            <h5 class="d-inline-block">{!! shortName($user->name) !!}</h5>
                             @include('layouts.friend-status', ['user' => $user, 'delete' => false])
                         </div>
                         <div class="card-body">

@@ -35959,6 +35959,9 @@ module.exports = function spread(callback) {
 
 $(function () {
 
+    /* Enable tooltips everywhere */
+    $('[data-toggle="tooltip"]').tooltip();
+
     var href = window.location.href;
 
     /* Highlighting admin navbar */

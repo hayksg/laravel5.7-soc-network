@@ -1,7 +1,9 @@
 <div class="card mb-3">
     <div class="card-header find-friends-card-header">
         <h5 class="d-inline-block">
-            <a href="{{ route('getWithSlug', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}">{{ $friend->name }}</a>
+            <a href="{{ route('getWithSlug', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}">
+                {!! shortName($friend->name) !!}
+            </a>
         </h5>
         @include('layouts.friend-status', ['user' => $friend, 'delete' => $delete])
     </div>

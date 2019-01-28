@@ -2,10 +2,13 @@
 
 function onlyName($lowercase = true) {
     $name = Auth::user()->name;
-    $output = substr($name, 0, strpos($name, ' '));
 
-    if ($lowercase) {
-        return strtolower($output);
+    if (strpos($name, ' ')) {
+        $name = substr($name, 0, strpos($name, ' '));
     }
-    return $output;
+    
+    if ($lowercase) {
+        return strtolower($name);
+    }
+    return $name;
 }

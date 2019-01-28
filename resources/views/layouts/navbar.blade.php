@@ -42,7 +42,7 @@
                         <a id="navbarDropdown" class="nav-link app-thubnail-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             <span class="app-thubnail-wrapper">
                                 @include('layouts.profile-pic', ['user' => Auth::user()])
-                            </span>&nbsp;<span>{{ onlyName(false) }}</span> <span class="caret"></span>
+                            </span>&nbsp;<span>{!! shortName(onlyName(false)) !!}</span> <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">

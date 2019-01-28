@@ -20,7 +20,7 @@ class ActiveUsers
     {
         if (Auth::check()) {
             $expireTime = Carbon::now()->addMinutes(5);
-            Cache::put('active-user-' . Auth::user()->id, true, $expireTime);
+            Cache::put('active-user-' . Auth::id(), true, $expireTime);
         }
         return $next($request);
     }

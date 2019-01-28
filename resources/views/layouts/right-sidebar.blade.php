@@ -8,7 +8,7 @@
             @if(isset($page) && $page === 'main')
                 <h6 class="text-center">Your friends</h6>
             @else
-                <h6 class="text-center">{{ $user->name }}'s friends</h6>
+                <h6 class="text-center">{!! shortName($user->name) !!}'s friends</h6>
             @endif
 
             <hr>
@@ -23,7 +23,7 @@
                             <span class="user-friend-thumbnail">
                                 @include('layouts.profile-pic', ['user' => $friend])
                             </span>
-                            <span class="user-friend-name">{{ $friend->name }}</span>
+                            <span class="user-friend-name">{!! shortName($friend->name) !!}</span>
                             @if($friend->isOnline())
                                 <span class="badge badge-pill badge-success">&nbsp;&nbsp;</span>
                             @else

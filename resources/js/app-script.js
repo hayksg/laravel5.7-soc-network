@@ -1,5 +1,8 @@
 $(function(){
 
+    /* Enable tooltips everywhere */
+    $('[data-toggle="tooltip"]').tooltip();
+
     let href = window.location.href;
 
     /* Highlighting admin navbar */
