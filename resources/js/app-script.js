@@ -7,8 +7,6 @@ $(function(){
 
     /* Highlighting admin navbar */
     $('.navbar-nav > li > a[href="'+href+'"]').parent().addClass('active');
-    
-    /* Highlighting admin navbar */
 	$('.app-left-sidebar-ul > li > a[href="'+href+'"]').parent().addClass('active');
 
     /* Change the value of Choose file after the file has been chosen */

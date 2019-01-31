@@ -11057,34 +11057,6 @@ h1.app-header {
   color: #18BC9C !important;
 }
 
-/* Top search */
-
-form.top-search-form {
-  margin-left: 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-input.top-search-input {
-  width: 0px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: white;
-  background-image: url("/css-img/searchicon.png");
-  background-position: 10px 6px;
-  background-repeat: no-repeat;
-  padding: 8px 0 12px 40px;
-  -webkit-transition: width 0.4s ease-in-out;
-  transition: width 0.4s ease-in-out;
-}
-
-input.top-search-input:focus {
-  width: 100%;
-}
-
 a {
   transition: color, 320ms;
   -webkit-transition: color, 320ms;
@@ -11283,26 +11255,12 @@ div.custom-file .custom-file-input {
     padding-top: 0em;
   }
 
-  input.top-search-input:focus {
-    width: 200%;
-  }
-
-  form.top-search-form {
-    margin-left: 20px;
-  }
-
   .app-user-profile {
     margin-bottom: 0;
   }
 }
 
 @media only screen and (min-width: 768px) {
-  form.top-search-form {
-    margin-left: 10px;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
   .app-thubnail-nav-link {
     position: relative;
   }
@@ -11315,12 +11273,6 @@ div.custom-file .custom-file-input {
 
   .app-thubnail-wrapper img {
     margin-right: 0;
-  }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 992px) {
-  input.top-search-input:focus {
-    width: 150%;
   }
 }
 

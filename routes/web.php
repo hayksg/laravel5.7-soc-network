@@ -15,6 +15,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/search', 'SearchController@index')->name('search');
+Route::get('/search/{id}/{slug}', 'SearchController@selectedUser');
 
 Route::group(['middleware' => ['auth', 'web']], function () {
 	Route::get('/friend',                 'FriendController@index')->name('friends');

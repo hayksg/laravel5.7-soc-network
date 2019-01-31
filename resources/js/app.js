@@ -12,6 +12,7 @@ import fontawesome from '@fortawesome/fontawesome-free'
 window.Vue = require('vue');
 
 Vue.component('vue-message', require('./components/MessageComponent.vue'));
+Vue.component('vue-search', require('./components/SearchComponent.vue'));
 
 const app = new Vue({
     el: '#app'

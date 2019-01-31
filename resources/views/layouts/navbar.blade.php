@@ -11,15 +11,8 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
-
-            <form class="top-search-form mr-auto" action="{{ route('search') }}">
-                <input class="form-control top-search-input"
-                       type="search"
-                       placeholder="Type name and press enter to search"
-                       name="search"
-                       aria-label="Search"
-                       autocomplete="off">
-            </form>
+            <!-- Vue Search Component -->
+            <vue-search assets="{{ asset('storage') }}"></vue-search>
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">

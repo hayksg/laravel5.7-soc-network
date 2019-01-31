@@ -6,7 +6,13 @@
 
 <script>
 export default {
-    props: ['message'],
+    name: 'MessageComponent',
+    props: {
+        message: {
+            type: String,
+            required: true
+        }
+    },
     data () {
         return {
             laravelMessage: this.message,

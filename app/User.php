@@ -101,4 +101,11 @@ class User extends Authenticatable
     public function isOnline() {
         return Cache::has('active-user-' . $this->id);
     }
+
+    public static function cacheAllUsers($minutes)
+    {
+        return cache()->remember('users.cached', $minutes, function() {
+            return static::all();
+        });
+    }
 }
