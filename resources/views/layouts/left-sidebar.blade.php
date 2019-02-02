@@ -1,4 +1,8 @@
+@if(!auth()->check())
+<div class="col-lg-3 col-md-12 order-2 feature-item rounded py-3 px-1">
+@else
 <div class="col-lg-3 col-md-12 order-1 feature-item rounded py-3 px-1">
+@endif
     <div class="shadow">
         <div class="p-2">
             <ul class="list-group list-group-flush app-left-sidebar-ul">

@@ -19,7 +19,7 @@ Route::get('/locale/{name}', 'LocaleController@index')->name('locale');
 Route::get('/search',             'SearchController@index')->name('search');
 Route::get('/search/{id}/{slug}', 'SearchController@selectedUser');
 
-Route::group(['middleware' => ['auth', 'web']], function () {
+Route::group(['middleware' => ['auth', 'admin', 'web']], function () {
 	Route::get('/friend',                 'FriendController@index')->name('friends');
 	Route::get('/find-friends',           'FriendController@findFriends')->name('findFriends');
 	Route::get('/friend-requests',        'FriendController@requests')->name('requests');
@@ -34,4 +34,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 	Route::get('/admin/favicon',        'Admin\FaviconController@index')->name('admin.favicon');
 	Route::post('/admin/favicon/store', 'Admin\FaviconController@store')->name('admin.favicon.store');
+
+	Route::get('/admin/role-user',  'Admin\PeopleController@users')->name('admin.role.user');
+	Route::get('/admin/role-admin', 'Admin\PeopleController@admins')->name('admin.role.admin');
 });

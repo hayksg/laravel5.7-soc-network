@@ -52,9 +52,13 @@
                                 <i class="fas fa-fw fa-user-edit mr-2"></i>{{ __('Edit Profile') }}
                             </a>
 
-                            <a class="dropdown-item" href="{{ route('admin') }}">
-                                <i class="fas fa-fw fa-user-cog mr-2"></i>{{ __('Admin') }}</a>
-                            </a>
+                            @if( (auth()->user() && auth()->user()->role === 'superadmin') || (auth()->user() && auth()->user()->role === 'admin') )
+                                <a class="dropdown-item" href="{{ route('admin') }}">
+                                    <i class="fas fa-fw fa-user-cog mr-2"></i>{{ __('Admin') }}</a>
+                                </a>
+                            @endif
+
+                            <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

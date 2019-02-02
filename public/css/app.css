@@ -11033,6 +11033,10 @@ li.active a {
   color: #fff;
 }
 
+.active-color {
+  color: #fff !important;
+}
+
 h1.app-header {
   font-size: 1rem;
   position: relative;
@@ -11225,7 +11229,7 @@ div.custom-file .custom-file-input {
       -ms-flex-align: center;
           align-items: center;
   padding: 0 20px;
-  background-color: #BEBEBE;
+  background-color: #ccc;
 }
 
 .flags-box img {
@@ -11235,17 +11239,22 @@ div.custom-file .custom-file-input {
 }
 
 .flags-box img:hover {
-  background-color: #7B8A8B;
+  background-color: #a6a6a6;
   padding: 0px 5px;
 }
 
 .selected-flag {
-  background-color: #7B8A8B;
+  background-color: #a6a6a6;
   padding: 0px 5px;
 }
 
 .selected-flag:hover {
   padding: 0;
+}
+
+.locale-right-sidebar {
+  width: 150px;
+  margin: auto;
 }
 
 .footer {

@@ -1,7 +1,12 @@
+@if(!auth()->check())
+<div class="col-lg-3 order-lg-3 col-md-12 order-1 feature-item rounded py-3 px-1">
+@else
 <div class="col-lg-3 order-lg-3 col-md-12 order-2 feature-item rounded py-3 px-1">
-    <div class="shadow p-4">
+@endif
+    <div class="shadow pt-1 pb-4 px-4">
         @if(!$user || !$user->count())
         <h6 class="text-center">
+            <div class="locale-right-sidebar mb-2">@include('layouts.locale')</div>
             Please <a href="{{ route('login') }}">login</a> to see your friends
         </h6>
         @else
@@ -14,7 +19,7 @@
             <hr>
         
             @if(!$user->friends()->count())
-                <p>Has no friends</p>
+                <p class="text-center">No friends found</p>
             @else
                 <ul class="list-unstyled">
                 @foreach($user->friends() as $friend)

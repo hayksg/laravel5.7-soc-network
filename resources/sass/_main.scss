@@ -16,6 +16,10 @@ li.active a {
     color: #fff;
 }
 
+.active-color {
+    color: #fff !important;
+}
+
 h1.app-header {
     font-size: 1rem;
     position: relative;
@@ -178,26 +182,31 @@ div.custom-file .custom-file-input{
     justify-content: space-around;
     align-items: center;
     padding: 0 20px;
-    background-color: #BEBEBE;
+    background-color: #ccc;
 
     img {
         padding: 0px 5px;
         transition: all .3s linear;
 
         &:hover {
-            background-color: #7B8A8B; 
+            background-color: darken(#ccc, 15%);
             padding: 0px 5px;
         }
     }
 }
 
 .selected-flag {
-    background-color: #7B8A8B; 
+    background-color: darken(#ccc, 15%);
     padding: 0px 5px;
 
     &:hover {
         padding: 0;
     }
+}
+
+.locale-right-sidebar {
+    width: 150px;
+    margin: auto;
 }
 
 

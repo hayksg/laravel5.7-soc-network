@@ -20,7 +20,8 @@ class UsersTableSeeder extends Seeder
             'email' => 'john@test.com',
             'email_verified_at' => NULL,
             'remember_token' => NULL,
-        	'password' => '$2y$10$4ftOStkjfQRpzeg8IauSR.DAybxsX/tuJNN68Kz2jSNFjz9b5S7Pe',
+        	'password' => Hash::make('john_superadmin'),
+        	'role' => 'superadmin',
         	'created_at' => date('Y-m-d H:m:s'),
         	'updated_at' => date('Y-m-d H:m:s')
         ]);
@@ -37,7 +38,8 @@ class UsersTableSeeder extends Seeder
             'email' => 'anna@test.com',
             'email_verified_at' => NULL,
             'remember_token' => NULL,
-        	'password' => '$2y$10$tlqa/sJNh9NmrxSkhZvxHuveppzBCl6WXymJbJcY7Q1uFC5MLZojC',
+            'password' => Hash::make('annaanna'),
+            'role' => 'admin',
         	'created_at' => date('Y-m-d H:m:s'),
         	'updated_at' => date('Y-m-d H:m:s')
         ]);
@@ -54,7 +56,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'emma@test.com',
             'email_verified_at' => NULL,
             'remember_token' => NULL,
-        	'password' => '$2y$10$d3kR.fCAPMwKdRbzj8Zg/OFCOZTIygWar21sBnbQB65XVd6ADQxFG',
+        	'password' => Hash::make('emmaemma'),
         	'created_at' => date('Y-m-d H:m:s'),
         	'updated_at' => date('Y-m-d H:m:s')
         ]);
