@@ -50149,7 +50149,7 @@ exports = module.exports = __webpack_require__(52)(true);
 
 
 // module
-exports.push([module.i, "\nform.top-search-form[data-v-89b0c3cc] {\n  margin-left: 0;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\ninput.top-search-input[data-v-89b0c3cc] {\n  width: 0px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  border: 2px solid #ccc;\n  border-radius: 4px;\n  font-size: 16px;\n  background-color: white;\n  background-image: url(\"/css-img/searchicon.png\");\n  background-position: 10px 6px;\n  background-repeat: no-repeat;\n  padding: 8px 0 12px 40px;\n  -webkit-transition: width 0.4s ease-in-out;\n  transition: width 0.4s ease-in-out;\n}\ninput.top-search-input[data-v-89b0c3cc]:focus {\n  width: 100%;\n}\n.search-box[data-v-89b0c3cc] {\n  position: relative;\n}\n.search-results[data-v-89b0c3cc] {\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n  max-height: 500px;\n  overflow: auto;\n  z-index: 1000;\n}\n.search-results ul[data-v-89b0c3cc] {\n    width: 100%;\n    padding: 10px;\n    margin-bottom: 0;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n    background-color: white;\n}\n.search-results ul li[data-v-89b0c3cc] {\n      margin-bottom: 10px;\n      padding-bottom: 10px;\n      border-bottom: 1px solid #aaa;\n}\n.search-results ul li .search-user-img[data-v-89b0c3cc] {\n        width: 50px;\n}\n.search-results ul li[data-v-89b0c3cc]:last-of-type {\n        border-bottom: none;\n        margin-bottom: 0;\n        padding-bottom: 0;\n}\n.search-enter-active[data-v-89b0c3cc] {\n  -webkit-transform: translateY(0px);\n          transform: translateY(0px);\n  -webkit-transition: all .2s linear;\n  transition: all .2s linear;\n}\n.search-leave-active[data-v-89b0c3cc] {\n  -webkit-transition: all .1s linear;\n  transition: all .1s linear;\n}\n.search-enter[data-v-89b0c3cc], .search-leave-to[data-v-89b0c3cc] {\n  opacity: 0;\n  -webkit-transform: translateY(-100px);\n          transform: translateY(-100px);\n}\n@media only screen and (min-width: 992px) {\nform.top-search-form[data-v-89b0c3cc] {\n    margin-left: 20px;\n}\nform.top-search-form input.top-search-input[data-v-89b0c3cc]:focus {\n      width: 200%;\n}\n.search-results[data-v-89b0c3cc] {\n    left: 10px;\n    width: 430px;\n}\n.search-results ul[data-v-89b0c3cc] {\n      width: 430px;\n}\n}\n@media only screen and (min-width: 768px) and (max-width: 992px) {\ninput.top-search-input[data-v-89b0c3cc]:focus {\n    width: 150%;\n}\n.search-results[data-v-89b0c3cc] {\n    left: 10px;\n    width: 323px;\n}\n.search-results ul[data-v-89b0c3cc] {\n      width: 323px;\n}\n}\n@media only screen and (min-width: 768px) {\nform.top-search-form[data-v-89b0c3cc] {\n    margin-left: 10px;\n    margin-top: 0;\n    margin-bottom: 0;\n}\n}\n", "", {"version":3,"sources":["C:/web/soc-net.loc/site/resources/js/components/SearchComponent.vue"],"names":[],"mappings":";AAAA;EACE,eAAe;EACf,iBAAiB;EACjB,oBAAoB;CAAE;AAExB;EACE,WAAW;EACX,+BAAuB;UAAvB,uBAAuB;EACvB,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,wBAAwB;EACxB,iDAAiD;EACjD,8BAA8B;EAC9B,6BAA6B;EAC7B,yBAAyB;EACzB,2CAA2C;EAC3C,mCAAmC;CAAE;AAEvC;EACE,YAAY;CAAE;AAEhB;EACE,mBAAmB;CAAE;AAEvB;EACE,mBAAmB;EACnB,UAAU;EACV,QAAQ;EACR,YAAY;EACZ,kBAAkB;EAClB,eAAe;EACf,cAAc;CAAE;AAChB;IACE,YAAY;IACZ,cAAc;IACd,iBAAiB;IACjB,uBAAuB;IACvB,mBAAmB;IACnB,wBAAwB;CAAE;AAC1B;MACE,oBAAoB;MACpB,qBAAqB;MACrB,8BAA8B;CAAE;AAChC;QACE,YAAY;CAAE;AAChB;QACE,oBAAoB;QACpB,iBAAiB;QACjB,kBAAkB;CAAE;AAE5B;EACE,mCAA2B;UAA3B,2BAA2B;EAC3B,mCAA2B;EAA3B,2BAA2B;CAAE;AAE/B;EACE,mCAA2B;EAA3B,2BAA2B;CAAE;AAE/B;EACE,WAAW;EACX,sCAA8B;UAA9B,8BAA8B;CAAE;AAElC;AACE;IACE,kBAAkB;CAAE;AACpB;MACE,YAAY;CAAE;AAClB;IACE,WAAW;IACX,aAAa;CAAE;AACf;MACE,aAAa;CAAE;CAAE;AAEvB;AACE;IACE,YAAY;CAAE;AAChB;IACE,WAAW;IACX,aAAa;CAAE;AACf;MACE,aAAa;CAAE;CAAE;AAEvB;AACE;IACE,kBAAkB;IAClB,cAAc;IACd,iBAAiB;CAAE;CAAE","file":"SearchComponent.vue","sourcesContent":["form.top-search-form {\n  margin-left: 0;\n  margin-top: 10px;\n  margin-bottom: 10px; }\n\ninput.top-search-input {\n  width: 0px;\n  box-sizing: border-box;\n  border: 2px solid #ccc;\n  border-radius: 4px;\n  font-size: 16px;\n  background-color: white;\n  background-image: url(\"/css-img/searchicon.png\");\n  background-position: 10px 6px;\n  background-repeat: no-repeat;\n  padding: 8px 0 12px 40px;\n  -webkit-transition: width 0.4s ease-in-out;\n  transition: width 0.4s ease-in-out; }\n\ninput.top-search-input:focus {\n  width: 100%; }\n\n.search-box {\n  position: relative; }\n\n.search-results {\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n  max-height: 500px;\n  overflow: auto;\n  z-index: 1000; }\n  .search-results ul {\n    width: 100%;\n    padding: 10px;\n    margin-bottom: 0;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n    background-color: white; }\n    .search-results ul li {\n      margin-bottom: 10px;\n      padding-bottom: 10px;\n      border-bottom: 1px solid #aaa; }\n      .search-results ul li .search-user-img {\n        width: 50px; }\n      .search-results ul li:last-of-type {\n        border-bottom: none;\n        margin-bottom: 0;\n        padding-bottom: 0; }\n\n.search-enter-active {\n  transform: translateY(0px);\n  transition: all .2s linear; }\n\n.search-leave-active {\n  transition: all .1s linear; }\n\n.search-enter, .search-leave-to {\n  opacity: 0;\n  transform: translateY(-100px); }\n\n@media only screen and (min-width: 992px) {\n  form.top-search-form {\n    margin-left: 20px; }\n    form.top-search-form input.top-search-input:focus {\n      width: 200%; }\n  .search-results {\n    left: 10px;\n    width: 430px; }\n    .search-results ul {\n      width: 430px; } }\n\n@media only screen and (min-width: 768px) and (max-width: 992px) {\n  input.top-search-input:focus {\n    width: 150%; }\n  .search-results {\n    left: 10px;\n    width: 323px; }\n    .search-results ul {\n      width: 323px; } }\n\n@media only screen and (min-width: 768px) {\n  form.top-search-form {\n    margin-left: 10px;\n    margin-top: 0;\n    margin-bottom: 0; } }\n"],"sourceRoot":""}]);
+exports.push([module.i, "\nform.top-search-form[data-v-89b0c3cc] {\n  margin-left: 0;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\ninput.top-search-input[data-v-89b0c3cc] {\n  width: 0px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  border: 2px solid #ccc;\n  border-radius: 4px;\n  font-size: 16px;\n  background-color: white;\n  background-position: 10px 6px;\n  background-repeat: no-repeat;\n  padding: 8px 0 12px 40px;\n  -webkit-transition: width 0.4s ease-in-out;\n  transition: width 0.4s ease-in-out;\n}\ninput.top-search-input[data-v-89b0c3cc]:focus {\n  width: 100%;\n}\n.search-box[data-v-89b0c3cc] {\n  position: relative;\n}\n.search-results[data-v-89b0c3cc] {\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n  max-height: 500px;\n  overflow: auto;\n  z-index: 1000;\n}\n.search-results ul[data-v-89b0c3cc] {\n    width: 100%;\n    padding: 10px;\n    margin-bottom: 0;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n    background-color: white;\n}\n.search-results ul li[data-v-89b0c3cc] {\n      margin-bottom: 10px;\n      padding-bottom: 10px;\n      border-bottom: 1px solid #aaa;\n}\n.search-results ul li .search-user-img[data-v-89b0c3cc] {\n        width: 50px;\n}\n.search-results ul li[data-v-89b0c3cc]:last-of-type {\n        border-bottom: none;\n        margin-bottom: 0;\n        padding-bottom: 0;\n}\n.search-enter-active[data-v-89b0c3cc] {\n  -webkit-transform: translateY(0px);\n          transform: translateY(0px);\n  -webkit-transition: all .2s linear;\n  transition: all .2s linear;\n}\n.search-leave-active[data-v-89b0c3cc] {\n  -webkit-transition: all .1s linear;\n  transition: all .1s linear;\n}\n.search-enter[data-v-89b0c3cc], .search-leave-to[data-v-89b0c3cc] {\n  opacity: 0;\n  -webkit-transform: translateY(-100px);\n          transform: translateY(-100px);\n}\n@media only screen and (min-width: 992px) {\nform.top-search-form[data-v-89b0c3cc] {\n    margin-left: 20px;\n}\nform.top-search-form input.top-search-input[data-v-89b0c3cc]:focus {\n      width: 200%;\n}\n.search-results[data-v-89b0c3cc] {\n    left: 10px;\n    width: 430px;\n}\n.search-results ul[data-v-89b0c3cc] {\n      width: 430px;\n}\n}\n@media only screen and (min-width: 768px) and (max-width: 992px) {\ninput.top-search-input[data-v-89b0c3cc]:focus {\n    width: 150%;\n}\n.search-results[data-v-89b0c3cc] {\n    left: 10px;\n    width: 323px;\n}\n.search-results ul[data-v-89b0c3cc] {\n      width: 323px;\n}\n}\n@media only screen and (min-width: 768px) {\nform.top-search-form[data-v-89b0c3cc] {\n    margin-left: 10px;\n    margin-top: 0;\n    margin-bottom: 0;\n}\n}\n", "", {"version":3,"sources":["C:/web/soc-net.loc/site/resources/js/components/SearchComponent.vue"],"names":[],"mappings":";AAAA;EACE,eAAe;EACf,iBAAiB;EACjB,oBAAoB;CAAE;AAExB;EACE,WAAW;EACX,+BAAuB;UAAvB,uBAAuB;EACvB,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;EAChB,wBAAwB;EACxB,8BAA8B;EAC9B,6BAA6B;EAC7B,yBAAyB;EACzB,2CAA2C;EAC3C,mCAAmC;CAAE;AAEvC;EACE,YAAY;CAAE;AAEhB;EACE,mBAAmB;CAAE;AAEvB;EACE,mBAAmB;EACnB,UAAU;EACV,QAAQ;EACR,YAAY;EACZ,kBAAkB;EAClB,eAAe;EACf,cAAc;CAAE;AAChB;IACE,YAAY;IACZ,cAAc;IACd,iBAAiB;IACjB,uBAAuB;IACvB,mBAAmB;IACnB,wBAAwB;CAAE;AAC1B;MACE,oBAAoB;MACpB,qBAAqB;MACrB,8BAA8B;CAAE;AAChC;QACE,YAAY;CAAE;AAChB;QACE,oBAAoB;QACpB,iBAAiB;QACjB,kBAAkB;CAAE;AAE5B;EACE,mCAA2B;UAA3B,2BAA2B;EAC3B,mCAA2B;EAA3B,2BAA2B;CAAE;AAE/B;EACE,mCAA2B;EAA3B,2BAA2B;CAAE;AAE/B;EACE,WAAW;EACX,sCAA8B;UAA9B,8BAA8B;CAAE;AAElC;AACE;IACE,kBAAkB;CAAE;AACpB;MACE,YAAY;CAAE;AAClB;IACE,WAAW;IACX,aAAa;CAAE;AACf;MACE,aAAa;CAAE;CAAE;AAEvB;AACE;IACE,YAAY;CAAE;AAChB;IACE,WAAW;IACX,aAAa;CAAE;AACf;MACE,aAAa;CAAE;CAAE;AAEvB;AACE;IACE,kBAAkB;IAClB,cAAc;IACd,iBAAiB;CAAE;CAAE","file":"SearchComponent.vue","sourcesContent":["form.top-search-form {\n  margin-left: 0;\n  margin-top: 10px;\n  margin-bottom: 10px; }\n\ninput.top-search-input {\n  width: 0px;\n  box-sizing: border-box;\n  border: 2px solid #ccc;\n  border-radius: 4px;\n  font-size: 16px;\n  background-color: white;\n  background-position: 10px 6px;\n  background-repeat: no-repeat;\n  padding: 8px 0 12px 40px;\n  -webkit-transition: width 0.4s ease-in-out;\n  transition: width 0.4s ease-in-out; }\n\ninput.top-search-input:focus {\n  width: 100%; }\n\n.search-box {\n  position: relative; }\n\n.search-results {\n  position: absolute;\n  top: 40px;\n  left: 0;\n  width: 100%;\n  max-height: 500px;\n  overflow: auto;\n  z-index: 1000; }\n  .search-results ul {\n    width: 100%;\n    padding: 10px;\n    margin-bottom: 0;\n    border: 2px solid #ccc;\n    border-radius: 4px;\n    background-color: white; }\n    .search-results ul li {\n      margin-bottom: 10px;\n      padding-bottom: 10px;\n      border-bottom: 1px solid #aaa; }\n      .search-results ul li .search-user-img {\n        width: 50px; }\n      .search-results ul li:last-of-type {\n        border-bottom: none;\n        margin-bottom: 0;\n        padding-bottom: 0; }\n\n.search-enter-active {\n  transform: translateY(0px);\n  transition: all .2s linear; }\n\n.search-leave-active {\n  transition: all .1s linear; }\n\n.search-enter, .search-leave-to {\n  opacity: 0;\n  transform: translateY(-100px); }\n\n@media only screen and (min-width: 992px) {\n  form.top-search-form {\n    margin-left: 20px; }\n    form.top-search-form input.top-search-input:focus {\n      width: 200%; }\n  .search-results {\n    left: 10px;\n    width: 430px; }\n    .search-results ul {\n      width: 430px; } }\n\n@media only screen and (min-width: 768px) and (max-width: 992px) {\n  input.top-search-input:focus {\n    width: 150%; }\n  .search-results {\n    left: 10px;\n    width: 323px; }\n    .search-results ul {\n      width: 323px; } }\n\n@media only screen and (min-width: 768px) {\n  form.top-search-form {\n    margin-left: 10px;\n    margin-top: 0;\n    margin-bottom: 0; } }\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -50548,11 +50548,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'SearchComponent',
     props: {
-        assets: {
+        url: {
             type: String,
             required: true
         }
@@ -50575,7 +50576,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         userSearch: function userSearch() {
             var _this = this;
 
-            axios.get('/search', {
+            axios.get(this.url + '/search', {
                 params: {
                     search: this.search
                 }
@@ -50594,10 +50595,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         onBlur: function onBlur() {
             var _this2 = this;
 
+            /*
+                If you click on the button with the name of the founded user 
+                the values in the function will be immediately reset 
+                and redirection to another page will not be happened 
+                so we need a timeout here.
+            */
             setTimeout(function () {
                 _this2.search = '';
                 _this2.users = [];
-            }, 100);
+            }, 200);
         },
         highlight: function highlight(text) {
             var size = 25;
@@ -50608,9 +50615,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return text.replace(new RegExp(this.search, 'gi'), '<span class="text-danger">$&</span>');
         },
         enc: function enc(str) {
+            /*
+                Hire we encrypt value and then we will decrypt it in php
+                (we need it for user id in address bar)
+            */
             var str = str + 'hi';
 
-            var encoded = "";
+            var encoded = '';
             for (var i = 0; i < str.length; i++) {
                 var a = str.charCodeAt(i);
                 var b = a ^ 118; // bitwise XOR with any number, e.g. 123
@@ -50654,6 +50665,10 @@ var render = function() {
               }
             ],
             staticClass: "form-control top-search-input",
+            style: {
+              backgroundImage:
+                "url(" + _vm.url + "/storage/search/searchicon.png)"
+            },
             attrs: {
               type: "search",
               placeholder: "Type name and press enter to search",
@@ -50688,21 +50703,27 @@ var render = function() {
                       ? _c("img", {
                           staticClass: "search-user-img mr-2",
                           attrs: {
-                            src: _vm.assets + "/profile-images/" + user.pic,
+                            src:
+                              _vm.url + "/storage/profile-images/" + user.pic,
                             alt: user.name
                           }
                         })
                       : _c("img", {
                           staticClass: "search-user-img mr-2",
                           attrs: {
-                            src: _vm.assets + "/users-images/" + user.pic,
+                            src: _vm.url + "/storage/users-images/" + user.pic,
                             alt: user.name
                           }
                         }),
                     _vm._v(" "),
                     _c("a", {
                       attrs: {
-                        href: "/search/" + _vm.enc(user.id) + "/" + user.slug,
+                        href:
+                          _vm.url +
+                          "/search/" +
+                          _vm.enc(user.id) +
+                          "/" +
+                          user.slug,
                         title: user.name
                       },
                       domProps: { innerHTML: _vm._s(_vm.highlight(user.name)) }

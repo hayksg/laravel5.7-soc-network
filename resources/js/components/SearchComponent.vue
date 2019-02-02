@@ -8,6 +8,7 @@
                     aria-label="Search"
                     autocomplete="off"
                     v-model="search"
+                    :style="{ backgroundImage: 'url(' + url + '/storage/search/searchicon.png)' }"
                     @blur="onBlur"
                     @keyup="userSearch">
         </form>
@@ -21,18 +22,18 @@
                     >
                         <img 
                             v-if="user.pic == 'boy.png' || user.pic == 'girl.png'"
-                            :src="assets + '/profile-images/' + user.pic" 
+                            :src="url + '/storage/profile-images/' + user.pic" 
                             class="search-user-img mr-2" 
                             :alt="user.name"
                         >
                         <img 
                             v-else
-                            :src="assets + '/users-images/' + user.pic" 
+                            :src="url + '/storage/users-images/' + user.pic" 
                             class="search-user-img mr-2" 
                             :alt="user.name"
                         >
                         <a 
-                            :href="'/search/' + enc(user.id) + '/' + user.slug"
+                            :href="url + '/search/' + enc(user.id) + '/' + user.slug"
                             :title="user.name"
                             v-html="highlight(user.name)"
                         ></a>
@@ -47,7 +48,7 @@
 export default {
     name: 'SearchComponent',
     props: {
-        assets: {
+        url: {
             type: String,
             required: true
         }
@@ -67,7 +68,7 @@ export default {
     },
     methods: {
         userSearch () {
-            axios.get('/search', {
+            axios.get(this.url + '/search', {
                 params: {
                     search: this.search
                 }
@@ -86,10 +87,16 @@ export default {
             });
         },
         onBlur () {
+            /*
+                If you click on the button with the name of the founded user 
+                the values in the function will be immediately reset 
+                and redirection to another page will not be happened 
+                so we need a timeout here.
+            */
             setTimeout(() => {
                 this.search = '';
                 this.users = [];
-            }, 100);
+            }, 200);
         },
         highlight(text) {
             let size = 25;
@@ -100,13 +107,17 @@ export default {
             return text.replace(new RegExp(this.search, 'gi'), '<span class="text-danger">$&</span>');
         },
         enc (str) {
+            /*
+                Hire we encrypt value and then we will decrypt it in php
+                (we need it for user id in address bar)
+            */
             var str = str + 'hi';
 
-            var encoded = "";
-            for (var i=0; i<str.length;i++) {
+            var encoded = '';
+            for (var i = 0; i < str.length; i++) {
                 var a = str.charCodeAt(i);
                 var b = a ^ 118;    // bitwise XOR with any number, e.g. 123
-                encoded = encoded+String.fromCharCode(b);
+                encoded = encoded + String.fromCharCode(b);
             }
             return encoded;
         }
@@ -129,7 +140,6 @@ export default {
         border-radius: 4px;
         font-size: 16px;
         background-color: white;
-        background-image: url('/css-img/searchicon.png');
         background-position: 10px 6px;
         background-repeat: no-repeat;
         padding: 8px 0 12px 40px;

@@ -11214,6 +11214,40 @@ div.custom-file .custom-file-input {
   border-top-color: #2C3E50 !important;
 }
 
+.flags-box {
+  width: 150px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 20px;
+  background-color: #BEBEBE;
+}
+
+.flags-box img {
+  padding: 0px 5px;
+  -webkit-transition: all .3s linear;
+  transition: all .3s linear;
+}
+
+.flags-box img:hover {
+  background-color: #7B8A8B;
+  padding: 0px 5px;
+}
+
+.selected-flag {
+  background-color: #7B8A8B;
+  padding: 0px 5px;
+}
+
+.selected-flag:hover {
+  padding: 0;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -11273,6 +11307,10 @@ div.custom-file .custom-file-input {
 
   .app-thubnail-wrapper img {
     margin-right: 0;
+  }
+
+  .flags-box {
+    width: 100%;
   }
 }
 

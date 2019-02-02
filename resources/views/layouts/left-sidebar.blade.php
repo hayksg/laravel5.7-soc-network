@@ -4,22 +4,22 @@
             <ul class="list-group list-group-flush app-left-sidebar-ul">
                 <li class="list-group-item">
                     <a href="{{ route('findFriends') }}">
-                        <i class="fas fa-fw fa-user-friends mr-2"></i>{{ __('Find Friends') }}
+                        <i class="fas fa-fw fa-user-friends mr-2"></i>@lang('left-menu.find_friends')
                     </a>
                 </li>
                 <li class="list-group-item">
                     <a href="#">
-                        <i class="fas fa-fw fa-envelope-open mr-2"></i>{{ __('Messages') }}
+                        <i class="fas fa-fw fa-envelope-open mr-2"></i>@lang('left-menu.messages')
                     </a>
                 </li>
                 <li class="list-group-item">
                     <a href="{{ route('friends') }}">
-                        <i class="fas fa-fw fa-users mr-2"></i>{{ __('Friends') }}
+                        <i class="fas fa-fw fa-users mr-2"></i>@lang('left-menu.friends')
                     </a>
                 </li>
                 <li class="list-group-item">
                     <a href="{{ route('requests') }}">
-                        <i class="fas fa-fw fa-exchange-alt mr-2"></i>{{ __('Requests') }}
+                        <i class="fas fa-fw fa-exchange-alt mr-2"></i>@lang('left-menu.requests')
                     </a>
                 </li>
             </ul>

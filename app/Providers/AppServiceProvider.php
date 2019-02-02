@@ -15,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        view()->composer('layouts.navbar', function($view){
+            $view->with('locale', \Session::get('locale'));
+        });
     }
 
     /**

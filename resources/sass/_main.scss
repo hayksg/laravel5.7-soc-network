@@ -172,6 +172,35 @@ div.custom-file .custom-file-input{
     border-top-color: #2C3E50 !important;
 }
 
+.flags-box {
+    width: 150px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #BEBEBE;
+
+    img {
+        padding: 0px 5px;
+        transition: all .3s linear;
+
+        &:hover {
+            background-color: #7B8A8B; 
+            padding: 0px 5px;
+        }
+    }
+}
+
+.selected-flag {
+    background-color: #7B8A8B; 
+    padding: 0px 5px;
+
+    &:hover {
+        padding: 0;
+    }
+}
+
+
 
 
 

@@ -12,7 +12,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <!-- Vue Search Component -->
-            <vue-search assets="{{ asset('storage') }}"></vue-search>
+            <vue-search url="{{ url('/') }}"></vue-search>
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -39,6 +39,11 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                            @include('layouts.locale')
+                            
+                            <div class="dropdown-divider"></div>
+
                             <a class="dropdown-item" href="{{ route('getWithSlug', ['id' => Hashids::encode(Auth::user()->id), 'slug' => Auth::user()->slug]) }}">
                                 <i class="fas fa-fw fa-user mr-2"></i>{{ __('Profile') }}
                             </a>
