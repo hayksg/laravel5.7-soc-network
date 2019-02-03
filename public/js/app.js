@@ -50575,6 +50575,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'SearchComponent',
@@ -50595,6 +50596,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         search: function search() {
             if (!this.search) {
                 this.users = [];
+            }
+
+            var firstResultInSearch = document.querySelectorAll('.search-results ul li a')[0];
+            if (firstResultInSearch) {
+                firstResultInSearch.style.textDecoration = 'underline';
             }
         }
     },
@@ -50654,6 +50660,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 encoded = encoded + String.fromCharCode(b);
             }
             return encoded;
+        },
+        keyupEnter: function keyupEnter() {
+            var firstResultInSearch = document.querySelectorAll('.search-results ul li a')[0];
+            if (firstResultInSearch) {
+                firstResultInSearch.click();
+            }
         }
     }
 });
@@ -50705,7 +50717,28 @@ var render = function() {
             domProps: { value: _vm.search },
             on: {
               blur: _vm.onBlur,
-              keyup: _vm.userSearch,
+              keyup: [
+                function($event) {
+                  if (
+                    $event.ctrlKey ||
+                    $event.shiftKey ||
+                    $event.altKey ||
+                    $event.metaKey
+                  ) {
+                    return null
+                  }
+                  return _vm.userSearch($event)
+                },
+                function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.keyupEnter($event)
+                }
+              ],
               input: function($event) {
                 if ($event.target.composing) {
                   return

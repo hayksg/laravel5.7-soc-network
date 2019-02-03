@@ -10,7 +10,8 @@
                     v-model="search"
                     :style="{ backgroundImage: 'url(' + url + '/storage/search/searchicon.png)' }"
                     @blur="onBlur"
-                    @keyup="userSearch">
+                    @keyup.exact="userSearch"
+                    @keyup.enter="keyupEnter">
         </form>
 
         <transition name="search">
@@ -63,6 +64,11 @@ export default {
         search () {
             if (! this.search) {
                 this.users = []
+            }
+
+            let firstResultInSearch = document.querySelectorAll('.search-results ul li a')[0];
+            if (firstResultInSearch) {
+                firstResultInSearch.style.textDecoration = 'underline';
             }
         }
     },
@@ -120,6 +126,12 @@ export default {
                 encoded = encoded + String.fromCharCode(b);
             }
             return encoded;
+        },
+        keyupEnter () {
+            let firstResultInSearch = document.querySelectorAll('.search-results ul li a')[0];
+            if (firstResultInSearch) {
+                firstResultInSearch.click();
+            }
         }
     }
 };
