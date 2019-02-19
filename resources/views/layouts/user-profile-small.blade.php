@@ -1,7 +1,7 @@
 <div class="card mb-3">
     <div class="card-header find-friends-card-header">
         <h5 class="d-inline-block">
-            <a href="{{ route('getWithSlug', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}">
+            <a href="{{ route('get.status', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}">
                 {!! shortName($friend->name) !!}
             </a>
         </h5>
@@ -13,6 +13,12 @@
                 <div class="find-friends-items">
                     @include('layouts.profile-pic', ['user' => $friend])
                     <div class="mt-2"><strong class="card-text">{!! cityAndCountry($friend->profile->city, $friend->profile->country) !!}</strong></div>
+                    <a 
+                        href="{{ route('getWithSlug', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}"
+                        class="to-profile"
+                    >
+                        View Profile
+                    </a>
                 </div>
             </div>
             <div class="col-9 col-sm-9 col-md-10 text-left pl-4">

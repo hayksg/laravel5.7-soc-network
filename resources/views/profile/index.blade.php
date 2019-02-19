@@ -14,7 +14,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header find-friends-card-header">
-                            <h5 class="d-inline-block">{!! shortName($user->name) !!}</h5>
+                            <h5 class="d-inline-block">
+                                <a href="{{ route('get.status', ['id' => Hashids::encode($user->id), 'slug' => $user->slug]) }}">
+                                    {!! shortName($user->name) !!}
+                                </a>
+                            </h5>
                             @include('layouts.friend-status', ['user' => $user, 'delete' => false])
                         </div>
                         <div class="card-body">
@@ -35,6 +39,20 @@
                                                 {!! cityAndCountry($profile->city, $profile->country) !!}
                                             </strong>
                                         </div>
+                                    </div>
+
+                                    <div class="text-center mt-1">
+                                        @if(auth()->user()->id === $profile->user->id)
+                                            <a href="#">Show gallery</a>
+                                        @else
+                                            @if($profile->private_gallery)
+                                                @if(auth()->user()->isFriendsWith($profile->user))
+                                                    <a href="#">Show gallery</a>
+                                                @endif
+                                            @else
+                                                <a href="#">Show gallery</a>
+                                            @endif
+                                        @endif
                                     </div>
 
                                 </div>

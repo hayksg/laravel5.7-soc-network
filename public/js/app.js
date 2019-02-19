@@ -36132,6 +36132,12 @@ $(function () {
     $('.dropdown').on('hide.bs.dropdown', function () {
         $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
     });
+
+    // Show upload img name
+    $('.upload-image').on('change', function () {
+        var filename = $(this).find('input').val().replace(/C:\\fakepath\\/i, '');
+        $('span.upload-img-name').text(filename);
+    });
 });
 
 $(window).on('load', function () {
@@ -36146,6 +36152,10 @@ $(window).on('load', function () {
             thumbnail.css('left', -thumbnailWidth);
         }
     }
+
+    /* In order, a CSS transition work properly in google-chrome */
+    $("body").removeClass("preload");
+    $("#current-password").val("");
 });
 
 /***/ }),

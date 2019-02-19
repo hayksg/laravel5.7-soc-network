@@ -2,7 +2,7 @@
 
 return [
   'find_friends' => 'Найти друзей',
-  'messages' => 'Сообщения',
+  'statuses' => 'Статусы',
   'friends' => 'Друзья',
   'requests' => 'Запросы',
 ];

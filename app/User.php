@@ -39,6 +39,11 @@ class User extends Authenticatable
         return $this->hasOne(Profile::class);
     }
 
+    public function statuses()
+    {
+        return $this->hasMany(Status::class, 'user_id');
+    }
+
     public function friendsOfMine()
     {
         return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');

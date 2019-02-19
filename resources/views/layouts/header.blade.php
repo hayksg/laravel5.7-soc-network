@@ -19,4 +19,4 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('storage/favicon/favicon.ico') }}">
 </head>
-<body>
+<body class="preload">

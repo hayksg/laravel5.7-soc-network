@@ -100,10 +100,11 @@ class ProfileController extends Controller
         $sessionFlash = false;
 
         $this->validate(request(), [
-            'city'    => 'nullable|regex:/^[^<>]*$/u|max:200',
-            'country' => 'nullable|regex:/^[^<>]*$/u|max:200',
-            'about'   => 'nullable|regex:/^[^<>]*$/u',
-            'image'   => 'image|max:3000',
+            'city'            => 'nullable|regex:/^[^<>]*$/u|max:200',
+            'country'         => 'nullable|regex:/^[^<>]*$/u|max:200',
+            'about'           => 'nullable|regex:/^[^<>]*$/u',
+            'image'           => 'image|max:3000',
+            'private-gallery' => 'boolean',
         ]);
 
         if (request()->hasFile('image')) {
@@ -111,7 +112,7 @@ class ProfileController extends Controller
             $extension = request('image')->getClientOriginalExtension();
             $imageName = onlyName() . '-' . $user->id . '.' . $extension;
 
-            $foo = Storage::delete('public/users-images/' . $user->pic);
+            Storage::delete('public/users-images/' . $user->pic);
 
             $res = request('image')->storeAs('public/users-images', $imageName);
 
@@ -127,9 +128,10 @@ class ProfileController extends Controller
 
         if ($profile) {
 
-            $profile->city = request('city') ? request('city') : '';
-            $profile->country = request('country') ? request('country') : '';
-            $profile->about = request('about') ? request('about') : '';
+            $profile->city            = request('city') ? request('city') : '';
+            $profile->country         = request('country') ? request('country') : '';
+            $profile->about           = request('about') ? request('about') : '';
+            $profile->private_gallery = request('private-gallery') ? 1 : 0;
 
             if($profile->isDirty()){
                 // changes have been made
@@ -139,7 +141,7 @@ class ProfileController extends Controller
 
         }
         
-        if (request('current-password') || request('new-password') || request('new-password_confirmation')) {
+        if (request('new-password') || request('new-password_confirmation')) {
 
             $this->validate(request(), [
                 'current-password' => ['required', new PasswordsMatch],

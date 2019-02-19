@@ -16,10 +16,9 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/locale/{name}', 'LocaleController@index')->name('locale');
 
-Route::get('/search',             'SearchController@index')->name('search');
-Route::get('/search/{id}/{slug}', 'SearchController@selectedUser');
+Route::get('/search', 'SearchController@index')->name('search');
 
-Route::group(['middleware' => ['auth', 'admin', 'web']], function () {
+Route::group(['middleware' => ['auth', 'web']], function () {
 	Route::get('/friend',                 'FriendController@index')->name('friends');
 	Route::get('/find-friends',           'FriendController@findFriends')->name('findFriends');
 	Route::get('/friend-requests',        'FriendController@requests')->name('requests');
@@ -30,6 +29,14 @@ Route::group(['middleware' => ['auth', 'admin', 'web']], function () {
 	Route::resource('/profile',        'ProfileController');
 	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
 
+    Route::get('/statuses', 'StatusController@index')->name('statuses');
+	Route::post('/statuses', 'StatusController@postStatus')->name('post.status');
+	Route::get('/statuses/{id}/{slug}', 'StatusController@getStatus')->name('get.status');
+
+	Route::get('/search/{id}/{slug}', 'SearchController@selectedUser');
+});
+
+Route::group(['middleware' => ['auth', 'admin', 'web']], function () {
 	Route::get('/admin', 'Admin\AdminController@index')->name('admin');
 
 	Route::get('/admin/favicon',        'Admin\FaviconController@index')->name('admin.favicon');

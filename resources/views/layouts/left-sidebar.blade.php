@@ -12,8 +12,8 @@
                     </a>
                 </li>
                 <li class="list-group-item">
-                    <a href="#">
-                        <i class="fas fa-fw fa-envelope-open mr-2"></i>@lang('left-menu.messages')
+                    <a href="{{ route('statuses') }}">
+                        <i class="fas fa-fw fa-stream mr-2"></i>@lang('left-menu.statuses')
                     </a>
                 </li>
                 <li class="list-group-item">

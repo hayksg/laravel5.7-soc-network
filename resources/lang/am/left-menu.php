@@ -2,7 +2,7 @@
 
 return [
   'find_friends' => 'Գտիր ընկերներ',
-  'messages' => 'Նամակներ',
+  'statuses' => 'Գրառումներ',
   'friends' => 'Ընկերներ',
   'requests' => 'Հարցումներ',
 ];

@@ -66,7 +66,8 @@
                                 <label for="about">About</label>
                                 <textarea name="about"
                                         id="about"
-                                        class="form-control{{ $errors->has('about') ? ' is-invalid' : '' }}">{{ $profile->about }}
+                                        class="form-control{{ $errors->has('about') ? ' is-invalid' : '' }}"
+                                >{{ $profile->about }}
                                 </textarea>
 
                                 @if ($errors->has('about'))
@@ -75,6 +76,20 @@
                                     </span>
                                 @endif
 
+                            </div>
+
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input 
+                                        type="checkbox" 
+                                        class="custom-control-input" 
+                                        name="private-gallery" 
+                                        value="1"
+                                        @if($profile->private_gallery == '1') checked @endif
+                                        id="private-gallery"
+                                    >
+                                    <label class="custom-control-label" for="private-gallery">Show gallery only for friends</label>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -120,7 +135,8 @@
                                         <input type="password"
                                             name="current-password"
                                             id="current-password"
-                                            class="form-control{{ $errors->has('current-password') ? ' is-invalid' : '' }}">
+                                            class="form-control{{ $errors->has('current-password') ? ' is-invalid' : '' }}"
+                                        >
 
                                         @if ($errors->has('current-password'))
                                             <span class="invalid-feedback" role="alert">

@@ -5,10 +5,10 @@
 @endif
     <div class="shadow pt-1 pb-4 px-4">
         @if(!$user || !$user->count())
-        <h6 class="text-center">
+        <div class="text-center">
             <div class="locale-right-sidebar mb-2">@include('layouts.locale')</div>
-            Please <a href="{{ route('login') }}">login</a> to see your friends
-        </h6>
+            <div>{!! trans('right-menu.please_login', [ 'path' => route('login') ]) !!}</div>
+        </div>
         @else
             @if(isset($page) && $page === 'main')
                 <h6 class="text-center">Your friends</h6>
@@ -24,7 +24,7 @@
                 <ul class="list-unstyled">
                 @foreach($user->friends() as $friend)
                     <li class="user-has-friends-block">
-                        <a href="{{ route('getWithSlug', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}">
+                        <a href="{{ route('get.status', ['id' => Hashids::encode($friend->id), 'slug' => $friend->slug]) }}">
                             <span class="user-friend-thumbnail">
                                 @include('layouts.profile-pic', ['user' => $friend])
                             </span>

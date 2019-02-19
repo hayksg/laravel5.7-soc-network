@@ -8,6 +8,14 @@ body {
     margin-bottom: 100px; /* Margin bottom by footer height */
 }
 
+body.preload * {
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+}
+
 #app {
     margin-bottom: 200px;
 }
@@ -186,7 +194,7 @@ div.custom-file .custom-file-input{
 
     img {
         padding: 0px 5px;
-        transition: all .3s linear;
+        @include app-transition(background-color, 320ms);
 
         &:hover {
             background-color: darken(#ccc, 15%);
@@ -207,6 +215,50 @@ div.custom-file .custom-file-input{
 .locale-right-sidebar {
     width: 150px;
     margin: auto;
+}
+
+.user-profile-in-messages {
+    display: flex;
+    justify-content: flex-start;
+
+    .user-img-in-messages {
+        width: 50px;
+        margin: 0 10px 20px 0;
+    }
+
+    .name-and-message-time {
+        display: flex;
+        flex-direction: column;
+
+        .message-time {
+            font-size: 14px;
+            color: #888;
+        }
+    }
+}
+
+.message-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.upload-image {
+    position: relative;
+    overflow: hidden;
+    
+    input {
+        position: absolute;
+        width: 95px; // btn width
+        height: 28px; // btn height
+        opacity: 0;
+        right: 0;
+        top: 0;
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    background-color: transparent;
 }
 
 

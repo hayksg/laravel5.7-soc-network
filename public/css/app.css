@@ -11025,6 +11025,14 @@ body {
   /* Margin bottom by footer height */
 }
 
+body.preload * {
+  transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+}
+
 #app {
   margin-bottom: 200px;
 }
@@ -11234,8 +11242,11 @@ div.custom-file .custom-file-input {
 
 .flags-box img {
   padding: 0px 5px;
-  -webkit-transition: all .3s linear;
-  transition: all .3s linear;
+  transition: background-color, 320ms;
+  -webkit-transition: background-color, 320ms;
+  -moz-transition: background-color, 320ms;
+  -o-transition: background-color, 320ms;
+  -ms-transition: background-color, 320ms;
 }
 
 .flags-box img:hover {
@@ -11255,6 +11266,59 @@ div.custom-file .custom-file-input {
 .locale-right-sidebar {
   width: 150px;
   margin: auto;
+}
+
+.user-profile-in-messages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.user-profile-in-messages .user-img-in-messages {
+  width: 50px;
+  margin: 0 10px 20px 0;
+}
+
+.user-profile-in-messages .name-and-message-time {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.user-profile-in-messages .name-and-message-time .message-time {
+  font-size: 14px;
+  color: #888;
+}
+
+.message-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.upload-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-image input {
+  position: absolute;
+  width: 95px;
+  height: 28px;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  background-color: transparent;
 }
 
 .footer {
