@@ -31,7 +31,8 @@
             "app/Helpers/getYear.php",
             "app/Helpers/onlyName.php",
             "app/Helpers/cityAndCountry.php",
-            "app/Helpers/shortName.php"
+            "app/Helpers/shortName.php",
+            "app/Helpers/isGalleryAccessible.php"
         ]
     },
     "autoload-dev": {

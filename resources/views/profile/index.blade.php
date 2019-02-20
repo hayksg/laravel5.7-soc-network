@@ -36,22 +36,14 @@
                                         </div>
                                         <div class="card-body">
                                             <strong class="card-text">
-                                                {!! cityAndCountry($profile->city, $profile->country) !!}
+                                                {!! cityAndCountry($user->profile->city, $user->profile->country) !!}
                                             </strong>
                                         </div>
                                     </div>
 
                                     <div class="text-center mt-1">
-                                        @if(auth()->user()->id === $profile->user->id)
-                                            <a href="#">Show gallery</a>
-                                        @else
-                                            @if($profile->private_gallery)
-                                                @if(auth()->user()->isFriendsWith($profile->user))
-                                                    <a href="#">Show gallery</a>
-                                                @endif
-                                            @else
-                                                <a href="#">Show gallery</a>
-                                            @endif
+                                        @if(isGalleryAccessible($user))
+                                            <a href="{{ route('gallery', ['id' => Hashids::encode($user->id), 'slug' => $user->slug]) }}">Show gallery</a>
                                         @endif
                                     </div>
 
@@ -59,8 +51,8 @@
 
                                 <div class="col-12 col-md-8 text-left">
                                     <h5>About</h5>
-                                    @if($profile->about)
-                                    <div>{!! nl2br($profile->about) !!}</div>
+                                    @if($user->profile->about)
+                                    <div>{!! nl2br($user->profile->about) !!}</div>
                                     @endif
                                 </div>
                             </div>

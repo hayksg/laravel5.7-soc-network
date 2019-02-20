@@ -200,8 +200,6 @@ class ProfileController extends Controller
             return abort(404);
         }
 
-        $profile = $user->profile;
-
-        return view('profile.index', compact('user', 'profile'));
+        return view('profile.index', compact('user'));
     }
 }

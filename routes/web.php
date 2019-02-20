@@ -29,6 +29,8 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 	Route::resource('/profile',        'ProfileController');
 	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
 
+	Route::get('/gallery/{id}/{slug}', 'GalleryController@index')->name('gallery');
+
     Route::get('/statuses', 'StatusController@index')->name('statuses');
 	Route::post('/statuses', 'StatusController@postStatus')->name('post.status');
 	Route::get('/statuses/{id}/{slug}', 'StatusController@getStatus')->name('get.status');

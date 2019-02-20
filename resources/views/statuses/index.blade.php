@@ -68,7 +68,7 @@
                         @if(auth()->user()->id === $user->id)
                             There's nothing in your timeline, yet.
                         @else
-                            There's nothing in {!! shortName($user->name, 20) !!} timeline, yet.
+                            There's nothing in {!! shortName($user->name, 20) !!}'s timeline, yet.
                         @endif
                     </h5>
                 @else
