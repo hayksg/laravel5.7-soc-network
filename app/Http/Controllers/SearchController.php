@@ -22,7 +22,7 @@ class SearchController extends Controller
 
     public function selectedUser($id, $slug)
     {
-        $id = Search::decodingFronJS($id);
+        $id = Search::decodingFromJS($id);
         $user = User::find($id);
         
         if (!$user || $user->slug != $slug) {

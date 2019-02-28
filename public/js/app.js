@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,8 +70,8 @@
 "use strict";
 
 
-var bind = __webpack_require__(5);
-var isBuffer = __webpack_require__(20);
+var bind = __webpack_require__(6);
+var isBuffer = __webpack_require__(24);
 
 /*global toString:true*/
 
@@ -10779,7 +10779,7 @@ return jQuery;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(22);
+var normalizeHeaderName = __webpack_require__(26);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -10795,10 +10795,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(7);
+    adapter = __webpack_require__(8);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(7);
+    adapter = __webpack_require__(8);
   }
   return adapter;
 }
@@ -10873,10 +10873,119 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13417,7 +13526,7 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13435,7 +13544,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -13625,19 +13734,19 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(23);
-var buildURL = __webpack_require__(25);
-var parseHeaders = __webpack_require__(26);
-var isURLSameOrigin = __webpack_require__(27);
-var createError = __webpack_require__(8);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(28);
+var settle = __webpack_require__(27);
+var buildURL = __webpack_require__(29);
+var parseHeaders = __webpack_require__(30);
+var isURLSameOrigin = __webpack_require__(31);
+var createError = __webpack_require__(9);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(32);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13734,7 +13843,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(29);
+      var cookies = __webpack_require__(33);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13812,13 +13921,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(24);
+var enhanceError = __webpack_require__(28);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13837,7 +13946,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13849,7 +13958,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13875,159 +13984,3613 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
-/* globals __VUE_SSR_CONTEXT__ */
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
 
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
 
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
 
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(56)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
   }
+*/}
 
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
 
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
 
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
 
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
+  options = _options || {}
 
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
     }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
     } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
       }
     }
   }
+}
 
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
   }
 }
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(13);
-module.exports = __webpack_require__(57);
+__webpack_require__(15);
+module.exports = __webpack_require__(64);
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__fortawesome_fontawesome_free__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_toastr__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_toastr__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__fortawesome_fontawesome_free__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__fortawesome_fontawesome_free___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__fortawesome_fontawesome_free__);
 
 
-__webpack_require__(14);
-__webpack_require__(37);
-__webpack_require__(38);
+
+
+__webpack_require__(18);
+__webpack_require__(41);
+__webpack_require__(42);
+__webpack_require__(43);
 
 // For Admin Panel
-__webpack_require__(39);
-window.toastr = __webpack_require__(40);
+__webpack_require__(44);
+window.toastr = __webpack_require__(45);
 
+window.Vue = __webpack_require__(47);
 
-window.Vue = __webpack_require__(43);
+Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_toastr___default.a, {
+    defaultPosition: 'toast-bottom-right',
+    defaultType: 'info',
+    defaultTimeout: 4000
+});
 
-Vue.component('vue-message', __webpack_require__(46));
-Vue.component('vue-search', __webpack_require__(49));
+Vue.component('vue-message', __webpack_require__(50));
+Vue.component('vue-search', __webpack_require__(53));
+Vue.component('vue-gallery', __webpack_require__(59));
 
 var app = new Vue({
     el: '#app'
 });
 
 /***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["vueToastr"] = factory();
+	else
+		root["vueToastr"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/dist/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _vueToastr = __webpack_require__(17);
+	
+	var _vueToastr2 = _interopRequireDefault(_vueToastr);
+	
+	__webpack_require__(41);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// Add Plugin capability.
+	_vueToastr2.default.install = function (Vue, options) {
+	  // console.log("install vuetoastr")
+	  // Create component instance
+	  var MyComponent = Vue.extend({
+	    template: '<vue-toastr :options="options" ref="vueToastr"></vue-toastr>',
+	    components: {
+	      'vue-toastr': _vueToastr2.default
+	    },
+	    data: function data() {
+	      return {
+	        options: options || {}
+	      };
+	    }
+	  });
+	  // or, render off-document and append afterwards:
+	  var component = new MyComponent().$mount();
+	  // console.log(document.body, component.$el)
+	  document.body.appendChild(component.$el);
+	  // 4. add an instance method
+	  Vue.prototype.$toastr = component.$refs.vueToastr;
+	};
+	// Install by default if using the script tag
+	// equal to Vue.use(window.vueToastr)
+	
+	// import './vue-toastr.less'
+	
+	// Change less to sass
+	if (typeof window !== 'undefined' && window.Vue) {
+	  // console.log(window.Vue)
+	  window.Vue.use(_vueToastr2.default);
+	}
+	exports.default = _vueToastr2.default;
+	module.exports = exports['default'];
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+	var $Object = Object;
+	module.exports = {
+	  create:     $Object.create,
+	  getProto:   $Object.getPrototypeOf,
+	  isEnum:     {}.propertyIsEnumerable,
+	  getDesc:    $Object.getOwnPropertyDescriptor,
+	  setDesc:    $Object.defineProperty,
+	  setDescs:   $Object.defineProperties,
+	  getKeys:    $Object.keys,
+	  getNames:   $Object.getOwnPropertyNames,
+	  getSymbols: $Object.getOwnPropertySymbols,
+	  each:       [].forEach
+	};
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+	var core = module.exports = {version: '1.2.6'};
+	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+	var global = module.exports = typeof window != 'undefined' && window.Math == Math
+	  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	module.exports = function(exec){
+	  try {
+	    return !!exec();
+	  } catch(e){
+	    return true;
+	  }
+	};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// to indexed object, toObject with fallback for non-array-like ES3 strings
+	var IObject = __webpack_require__(29)
+	  , defined = __webpack_require__(7);
+	module.exports = function(it){
+	  return IObject(defined(it));
+	};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+	var toString = {}.toString;
+	
+	module.exports = function(it){
+	  return toString.call(it).slice(8, -1);
+	};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+	// 7.2.1 RequireObjectCoercible(argument)
+	module.exports = function(it){
+	  if(it == undefined)throw TypeError("Can't call method on  " + it);
+	  return it;
+	};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// Thank's IE8 for his funny defineProperty
+	module.exports = !__webpack_require__(4)(function(){
+	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(3)
+	  , core      = __webpack_require__(2)
+	  , ctx       = __webpack_require__(25)
+	  , PROTOTYPE = 'prototype';
+	
+	var $export = function(type, name, source){
+	  var IS_FORCED = type & $export.F
+	    , IS_GLOBAL = type & $export.G
+	    , IS_STATIC = type & $export.S
+	    , IS_PROTO  = type & $export.P
+	    , IS_BIND   = type & $export.B
+	    , IS_WRAP   = type & $export.W
+	    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+	    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
+	    , key, own, out;
+	  if(IS_GLOBAL)source = name;
+	  for(key in source){
+	    // contains in native
+	    own = !IS_FORCED && target && key in target;
+	    if(own && key in exports)continue;
+	    // export native or passed
+	    out = own ? target[key] : source[key];
+	    // prevent global pollution for namespaces
+	    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+	    // bind timers to global for call from export context
+	    : IS_BIND && own ? ctx(out, global)
+	    // wrap global constructors for prevent change them in library
+	    : IS_WRAP && target[key] == out ? (function(C){
+	      var F = function(param){
+	        return this instanceof C ? new C(param) : C(param);
+	      };
+	      F[PROTOTYPE] = C[PROTOTYPE];
+	      return F;
+	    // make static versions for prototype methods
+	    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+	    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
+	  }
+	};
+	// type bitmap
+	$export.F = 1;  // forced
+	$export.G = 2;  // global
+	$export.S = 4;  // static
+	$export.P = 8;  // proto
+	$export.B = 16; // bind
+	$export.W = 32; // wrap
+	module.exports = $export;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+	var hasOwnProperty = {}.hasOwnProperty;
+	module.exports = function(it, key){
+	  return hasOwnProperty.call(it, key);
+	};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+	module.exports = function(bitmap, value){
+	  return {
+	    enumerable  : !(bitmap & 1),
+	    configurable: !(bitmap & 2),
+	    writable    : !(bitmap & 4),
+	    value       : value
+	  };
+	};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var global = __webpack_require__(3)
+	  , SHARED = '__core-js_shared__'
+	  , store  = global[SHARED] || (global[SHARED] = {});
+	module.exports = function(key){
+	  return store[key] || (store[key] = {});
+	};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	var id = 0
+	  , px = Math.random();
+	module.exports = function(key){
+	  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+	};
+
+/***/ }),
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var store  = __webpack_require__(12)('wks')
+	  , uid    = __webpack_require__(13)
+	  , Symbol = __webpack_require__(3).Symbol;
+	module.exports = function(name){
+	  return store[name] || (store[name] =
+	    Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
+	};
 
-window._ = __webpack_require__(15);
-window.Popper = __webpack_require__(4).default;
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = {
+	  template: '<div class="toast-progress" v-bind:style="style"></div>',
+	  props: ['data'],
+	  data: function data() {
+	    return {
+	      intervalId: false,
+	      hideEta: false,
+	      progressBarValue: this.data.progressBarValue,
+	      style: {
+	        width: '100%'
+	      }
+	    };
+	  },
+	  mounted: function mounted() {
+	    if (this.progressBarValue === null) {
+	      this.hideEta = new Date().getTime() + this.data.timeout;
+	      this.setTimer();
+	    } else {
+	      this.updateProgress();
+	    }
+	  },
+	  destroyed: function destroyed() {
+	    clearInterval(this.intervalId);
+	  },
+	
+	  methods: {
+	    setTimer: function setTimer() {
+	      var _this = this;
+	
+	      // console.log(this.hideEta)
+	      this.intervalId = setInterval(function () {
+	        _this.updateProgress();
+	      }, 10);
+	      // console.log(this.data.intervalId)
+	    },
+	    setValue: function setValue(newValue) {
+	      this.progressBarValue = newValue;
+	      this.updateProgress();
+	    },
+	    updateProgress: function updateProgress() {
+	      var percentage;
+	      if (this.progressBarValue === null) {
+	        var diff = this.hideEta - new Date().getTime();
+	        percentage = diff / this.data.timeout * 100;
+	        percentage = Math.floor(percentage);
+	        // console.log(diff, this.data.timeout, percentage)
+	        this.style.width = percentage + '%';
+	      } else {
+	        percentage = Math.floor(this.progressBarValue);
+	        this.style.width = percentage + '%';
+	      }
+	    }
+	  }
+	
+	};
+	module.exports = exports['default'];
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _toast = __webpack_require__(42);
+	
+	var _toast2 = _interopRequireDefault(_toast);
+	
+	var _toastProgress = __webpack_require__(15);
+	
+	var _toastProgress2 = _interopRequireDefault(_toastProgress);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = {
+	  components: {
+	    toastProgress: _toastProgress2.default
+	  },
+	  template: _toast2.default,
+	  props: ['data'],
+	  data: function data() {
+	    return { progressbar: false, intervalId: false };
+	  },
+	  mounted: function mounted() {
+	    // console.log("ready", this.data);
+	  },
+	  created: function created() {
+	    // console.log("created", this.data);
+	    if (typeof this.data.timeout !== 'undefined' && this.data.timeout !== 0) {
+	      if (this.data.progressbar !== false) {
+	        this.progressbar = true;
+	      }
+	      this.setTimeout();
+	    } else if (this.data.progressBarValue !== null && this.data.progressbar !== false) {
+	      this.progressbar = true;
+	    }
+	  },
+	
+	  watch: {
+	    data: {
+	      handler: function handler(val, oldVal) {
+	        this.setProgressBarValue(val.progressBarValue);
+	      },
+	      deep: true
+	    }
+	  },
+	  beforeDestroy: function beforeDestroy() {
+	    this.clearIntervalID();
+	  },
+	
+	  methods: {
+	    clearIntervalID: function clearIntervalID() {
+	      // console.log(this.intervalId)
+	      if (this.intervalId !== false) {
+	        clearInterval(this.intervalId);
+	      }
+	      this.intervalId = false;
+	    },
+	
+	    // Enter Hover
+	    onMouseOver: function onMouseOver() {
+	      // console.log("onMouseOver")
+	      if (typeof this.data.onMouseOver !== 'undefined') {
+	        this.data.onMouseOver();
+	      }
+	      if (!this.data.closeOnHover) {
+	        this.clearIntervalID();
+	      }
+	    },
+	
+	    // Leave Hover
+	    onMouseOut: function onMouseOut() {
+	      // console.log("onMouseOut")
+	      if (typeof this.data.onMouseOut !== 'undefined') {
+	        this.data.onMouseOut();
+	      }
+	      if (!this.data.closeOnHover) {
+	        this.setTimeout();
+	      }
+	    },
+	
+	    // Set timeout to close
+	    setTimeout: function (_setTimeout) {
+	      function setTimeout() {
+	        return _setTimeout.apply(this, arguments);
+	      }
+	
+	      setTimeout.toString = function () {
+	        return _setTimeout.toString();
+	      };
+	
+	      return setTimeout;
+	    }(function () {
+	      var _this = this;
+	
+	      // console.log("setTimeout")
+	      this.intervalId = setTimeout(function () {
+	        _this.close();
+	      }, this.data.timeout);
+	      // console.log(this.data.intervalId)
+	    }),
+	
+	    // Set progress bar value if manually managed
+	    setProgressBarValue: function setProgressBarValue(newValue) {
+	      if (this.data.progressBarValue !== null) {
+	        this.$refs.progressBar.setValue(newValue);
+	      }
+	    },
+	
+	    // Clicked Toast
+	    clicked: function clicked() {
+	      if (typeof this.data.onClicked !== 'undefined') {
+	        this.data.onClicked();
+	      }
+	      this.cclose();
+	    },
+	
+	    // Click Close?
+	    cclose: function cclose() {
+	      if (typeof this.data.clickClose !== 'undefined' && this.data.clickClose === false) {
+	        return;
+	      }
+	      this.close();
+	    },
+	
+	    // Close Toast
+	    close: function close() {
+	      // console.log(typeof this.$parent, this);
+	      // if toast not manuel closed.
+	      if (this.$parent != null) {
+	        this.$parent.Close(this.data);
+	      }
+	    }
+	  }
+	};
+	module.exports = exports['default'];
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _keys = __webpack_require__(18);
+	
+	var _keys2 = _interopRequireDefault(_keys);
+	
+	var _typeof2 = __webpack_require__(20);
+	
+	var _typeof3 = _interopRequireDefault(_typeof2);
+	
+	var _vueToastr = __webpack_require__(43);
+	
+	var _vueToastr2 = _interopRequireDefault(_vueToastr);
+	
+	var _toast = __webpack_require__(16);
+	
+	var _toast2 = _interopRequireDefault(_toast);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = {
+	  template: _vueToastr2.default,
+	  name: 'vueToastr',
+	  props: ['options'],
+	  data: function data() {
+	    var positions = ['toast-top-right', 'toast-bottom-right', 'toast-bottom-left', 'toast-top-left', 'toast-top-full-width', 'toast-bottom-full-width', 'toast-top-center', 'toast-bottom-center'];
+	    var list = {};
+	    for (var i = 0; i <= positions.length - 1; i++) {
+	      list[positions[i]] = {};
+	    }
+	    return {
+	      positions: positions,
+	      defaultPosition: this.processOption('defaultPosition', 'toast-top-right'),
+	      defaultType: this.processOption('defaultType', 'success'),
+	      defaultCloseOnHover: this.processOption('defaultCloseOnHover', true),
+	      defaultTimeout: this.processOption('defaultTimeout', 5000),
+	      defaultProgressBar: this.processOption('defaultProgressBar', true),
+	      defaultProgressBarValue: this.processOption('defaultProgressBarValue', null),
+	      defaultPreventDuplicates: this.processOption('defaultPreventDuplicates', false),
+	      defaultStyle: this.processOption('defaultStyle', {}),
+	      list: list,
+	      index: 0,
+	      savedNames: {}
+	    };
+	  },
+	  created: function created() {
+	    // console.log("Created");
+	  },
+	  mounted: function mounted() {
+	    // console.log("ready", this.list);
+	  },
+	
+	  components: {
+	    toast: _toast2.default
+	  },
+	  methods: {
+	    addToast: function addToast(data) {
+	      this.index++;
+	      data['index'] = this.index;
+	      this.$set(this.list[data.position], this.index, data);
+	      if (typeof data['name'] !== 'undefined') {
+	        this.$set(this.savedNames, data['name'], data);
+	      }
+	      // if have onCreated
+	      if (typeof data.onCreated !== 'undefined') {
+	        // wait doom update after call cb
+	        this.$nextTick(function () {
+	          data.onCreated();
+	        });
+	      }
+	    },
+	    removeByName: function removeByName(name) {
+	      if (typeof this.savedNames[name] !== 'undefined') {
+	        this.Close(this.savedNames[name]);
+	        this.$delete(this.savedNames, name);
+	      }
+	    },
+	    removeToast: function removeToast(data) {
+	      var item = this.list[data.position][data.index];
+	      // console.log("remove toast", data, item);
+	      if (typeof item !== 'undefined') {
+	        this.$delete(this.list[data.position], data.index);
+	        // if have onClosed
+	        if (typeof data.onClosed !== 'undefined') {
+	          // wait doom update after call cb
+	          this.$nextTick(function () {
+	            data.onClosed();
+	          });
+	        }
+	      }
+	    },
+	    setProgress: function setProgress(data, newValue) {
+	      var item = this.list[data.position][data.index];
+	      if (typeof item !== 'undefined') {
+	        this.$set(item, 'progressBarValue', newValue);
+	      }
+	    },
+	    Add: function Add(d) {
+	      return this.AddData(this.processObjectData(d));
+	    },
+	    AddData: function AddData(data) {
+	      if ((typeof data === 'undefined' ? 'undefined' : (0, _typeof3.default)(data)) !== 'object') {
+	        console.log('AddData accept only Object', data);
+	        return false;
+	      }
+	      if (data.preventDuplicates) {
+	        var listKeys = (0, _keys2.default)(this.list[data.position]);
+	        for (var i = 0; i < listKeys.length; i++) {
+	          if (this.list[data.position][listKeys[i]].title === data.title && this.list[data.position][listKeys[i]].msg === data.msg) {
+	            console.log('Prevent Duplicates', data);
+	            return false;
+	          }
+	        }
+	      }
+	      this.addToast(data);
+	      return data;
+	    },
+	    processOption: function processOption(optionValue, defaultValue) {
+	      if (!this.options) {
+	        return defaultValue;
+	      }
+	      return typeof this.options[optionValue] !== 'undefined' ? this.options[optionValue] : defaultValue;
+	    },
+	    processObjectData: function processObjectData(data) {
+	      // if Object
+	      if ((typeof data === 'undefined' ? 'undefined' : (0, _typeof3.default)(data)) === 'object' && typeof data.msg !== 'undefined') {
+	        if (typeof data.position === 'undefined') {
+	          data.position = this.defaultPosition;
+	        }
+	        if (typeof data.type === 'undefined') {
+	          data.type = this.defaultType;
+	        }
+	        if (typeof data.timeout === 'undefined') {
+	          data.timeout = this.defaultTimeout;
+	        }
+	        // have progressBar ?
+	        if (typeof data.progressbar === 'undefined') {
+	          data.progressbar = this.defaultProgressBar;
+	        }
+	        // should progressBar be bound to timer or is set manually ?
+	        if (typeof data.progressBarValue === 'undefined') {
+	          data.progressBarValue = this.defaultProgressBarValue;
+	        }
+	
+	        if (typeof data.closeOnHover === 'undefined') {
+	          data.closeOnHover = this.defaultCloseOnHover;
+	        }
+	
+	        if (typeof data.preventDuplicates === 'undefined') {
+	          data.preventDuplicates = this.defaultPreventDuplicates;
+	        }
+	
+	        if (typeof data.style === 'undefined') {
+	          data.style = this.defaultStyle;
+	        }
+	        return data;
+	      }
+	      // if String
+	      return {
+	        msg: data.toString(),
+	        position: this.defaultPosition,
+	        type: this.defaultType,
+	        timeout: this.defaultTimeout,
+	        closeOnHover: this.defaultCloseOnHover,
+	        progressbar: this.defaultProgressBar,
+	        progressBarValue: this.defaultProgressBarValue,
+	        preventDuplicates: this.defaultPreventDuplicates,
+	        style: this.defaultStyle
+	      };
+	    },
+	    e: function e(msg, title) {
+	      var data = this.processObjectData(msg);
+	      data['type'] = 'error';
+	      if (typeof title !== 'undefined') {
+	        data['title'] = title;
+	      }
+	      return this.AddData(data);
+	    },
+	    s: function s(msg, title) {
+	      var data = this.processObjectData(msg);
+	      data['type'] = 'success';
+	      if (typeof title !== 'undefined') {
+	        data['title'] = title;
+	      }
+	      return this.AddData(data);
+	    },
+	    w: function w(msg, title) {
+	      var data = this.processObjectData(msg);
+	      data['type'] = 'warning';
+	      if (typeof title !== 'undefined') {
+	        data['title'] = title;
+	      }
+	      return this.AddData(data);
+	    },
+	    i: function i(msg, title) {
+	      var data = this.processObjectData(msg);
+	      data['type'] = 'info';
+	      if (typeof title !== 'undefined') {
+	        data['title'] = title;
+	      }
+	      return this.AddData(data);
+	    },
+	    Close: function Close(data) {
+	      // console.log(data)
+	      this.removeToast(data);
+	    },
+	    removeByType: function removeByType(toastType) {
+	      for (var i = 0; i < this.positions.length; i++) {
+	        var listKeys = (0, _keys2.default)(this.list[this.positions[i]]);
+	        for (var j = 0; j < listKeys.length; j++) {
+	          if (this.list[this.positions[i]][listKeys[j]]['type'] === toastType) {
+	            this.Close(this.list[this.positions[i]][listKeys[j]]);
+	          }
+	        }
+	      }
+	    },
+	    clearAll: function clearAll() {
+	      for (var i = 0; i < this.positions.length; i++) {
+	        var listKeys = (0, _keys2.default)(this.list[this.positions[i]]);
+	        for (var j = 0; j < listKeys.length; j++) {
+	          this.Close(this.list[this.positions[i]][listKeys[j]]);
+	        }
+	      }
+	    }
+	  }
+	};
+	module.exports = exports['default'];
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(21), __esModule: true };
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(22), __esModule: true };
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _Symbol = __webpack_require__(19)["default"];
+	
+	exports["default"] = function (obj) {
+	  return obj && obj.constructor === _Symbol ? "symbol" : typeof obj;
+	};
+	
+	exports.__esModule = true;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	__webpack_require__(38);
+	module.exports = __webpack_require__(2).Object.keys;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	__webpack_require__(40);
+	__webpack_require__(39);
+	module.exports = __webpack_require__(2).Symbol;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+	module.exports = function(it){
+	  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+	  return it;
+	};
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(31);
+	module.exports = function(it){
+	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	  return it;
+	};
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// optional / simple context binding
+	var aFunction = __webpack_require__(23);
+	module.exports = function(fn, that, length){
+	  aFunction(fn);
+	  if(that === undefined)return fn;
+	  switch(length){
+	    case 1: return function(a){
+	      return fn.call(that, a);
+	    };
+	    case 2: return function(a, b){
+	      return fn.call(that, a, b);
+	    };
+	    case 3: return function(a, b, c){
+	      return fn.call(that, a, b, c);
+	    };
+	  }
+	  return function(/* ...args */){
+	    return fn.apply(that, arguments);
+	  };
+	};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// all enumerable object keys, includes symbols
+	var $ = __webpack_require__(1);
+	module.exports = function(it){
+	  var keys       = $.getKeys(it)
+	    , getSymbols = $.getSymbols;
+	  if(getSymbols){
+	    var symbols = getSymbols(it)
+	      , isEnum  = $.isEnum
+	      , i       = 0
+	      , key;
+	    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))keys.push(key);
+	  }
+	  return keys;
+	};
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+	var toIObject = __webpack_require__(5)
+	  , getNames  = __webpack_require__(1).getNames
+	  , toString  = {}.toString;
+	
+	var windowNames = typeof window == 'object' && Object.getOwnPropertyNames
+	  ? Object.getOwnPropertyNames(window) : [];
+	
+	var getWindowNames = function(it){
+	  try {
+	    return getNames(it);
+	  } catch(e){
+	    return windowNames.slice();
+	  }
+	};
+	
+	module.exports.get = function getOwnPropertyNames(it){
+	  if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
+	  return getNames(toIObject(it));
+	};
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var $          = __webpack_require__(1)
+	  , createDesc = __webpack_require__(11);
+	module.exports = __webpack_require__(8) ? function(object, key, value){
+	  return $.setDesc(object, key, createDesc(1, value));
+	} : function(object, key, value){
+	  object[key] = value;
+	  return object;
+	};
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// fallback for non-array-like ES3 and non-enumerable old V8 strings
+	var cof = __webpack_require__(6);
+	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
+	  return cof(it) == 'String' ? it.split('') : Object(it);
+	};
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// 7.2.2 IsArray(argument)
+	var cof = __webpack_require__(6);
+	module.exports = Array.isArray || function(arg){
+	  return cof(arg) == 'Array';
+	};
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+	module.exports = function(it){
+	  return typeof it === 'object' ? it !== null : typeof it === 'function';
+	};
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var $         = __webpack_require__(1)
+	  , toIObject = __webpack_require__(5);
+	module.exports = function(object, el){
+	  var O      = toIObject(object)
+	    , keys   = $.getKeys(O)
+	    , length = keys.length
+	    , index  = 0
+	    , key;
+	  while(length > index)if(O[key = keys[index++]] === el)return key;
+	};
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
+
+	module.exports = true;
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// most Object methods by ES6 should accept primitives
+	var $export = __webpack_require__(9)
+	  , core    = __webpack_require__(2)
+	  , fails   = __webpack_require__(4);
+	module.exports = function(KEY, exec){
+	  var fn  = (core.Object || {})[KEY] || Object[KEY]
+	    , exp = {};
+	  exp[KEY] = exec(fn);
+	  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
+	};
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(28);
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var def = __webpack_require__(1).setDesc
+	  , has = __webpack_require__(10)
+	  , TAG = __webpack_require__(14)('toStringTag');
+	
+	module.exports = function(it, tag, stat){
+	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+	};
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// 7.1.13 ToObject(argument)
+	var defined = __webpack_require__(7);
+	module.exports = function(it){
+	  return Object(defined(it));
+	};
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(37);
+	
+	__webpack_require__(34)('keys', function($keys){
+	  return function keys(it){
+	    return $keys(toObject(it));
+	  };
+	});
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	// ECMAScript 6 symbols shim
+	var $              = __webpack_require__(1)
+	  , global         = __webpack_require__(3)
+	  , has            = __webpack_require__(10)
+	  , DESCRIPTORS    = __webpack_require__(8)
+	  , $export        = __webpack_require__(9)
+	  , redefine       = __webpack_require__(35)
+	  , $fails         = __webpack_require__(4)
+	  , shared         = __webpack_require__(12)
+	  , setToStringTag = __webpack_require__(36)
+	  , uid            = __webpack_require__(13)
+	  , wks            = __webpack_require__(14)
+	  , keyOf          = __webpack_require__(32)
+	  , $names         = __webpack_require__(27)
+	  , enumKeys       = __webpack_require__(26)
+	  , isArray        = __webpack_require__(30)
+	  , anObject       = __webpack_require__(24)
+	  , toIObject      = __webpack_require__(5)
+	  , createDesc     = __webpack_require__(11)
+	  , getDesc        = $.getDesc
+	  , setDesc        = $.setDesc
+	  , _create        = $.create
+	  , getNames       = $names.get
+	  , $Symbol        = global.Symbol
+	  , $JSON          = global.JSON
+	  , _stringify     = $JSON && $JSON.stringify
+	  , setter         = false
+	  , HIDDEN         = wks('_hidden')
+	  , isEnum         = $.isEnum
+	  , SymbolRegistry = shared('symbol-registry')
+	  , AllSymbols     = shared('symbols')
+	  , useNative      = typeof $Symbol == 'function'
+	  , ObjectProto    = Object.prototype;
+	
+	// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+	var setSymbolDesc = DESCRIPTORS && $fails(function(){
+	  return _create(setDesc({}, 'a', {
+	    get: function(){ return setDesc(this, 'a', {value: 7}).a; }
+	  })).a != 7;
+	}) ? function(it, key, D){
+	  var protoDesc = getDesc(ObjectProto, key);
+	  if(protoDesc)delete ObjectProto[key];
+	  setDesc(it, key, D);
+	  if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
+	} : setDesc;
+	
+	var wrap = function(tag){
+	  var sym = AllSymbols[tag] = _create($Symbol.prototype);
+	  sym._k = tag;
+	  DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
+	    configurable: true,
+	    set: function(value){
+	      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
+	      setSymbolDesc(this, tag, createDesc(1, value));
+	    }
+	  });
+	  return sym;
+	};
+	
+	var isSymbol = function(it){
+	  return typeof it == 'symbol';
+	};
+	
+	var $defineProperty = function defineProperty(it, key, D){
+	  if(D && has(AllSymbols, key)){
+	    if(!D.enumerable){
+	      if(!has(it, HIDDEN))setDesc(it, HIDDEN, createDesc(1, {}));
+	      it[HIDDEN][key] = true;
+	    } else {
+	      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
+	      D = _create(D, {enumerable: createDesc(0, false)});
+	    } return setSymbolDesc(it, key, D);
+	  } return setDesc(it, key, D);
+	};
+	var $defineProperties = function defineProperties(it, P){
+	  anObject(it);
+	  var keys = enumKeys(P = toIObject(P))
+	    , i    = 0
+	    , l = keys.length
+	    , key;
+	  while(l > i)$defineProperty(it, key = keys[i++], P[key]);
+	  return it;
+	};
+	var $create = function create(it, P){
+	  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
+	};
+	var $propertyIsEnumerable = function propertyIsEnumerable(key){
+	  var E = isEnum.call(this, key);
+	  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key]
+	    ? E : true;
+	};
+	var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
+	  var D = getDesc(it = toIObject(it), key);
+	  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
+	  return D;
+	};
+	var $getOwnPropertyNames = function getOwnPropertyNames(it){
+	  var names  = getNames(toIObject(it))
+	    , result = []
+	    , i      = 0
+	    , key;
+	  while(names.length > i)if(!has(AllSymbols, key = names[i++]) && key != HIDDEN)result.push(key);
+	  return result;
+	};
+	var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
+	  var names  = getNames(toIObject(it))
+	    , result = []
+	    , i      = 0
+	    , key;
+	  while(names.length > i)if(has(AllSymbols, key = names[i++]))result.push(AllSymbols[key]);
+	  return result;
+	};
+	var $stringify = function stringify(it){
+	  if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
+	  var args = [it]
+	    , i    = 1
+	    , $$   = arguments
+	    , replacer, $replacer;
+	  while($$.length > i)args.push($$[i++]);
+	  replacer = args[1];
+	  if(typeof replacer == 'function')$replacer = replacer;
+	  if($replacer || !isArray(replacer))replacer = function(key, value){
+	    if($replacer)value = $replacer.call(this, key, value);
+	    if(!isSymbol(value))return value;
+	  };
+	  args[1] = replacer;
+	  return _stringify.apply($JSON, args);
+	};
+	var buggyJSON = $fails(function(){
+	  var S = $Symbol();
+	  // MS Edge converts symbol values to JSON as {}
+	  // WebKit converts symbol values to JSON as null
+	  // V8 throws on boxed symbols
+	  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
+	});
+	
+	// 19.4.1.1 Symbol([description])
+	if(!useNative){
+	  $Symbol = function Symbol(){
+	    if(isSymbol(this))throw TypeError('Symbol is not a constructor');
+	    return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
+	  };
+	  redefine($Symbol.prototype, 'toString', function toString(){
+	    return this._k;
+	  });
+	
+	  isSymbol = function(it){
+	    return it instanceof $Symbol;
+	  };
+	
+	  $.create     = $create;
+	  $.isEnum     = $propertyIsEnumerable;
+	  $.getDesc    = $getOwnPropertyDescriptor;
+	  $.setDesc    = $defineProperty;
+	  $.setDescs   = $defineProperties;
+	  $.getNames   = $names.get = $getOwnPropertyNames;
+	  $.getSymbols = $getOwnPropertySymbols;
+	
+	  if(DESCRIPTORS && !__webpack_require__(33)){
+	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+	  }
+	}
+	
+	var symbolStatics = {
+	  // 19.4.2.1 Symbol.for(key)
+	  'for': function(key){
+	    return has(SymbolRegistry, key += '')
+	      ? SymbolRegistry[key]
+	      : SymbolRegistry[key] = $Symbol(key);
+	  },
+	  // 19.4.2.5 Symbol.keyFor(sym)
+	  keyFor: function keyFor(key){
+	    return keyOf(SymbolRegistry, key);
+	  },
+	  useSetter: function(){ setter = true; },
+	  useSimple: function(){ setter = false; }
+	};
+	// 19.4.2.2 Symbol.hasInstance
+	// 19.4.2.3 Symbol.isConcatSpreadable
+	// 19.4.2.4 Symbol.iterator
+	// 19.4.2.6 Symbol.match
+	// 19.4.2.8 Symbol.replace
+	// 19.4.2.9 Symbol.search
+	// 19.4.2.10 Symbol.species
+	// 19.4.2.11 Symbol.split
+	// 19.4.2.12 Symbol.toPrimitive
+	// 19.4.2.13 Symbol.toStringTag
+	// 19.4.2.14 Symbol.unscopables
+	$.each.call((
+	  'hasInstance,isConcatSpreadable,iterator,match,replace,search,' +
+	  'species,split,toPrimitive,toStringTag,unscopables'
+	).split(','), function(it){
+	  var sym = wks(it);
+	  symbolStatics[it] = useNative ? sym : wrap(sym);
+	});
+	
+	setter = true;
+	
+	$export($export.G + $export.W, {Symbol: $Symbol});
+	
+	$export($export.S, 'Symbol', symbolStatics);
+	
+	$export($export.S + $export.F * !useNative, 'Object', {
+	  // 19.1.2.2 Object.create(O [, Properties])
+	  create: $create,
+	  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
+	  defineProperty: $defineProperty,
+	  // 19.1.2.3 Object.defineProperties(O, Properties)
+	  defineProperties: $defineProperties,
+	  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
+	  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
+	  // 19.1.2.7 Object.getOwnPropertyNames(O)
+	  getOwnPropertyNames: $getOwnPropertyNames,
+	  // 19.1.2.8 Object.getOwnPropertySymbols(O)
+	  getOwnPropertySymbols: $getOwnPropertySymbols
+	});
+	
+	// 24.3.2 JSON.stringify(value [, replacer [, space]])
+	$JSON && $export($export.S + $export.F * (!useNative || buggyJSON), 'JSON', {stringify: $stringify});
+	
+	// 19.4.3.5 Symbol.prototype[@@toStringTag]
+	setToStringTag($Symbol, 'Symbol');
+	// 20.2.1.9 Math[@@toStringTag]
+	setToStringTag(Math, 'Math', true);
+	// 24.3.3 JSON[@@toStringTag]
+	setToStringTag(global.JSON, 'JSON', true);
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div v-bind:style=\"data.style\" v-bind:class=\"'toast toast-' + data.type\" style=\"display: block;\" @click=\"clicked()\" v-on:mouseover=\"onMouseOver\" v-on:mouseout=\"onMouseOut\">\n    <toast-progress v-if=\"progressbar\" :data=\"data\" ref=\"progressBar\"></toast-progress>\n    <div class=\"toast-title\" v-html=\"data.title\">\n    </div>\n    <div class=\"toast-message\" v-html=\"data.msg\">\n    </div>\n</div>\n";
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div>\n    <div v-bind:class=\"'toast-container ' + position\" v-for=\"(toasts, position) in list\" :key=\"position\">\n        <toast :data=\"toast\" v-for=\"(toast, index) in toasts\" :key=\"index\">\n        </toast>\n    </div>\n</div>\n";
+
+/***/ })
+/******/ ])
+});
+;
+//# sourceMappingURL=vue-toastr.js.map
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+/*!
+ * Font Awesome Free 5.4.2 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+(function () {
+'use strict';
+
+var noop = function noop() {};
+
+var _WINDOW = {};
+var _DOCUMENT = {};
+var _MUTATION_OBSERVER$1 = null;
+var _PERFORMANCE = { mark: noop, measure: noop };
+
+try {
+  if (typeof window !== 'undefined') _WINDOW = window;
+  if (typeof document !== 'undefined') _DOCUMENT = document;
+  if (typeof MutationObserver !== 'undefined') _MUTATION_OBSERVER$1 = MutationObserver;
+  if (typeof performance !== 'undefined') _PERFORMANCE = performance;
+} catch (e) {}
+
+var _ref = _WINDOW.navigator || {};
+var _ref$userAgent = _ref.userAgent;
+var userAgent = _ref$userAgent === undefined ? '' : _ref$userAgent;
+
+var WINDOW = _WINDOW;
+var DOCUMENT = _DOCUMENT;
+var MUTATION_OBSERVER = _MUTATION_OBSERVER$1;
+var PERFORMANCE = _PERFORMANCE;
+var IS_BROWSER = !!WINDOW.document;
+var IS_DOM = !!DOCUMENT.documentElement && !!DOCUMENT.head && typeof DOCUMENT.addEventListener === 'function' && typeof DOCUMENT.createElement === 'function';
+var IS_IE = ~userAgent.indexOf('MSIE') || ~userAgent.indexOf('Trident/');
+
+var NAMESPACE_IDENTIFIER = '___FONT_AWESOME___';
+var UNITS_IN_GRID = 16;
+var DEFAULT_FAMILY_PREFIX = 'fa';
+var DEFAULT_REPLACEMENT_CLASS = 'svg-inline--fa';
+var DATA_FA_I2SVG = 'data-fa-i2svg';
+var DATA_FA_PSEUDO_ELEMENT = 'data-fa-pseudo-element';
+var DATA_PREFIX = 'data-prefix';
+var DATA_ICON = 'data-icon';
+var HTML_CLASS_I2SVG_BASE_CLASS = 'fontawesome-i2svg';
+var TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS = ['HTML', 'HEAD', 'STYLE', 'SCRIPT'];
+var PRODUCTION = function () {
+  try {
+    return "production" === 'production';
+  } catch (e) {
+    return false;
+  }
+}();
+
+var oneToTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+var oneToTwenty = oneToTen.concat([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+
+var ATTRIBUTES_WATCHED_FOR_MUTATION = ['class', 'data-prefix', 'data-icon', 'data-fa-transform', 'data-fa-mask'];
+
+var RESERVED_CLASSES = ['xs', 'sm', 'lg', 'fw', 'ul', 'li', 'border', 'pull-left', 'pull-right', 'spin', 'pulse', 'rotate-90', 'rotate-180', 'rotate-270', 'flip-horizontal', 'flip-vertical', 'stack', 'stack-1x', 'stack-2x', 'inverse', 'layers', 'layers-text', 'layers-counter'].concat(oneToTen.map(function (n) {
+  return n + 'x';
+})).concat(oneToTwenty.map(function (n) {
+  return 'w-' + n;
+}));
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+var initial = WINDOW.FontAwesomeConfig || {};
+
+function getAttrConfig(attr) {
+  var element = DOCUMENT.querySelector('script[' + attr + ']');
+
+  if (element) {
+    return element.getAttribute(attr);
+  }
+}
+
+function coerce(val) {
+  // Getting an empty string will occur if the attribute is set on the HTML tag but without a value
+  // We'll assume that this is an indication that it should be toggled to true
+  // For example <script data-search-pseudo-elements src="..."></script>
+  if (val === '') return true;
+  if (val === 'false') return false;
+  if (val === 'true') return true;
+  return val;
+}
+
+if (DOCUMENT && typeof DOCUMENT.querySelector === 'function') {
+  var attrs = [['data-family-prefix', 'familyPrefix'], ['data-replacement-class', 'replacementClass'], ['data-auto-replace-svg', 'autoReplaceSvg'], ['data-auto-add-css', 'autoAddCss'], ['data-auto-a11y', 'autoA11y'], ['data-search-pseudo-elements', 'searchPseudoElements'], ['data-observe-mutations', 'observeMutations'], ['data-keep-original-source', 'keepOriginalSource'], ['data-measure-performance', 'measurePerformance'], ['data-show-missing-icons', 'showMissingIcons']];
+
+  attrs.forEach(function (_ref) {
+    var _ref2 = slicedToArray(_ref, 2),
+        attr = _ref2[0],
+        key = _ref2[1];
+
+    var val = coerce(getAttrConfig(attr));
+
+    if (val !== undefined && val !== null) {
+      initial[key] = val;
+    }
+  });
+}
+
+var _default = _extends({
+  familyPrefix: DEFAULT_FAMILY_PREFIX,
+  replacementClass: DEFAULT_REPLACEMENT_CLASS,
+  autoReplaceSvg: true,
+  autoAddCss: true,
+  autoA11y: true,
+  searchPseudoElements: false,
+  observeMutations: true,
+  keepOriginalSource: true,
+  measurePerformance: false,
+  showMissingIcons: true
+}, initial);
+
+if (!_default.autoReplaceSvg) _default.observeMutations = false;
+
+var config = _extends({}, _default);
+
+WINDOW.FontAwesomeConfig = config;
+
+var w = WINDOW || {};
+
+if (!w[NAMESPACE_IDENTIFIER]) w[NAMESPACE_IDENTIFIER] = {};
+if (!w[NAMESPACE_IDENTIFIER].styles) w[NAMESPACE_IDENTIFIER].styles = {};
+if (!w[NAMESPACE_IDENTIFIER].hooks) w[NAMESPACE_IDENTIFIER].hooks = {};
+if (!w[NAMESPACE_IDENTIFIER].shims) w[NAMESPACE_IDENTIFIER].shims = [];
+
+var namespace = w[NAMESPACE_IDENTIFIER];
+
+var functions = [];
+var listener = function listener() {
+  DOCUMENT.removeEventListener('DOMContentLoaded', listener);
+  loaded = 1;
+  functions.map(function (fn) {
+    return fn();
+  });
+};
+
+var loaded = false;
+
+if (IS_DOM) {
+  loaded = (DOCUMENT.documentElement.doScroll ? /^loaded|^c/ : /^loaded|^i|^c/).test(DOCUMENT.readyState);
+
+  if (!loaded) DOCUMENT.addEventListener('DOMContentLoaded', listener);
+}
+
+var domready = function (fn) {
+  if (!IS_DOM) return;
+  loaded ? setTimeout(fn, 0) : functions.push(fn);
+};
+
+var d = UNITS_IN_GRID;
+
+var meaninglessTransform = {
+  size: 16,
+  x: 0,
+  y: 0,
+  rotate: 0,
+  flipX: false,
+  flipY: false
+};
+
+function isReserved(name) {
+  return ~RESERVED_CLASSES.indexOf(name);
+}
+
+function bunker(fn) {
+  try {
+    fn();
+  } catch (e) {
+    if (!PRODUCTION) {
+      throw e;
+    }
+  }
+}
+
+function insertCss(css) {
+  if (!css || !IS_DOM) {
+    return;
+  }
+
+  var style = DOCUMENT.createElement('style');
+  style.setAttribute('type', 'text/css');
+  style.innerHTML = css;
+
+  var headChildren = DOCUMENT.head.childNodes;
+  var beforeChild = null;
+
+  for (var i = headChildren.length - 1; i > -1; i--) {
+    var child = headChildren[i];
+    var tagName = (child.tagName || '').toUpperCase();
+    if (['STYLE', 'LINK'].indexOf(tagName) > -1) {
+      beforeChild = child;
+    }
+  }
+
+  DOCUMENT.head.insertBefore(style, beforeChild);
+
+  return css;
+}
+
+var idPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function nextUniqueId() {
+  var size = 12;
+  var id = '';
+  while (size-- > 0) {
+    id += idPool[Math.random() * 62 | 0];
+  }
+  return id;
+}
+
+function toArray(obj) {
+  var array = [];
+
+  for (var i = (obj || []).length >>> 0; i--;) {
+    array[i] = obj[i];
+  }
+
+  return array;
+}
+
+function classArray(node) {
+  if (node.classList) {
+    return toArray(node.classList);
+  } else {
+    return (node.getAttribute('class') || '').split(' ').filter(function (i) {
+      return i;
+    });
+  }
+}
+
+function getIconName(familyPrefix, cls) {
+  var parts = cls.split('-');
+  var prefix = parts[0];
+  var iconName = parts.slice(1).join('-');
+
+  if (prefix === familyPrefix && iconName !== '' && !isReserved(iconName)) {
+    return iconName;
+  } else {
+    return null;
+  }
+}
+
+function htmlEscape(str) {
+  return ('' + str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function joinAttributes(attributes) {
+  return Object.keys(attributes || {}).reduce(function (acc, attributeName) {
+    return acc + (attributeName + '="' + htmlEscape(attributes[attributeName]) + '" ');
+  }, '').trim();
+}
+
+function joinStyles(styles) {
+  return Object.keys(styles || {}).reduce(function (acc, styleName) {
+    return acc + (styleName + ': ' + styles[styleName] + ';');
+  }, '');
+}
+
+function transformIsMeaningful(transform) {
+  return transform.size !== meaninglessTransform.size || transform.x !== meaninglessTransform.x || transform.y !== meaninglessTransform.y || transform.rotate !== meaninglessTransform.rotate || transform.flipX || transform.flipY;
+}
+
+function transformForSvg(_ref) {
+  var transform = _ref.transform,
+      containerWidth = _ref.containerWidth,
+      iconWidth = _ref.iconWidth;
+
+  var outer = {
+    transform: 'translate(' + containerWidth / 2 + ' 256)'
+  };
+  var innerTranslate = 'translate(' + transform.x * 32 + ', ' + transform.y * 32 + ') ';
+  var innerScale = 'scale(' + transform.size / 16 * (transform.flipX ? -1 : 1) + ', ' + transform.size / 16 * (transform.flipY ? -1 : 1) + ') ';
+  var innerRotate = 'rotate(' + transform.rotate + ' 0 0)';
+  var inner = {
+    transform: innerTranslate + ' ' + innerScale + ' ' + innerRotate
+  };
+  var path = {
+    transform: 'translate(' + iconWidth / 2 * -1 + ' -256)'
+  };
+  return {
+    outer: outer,
+    inner: inner,
+    path: path
+  };
+}
+
+function transformForCss(_ref2) {
+  var transform = _ref2.transform,
+      _ref2$width = _ref2.width,
+      width = _ref2$width === undefined ? UNITS_IN_GRID : _ref2$width,
+      _ref2$height = _ref2.height,
+      height = _ref2$height === undefined ? UNITS_IN_GRID : _ref2$height,
+      _ref2$startCentered = _ref2.startCentered,
+      startCentered = _ref2$startCentered === undefined ? false : _ref2$startCentered;
+
+  var val = '';
+
+  if (startCentered && IS_IE) {
+    val += 'translate(' + (transform.x / d - width / 2) + 'em, ' + (transform.y / d - height / 2) + 'em) ';
+  } else if (startCentered) {
+    val += 'translate(calc(-50% + ' + transform.x / d + 'em), calc(-50% + ' + transform.y / d + 'em)) ';
+  } else {
+    val += 'translate(' + transform.x / d + 'em, ' + transform.y / d + 'em) ';
+  }
+
+  val += 'scale(' + transform.size / d * (transform.flipX ? -1 : 1) + ', ' + transform.size / d * (transform.flipY ? -1 : 1) + ') ';
+  val += 'rotate(' + transform.rotate + 'deg) ';
+
+  return val;
+}
+
+var ALL_SPACE = {
+  x: 0,
+  y: 0,
+  width: '100%',
+  height: '100%'
+};
+
+var makeIconMasking = function (_ref) {
+  var children = _ref.children,
+      attributes = _ref.attributes,
+      main = _ref.main,
+      mask = _ref.mask,
+      transform = _ref.transform;
+  var mainWidth = main.width,
+      mainPath = main.icon;
+  var maskWidth = mask.width,
+      maskPath = mask.icon;
+
+
+  var trans = transformForSvg({ transform: transform, containerWidth: maskWidth, iconWidth: mainWidth });
+
+  var maskRect = {
+    tag: 'rect',
+    attributes: _extends({}, ALL_SPACE, {
+      fill: 'white'
+    })
+  };
+  var maskInnerGroup = {
+    tag: 'g',
+    attributes: _extends({}, trans.inner),
+    children: [{ tag: 'path', attributes: _extends({}, mainPath.attributes, trans.path, { fill: 'black' }) }]
+  };
+  var maskOuterGroup = {
+    tag: 'g',
+    attributes: _extends({}, trans.outer),
+    children: [maskInnerGroup]
+  };
+  var maskId = 'mask-' + nextUniqueId();
+  var clipId = 'clip-' + nextUniqueId();
+  var maskTag = {
+    tag: 'mask',
+    attributes: _extends({}, ALL_SPACE, {
+      id: maskId,
+      maskUnits: 'userSpaceOnUse',
+      maskContentUnits: 'userSpaceOnUse'
+    }),
+    children: [maskRect, maskOuterGroup]
+  };
+  var defs = {
+    tag: 'defs',
+    children: [{ tag: 'clipPath', attributes: { id: clipId }, children: [maskPath] }, maskTag]
+  };
+
+  children.push(defs, { tag: 'rect', attributes: _extends({ fill: 'currentColor', 'clip-path': 'url(#' + clipId + ')', mask: 'url(#' + maskId + ')' }, ALL_SPACE) });
+
+  return {
+    children: children,
+    attributes: attributes
+  };
+};
+
+var makeIconStandard = function (_ref) {
+  var children = _ref.children,
+      attributes = _ref.attributes,
+      main = _ref.main,
+      transform = _ref.transform,
+      styles = _ref.styles;
+
+  var styleString = joinStyles(styles);
+
+  if (styleString.length > 0) {
+    attributes['style'] = styleString;
+  }
+
+  if (transformIsMeaningful(transform)) {
+    var trans = transformForSvg({ transform: transform, containerWidth: main.width, iconWidth: main.width });
+    children.push({
+      tag: 'g',
+      attributes: _extends({}, trans.outer),
+      children: [{
+        tag: 'g',
+        attributes: _extends({}, trans.inner),
+        children: [{
+          tag: main.icon.tag,
+          children: main.icon.children,
+          attributes: _extends({}, main.icon.attributes, trans.path)
+        }]
+      }]
+    });
+  } else {
+    children.push(main.icon);
+  }
+
+  return {
+    children: children,
+    attributes: attributes
+  };
+};
+
+var asIcon = function (_ref) {
+  var children = _ref.children,
+      main = _ref.main,
+      mask = _ref.mask,
+      attributes = _ref.attributes,
+      styles = _ref.styles,
+      transform = _ref.transform;
+
+  if (transformIsMeaningful(transform) && main.found && !mask.found) {
+    var width = main.width,
+        height = main.height;
+
+    var offset = {
+      x: width / height / 2,
+      y: 0.5
+    };
+    attributes['style'] = joinStyles(_extends({}, styles, {
+      'transform-origin': offset.x + transform.x / 16 + 'em ' + (offset.y + transform.y / 16) + 'em'
+    }));
+  }
+
+  return [{
+    tag: 'svg',
+    attributes: attributes,
+    children: children
+  }];
+};
+
+var asSymbol = function (_ref) {
+  var prefix = _ref.prefix,
+      iconName = _ref.iconName,
+      children = _ref.children,
+      attributes = _ref.attributes,
+      symbol = _ref.symbol;
+
+  var id = symbol === true ? prefix + '-' + config.familyPrefix + '-' + iconName : symbol;
+
+  return [{
+    tag: 'svg',
+    attributes: {
+      style: 'display: none;'
+    },
+    children: [{
+      tag: 'symbol',
+      attributes: _extends({}, attributes, { id: id }),
+      children: children
+    }]
+  }];
+};
+
+function makeInlineSvgAbstract(params) {
+  var _params$icons = params.icons,
+      main = _params$icons.main,
+      mask = _params$icons.mask,
+      prefix = params.prefix,
+      iconName = params.iconName,
+      transform = params.transform,
+      symbol = params.symbol,
+      title = params.title,
+      extra = params.extra,
+      _params$watchable = params.watchable,
+      watchable = _params$watchable === undefined ? false : _params$watchable;
+
+  var _ref = mask.found ? mask : main,
+      width = _ref.width,
+      height = _ref.height;
+
+  var widthClass = 'fa-w-' + Math.ceil(width / height * 16);
+  var attrClass = [config.replacementClass, iconName ? config.familyPrefix + '-' + iconName : '', widthClass].filter(function (c) {
+    return extra.classes.indexOf(c) === -1;
+  }).concat(extra.classes).join(' ');
+
+  var content = {
+    children: [],
+    attributes: _extends({}, extra.attributes, {
+      'data-prefix': prefix,
+      'data-icon': iconName,
+      'class': attrClass,
+      'role': 'img',
+      'xmlns': 'http://www.w3.org/2000/svg',
+      'viewBox': '0 0 ' + width + ' ' + height
+    })
+  };
+
+  if (watchable) {
+    content.attributes[DATA_FA_I2SVG] = '';
+  }
+
+  if (title) content.children.push({ tag: 'title', attributes: { id: content.attributes['aria-labelledby'] || 'title-' + nextUniqueId() }, children: [title] });
+
+  var args = _extends({}, content, {
+    prefix: prefix,
+    iconName: iconName,
+    main: main,
+    mask: mask,
+    transform: transform,
+    symbol: symbol,
+    styles: extra.styles
+  });
+
+  var _ref2 = mask.found && main.found ? makeIconMasking(args) : makeIconStandard(args),
+      children = _ref2.children,
+      attributes = _ref2.attributes;
+
+  args.children = children;
+  args.attributes = attributes;
+
+  if (symbol) {
+    return asSymbol(args);
+  } else {
+    return asIcon(args);
+  }
+}
+
+function makeLayersTextAbstract(params) {
+  var content = params.content,
+      width = params.width,
+      height = params.height,
+      transform = params.transform,
+      title = params.title,
+      extra = params.extra,
+      _params$watchable2 = params.watchable,
+      watchable = _params$watchable2 === undefined ? false : _params$watchable2;
+
+
+  var attributes = _extends({}, extra.attributes, title ? { 'title': title } : {}, {
+    'class': extra.classes.join(' ')
+  });
+
+  if (watchable) {
+    attributes[DATA_FA_I2SVG] = '';
+  }
+
+  var styles = _extends({}, extra.styles);
+
+  if (transformIsMeaningful(transform)) {
+    styles['transform'] = transformForCss({ transform: transform, startCentered: true, width: width, height: height });
+    styles['-webkit-transform'] = styles['transform'];
+  }
+
+  var styleString = joinStyles(styles);
+
+  if (styleString.length > 0) {
+    attributes['style'] = styleString;
+  }
+
+  var val = [];
+
+  val.push({
+    tag: 'span',
+    attributes: attributes,
+    children: [content]
+  });
+
+  if (title) {
+    val.push({ tag: 'span', attributes: { class: 'sr-only' }, children: [title] });
+  }
+
+  return val;
+}
+
+function makeLayersCounterAbstract(params) {
+  var content = params.content,
+      title = params.title,
+      extra = params.extra;
+
+
+  var attributes = _extends({}, extra.attributes, title ? { 'title': title } : {}, {
+    'class': extra.classes.join(' ')
+  });
+
+  var styleString = joinStyles(extra.styles);
+
+  if (styleString.length > 0) {
+    attributes['style'] = styleString;
+  }
+
+  var val = [];
+
+  val.push({
+    tag: 'span',
+    attributes: attributes,
+    children: [content]
+  });
+
+  if (title) {
+    val.push({ tag: 'span', attributes: { class: 'sr-only' }, children: [title] });
+  }
+
+  return val;
+}
+
+var noop$2 = function noop() {};
+var p = config.measurePerformance && PERFORMANCE && PERFORMANCE.mark && PERFORMANCE.measure ? PERFORMANCE : { mark: noop$2, measure: noop$2 };
+var preamble = 'FA "5.4.2"';
+
+var begin = function begin(name) {
+  p.mark(preamble + ' ' + name + ' begins');
+  return function () {
+    return end(name);
+  };
+};
+
+var end = function end(name) {
+  p.mark(preamble + ' ' + name + ' ends');
+  p.measure(preamble + ' ' + name, preamble + ' ' + name + ' begins', preamble + ' ' + name + ' ends');
+};
+
+var perf = { begin: begin, end: end };
+
+'use strict';
+
+/**
+ * Internal helper to bind a function known to have 4 arguments
+ * to a given context.
+ */
+var bindInternal4 = function bindInternal4 (func, thisContext) {
+  return function (a, b, c, d) {
+    return func.call(thisContext, a, b, c, d);
+  };
+};
+
+'use strict';
+
+
+
+/**
+ * # Reduce
+ *
+ * A fast object `.reduce()` implementation.
+ *
+ * @param  {Object}   subject      The object to reduce over.
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}   thisContext  The context for the reducer.
+ * @return {mixed}                 The final result.
+ */
+var reduce = function fastReduceObject (subject, fn, initialValue, thisContext) {
+  var keys = Object.keys(subject),
+      length = keys.length,
+      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
+      i, key, result;
+
+  if (initialValue === undefined) {
+    i = 1;
+    result = subject[keys[0]];
+  }
+  else {
+    i = 0;
+    result = initialValue;
+  }
+
+  for (; i < length; i++) {
+    key = keys[i];
+    result = iterator(result, subject[key], key, subject);
+  }
+
+  return result;
+};
+
+var styles$2 = namespace.styles;
+var shims = namespace.shims;
+
+
+var _byUnicode = {};
+var _byLigature = {};
+var _byOldName = {};
+
+var build = function build() {
+  var lookup = function lookup(reducer) {
+    return reduce(styles$2, function (o, style, prefix) {
+      o[prefix] = reduce(style, reducer, {});
+      return o;
+    }, {});
+  };
+
+  _byUnicode = lookup(function (acc, icon, iconName) {
+    acc[icon[3]] = iconName;
+
+    return acc;
+  });
+
+  _byLigature = lookup(function (acc, icon, iconName) {
+    var ligatures = icon[2];
+
+    acc[iconName] = iconName;
+
+    ligatures.forEach(function (ligature) {
+      acc[ligature] = iconName;
+    });
+
+    return acc;
+  });
+
+  var hasRegular = 'far' in styles$2;
+
+  _byOldName = reduce(shims, function (acc, shim) {
+    var oldName = shim[0];
+    var prefix = shim[1];
+    var iconName = shim[2];
+
+    if (prefix === 'far' && !hasRegular) {
+      prefix = 'fas';
+    }
+
+    acc[oldName] = { prefix: prefix, iconName: iconName };
+
+    return acc;
+  }, {});
+};
+
+build();
+
+function byUnicode(prefix, unicode) {
+  return _byUnicode[prefix][unicode];
+}
+
+function byLigature(prefix, ligature) {
+  return _byLigature[prefix][ligature];
+}
+
+function byOldName(name) {
+  return _byOldName[name] || { prefix: null, iconName: null };
+}
+
+var styles$1 = namespace.styles;
+
+
+var emptyCanonicalIcon = function emptyCanonicalIcon() {
+  return { prefix: null, iconName: null, rest: [] };
+};
+
+function getCanonicalIcon(values) {
+  return values.reduce(function (acc, cls) {
+    var iconName = getIconName(config.familyPrefix, cls);
+
+    if (styles$1[cls]) {
+      acc.prefix = cls;
+    } else if (iconName) {
+      var shim = acc.prefix === 'fa' ? byOldName(iconName) : {};
+
+      acc.iconName = shim.iconName || iconName;
+      acc.prefix = shim.prefix || acc.prefix;
+    } else if (cls !== config.replacementClass && cls.indexOf('fa-w-') !== 0) {
+      acc.rest.push(cls);
+    }
+
+    return acc;
+  }, emptyCanonicalIcon());
+}
+
+function iconFromMapping(mapping, prefix, iconName) {
+  if (mapping && mapping[prefix] && mapping[prefix][iconName]) {
+    return {
+      prefix: prefix,
+      iconName: iconName,
+      icon: mapping[prefix][iconName]
+    };
+  }
+}
+
+function toHtml(abstractNodes) {
+  var tag = abstractNodes.tag,
+      _abstractNodes$attrib = abstractNodes.attributes,
+      attributes = _abstractNodes$attrib === undefined ? {} : _abstractNodes$attrib,
+      _abstractNodes$childr = abstractNodes.children,
+      children = _abstractNodes$childr === undefined ? [] : _abstractNodes$childr;
+
+
+  if (typeof abstractNodes === 'string') {
+    return htmlEscape(abstractNodes);
+  } else {
+    return '<' + tag + ' ' + joinAttributes(attributes) + '>' + children.map(toHtml).join('') + '</' + tag + '>';
+  }
+}
+
+var noop$1 = function noop() {};
+
+function isWatched(node) {
+  var i2svg = node.getAttribute ? node.getAttribute(DATA_FA_I2SVG) : null;
+
+  return typeof i2svg === 'string';
+}
+
+function getMutator() {
+  if (config.autoReplaceSvg === true) {
+    return mutators.replace;
+  }
+
+  var mutator = mutators[config.autoReplaceSvg];
+
+  return mutator || mutators.replace;
+}
+
+var mutators = {
+  replace: function replace(mutation) {
+    var node = mutation[0];
+    var abstract = mutation[1];
+    var newOuterHTML = abstract.map(function (a) {
+      return toHtml(a);
+    }).join('\n');
+
+    if (node.parentNode && node.outerHTML) {
+      node.outerHTML = newOuterHTML + (config.keepOriginalSource && node.tagName.toLowerCase() !== 'svg' ? '<!-- ' + node.outerHTML + ' -->' : '');
+    } else if (node.parentNode) {
+      var newNode = document.createElement('span');
+      node.parentNode.replaceChild(newNode, node);
+      newNode.outerHTML = newOuterHTML;
+    }
+  },
+  nest: function nest(mutation) {
+    var node = mutation[0];
+    var abstract = mutation[1];
+
+    // If we already have a replaced node we do not want to continue nesting within it.
+    // Short-circuit to the standard replacement
+    if (~classArray(node).indexOf(config.replacementClass)) {
+      return mutators.replace(mutation);
+    }
+
+    var forSvg = new RegExp(config.familyPrefix + '-.*');
+
+    delete abstract[0].attributes.style;
+
+    var splitClasses = abstract[0].attributes.class.split(' ').reduce(function (acc, cls) {
+      if (cls === config.replacementClass || cls.match(forSvg)) {
+        acc.toSvg.push(cls);
+      } else {
+        acc.toNode.push(cls);
+      }
+
+      return acc;
+    }, { toNode: [], toSvg: [] });
+
+    abstract[0].attributes.class = splitClasses.toSvg.join(' ');
+
+    var newInnerHTML = abstract.map(function (a) {
+      return toHtml(a);
+    }).join('\n');
+    node.setAttribute('class', splitClasses.toNode.join(' '));
+    node.setAttribute(DATA_FA_I2SVG, '');
+    node.innerHTML = newInnerHTML;
+  }
+};
+
+function perform(mutations, callback) {
+  var callbackFunction = typeof callback === 'function' ? callback : noop$1;
+
+  if (mutations.length === 0) {
+    callbackFunction();
+  } else {
+    var frame = WINDOW.requestAnimationFrame || function (op) {
+      return op();
+    };
+
+    frame(function () {
+      var mutator = getMutator();
+      var mark = perf.begin('mutate');
+
+      mutations.map(mutator);
+
+      mark();
+
+      callbackFunction();
+    });
+  }
+}
+
+var disabled = false;
+
+function disableObservation(operation) {
+  disabled = true;
+  operation();
+  disabled = false;
+}
+
+var mo = null;
+
+function observe(options) {
+  if (!MUTATION_OBSERVER) {
+    return;
+  }
+
+  if (!config.observeMutations) {
+    return;
+  }
+
+  var treeCallback = options.treeCallback,
+      nodeCallback = options.nodeCallback,
+      pseudoElementsCallback = options.pseudoElementsCallback,
+      _options$observeMutat = options.observeMutationsRoot,
+      observeMutationsRoot = _options$observeMutat === undefined ? DOCUMENT.body : _options$observeMutat;
+
+
+  mo = new MUTATION_OBSERVER(function (objects) {
+    if (disabled) return;
+
+    toArray(objects).forEach(function (mutationRecord) {
+      if (mutationRecord.type === 'childList' && mutationRecord.addedNodes.length > 0 && !isWatched(mutationRecord.addedNodes[0])) {
+        if (config.searchPseudoElements) {
+          pseudoElementsCallback(mutationRecord.target);
+        }
+
+        treeCallback(mutationRecord.target);
+      }
+
+      if (mutationRecord.type === 'attributes' && mutationRecord.target.parentNode && config.searchPseudoElements) {
+        pseudoElementsCallback(mutationRecord.target.parentNode);
+      }
+
+      if (mutationRecord.type === 'attributes' && isWatched(mutationRecord.target) && ~ATTRIBUTES_WATCHED_FOR_MUTATION.indexOf(mutationRecord.attributeName)) {
+        if (mutationRecord.attributeName === 'class') {
+          var _getCanonicalIcon = getCanonicalIcon(classArray(mutationRecord.target)),
+              prefix = _getCanonicalIcon.prefix,
+              iconName = _getCanonicalIcon.iconName;
+
+          if (prefix) mutationRecord.target.setAttribute('data-prefix', prefix);
+          if (iconName) mutationRecord.target.setAttribute('data-icon', iconName);
+        } else {
+          nodeCallback(mutationRecord.target);
+        }
+      }
+    });
+  });
+
+  if (!IS_DOM) return;
+
+  mo.observe(observeMutationsRoot, {
+    childList: true, attributes: true, characterData: true, subtree: true
+  });
+}
+
+function disconnect() {
+  if (!mo) return;
+
+  mo.disconnect();
+}
+
+var styleParser = function (node) {
+  var style = node.getAttribute('style');
+
+  var val = [];
+
+  if (style) {
+    val = style.split(';').reduce(function (acc, style) {
+      var styles = style.split(':');
+      var prop = styles[0];
+      var value = styles.slice(1);
+
+      if (prop && value.length > 0) {
+        acc[prop] = value.join(':').trim();
+      }
+
+      return acc;
+    }, {});
+  }
+
+  return val;
+};
+
+function toHex(unicode) {
+  var result = '';
+
+  for (var i = 0; i < unicode.length; i++) {
+    var hex = unicode.charCodeAt(i).toString(16);
+    result += ('000' + hex).slice(-4);
+  }
+
+  return result;
+}
+
+var classParser = function (node) {
+  var existingPrefix = node.getAttribute('data-prefix');
+  var existingIconName = node.getAttribute('data-icon');
+  var innerText = node.innerText !== undefined ? node.innerText.trim() : '';
+
+  var val = getCanonicalIcon(classArray(node));
+
+  if (existingPrefix && existingIconName) {
+    val.prefix = existingPrefix;
+    val.iconName = existingIconName;
+  }
+
+  if (val.prefix && innerText.length > 1) {
+    val.iconName = byLigature(val.prefix, node.innerText);
+  } else if (val.prefix && innerText.length === 1) {
+    val.iconName = byUnicode(val.prefix, toHex(node.innerText));
+  }
+
+  return val;
+};
+
+var parseTransformString = function parseTransformString(transformString) {
+  var transform = {
+    size: 16,
+    x: 0,
+    y: 0,
+    flipX: false,
+    flipY: false,
+    rotate: 0
+  };
+
+  if (!transformString) {
+    return transform;
+  } else {
+    return transformString.toLowerCase().split(' ').reduce(function (acc, n) {
+      var parts = n.toLowerCase().split('-');
+      var first = parts[0];
+      var rest = parts.slice(1).join('-');
+
+      if (first && rest === 'h') {
+        acc.flipX = true;
+        return acc;
+      }
+
+      if (first && rest === 'v') {
+        acc.flipY = true;
+        return acc;
+      }
+
+      rest = parseFloat(rest);
+
+      if (isNaN(rest)) {
+        return acc;
+      }
+
+      switch (first) {
+        case 'grow':
+          acc.size = acc.size + rest;
+          break;
+        case 'shrink':
+          acc.size = acc.size - rest;
+          break;
+        case 'left':
+          acc.x = acc.x - rest;
+          break;
+        case 'right':
+          acc.x = acc.x + rest;
+          break;
+        case 'up':
+          acc.y = acc.y - rest;
+          break;
+        case 'down':
+          acc.y = acc.y + rest;
+          break;
+        case 'rotate':
+          acc.rotate = acc.rotate + rest;
+          break;
+      }
+
+      return acc;
+    }, transform);
+  }
+};
+
+var transformParser = function (node) {
+  return parseTransformString(node.getAttribute('data-fa-transform'));
+};
+
+var symbolParser = function (node) {
+  var symbol = node.getAttribute('data-fa-symbol');
+
+  return symbol === null ? false : symbol === '' ? true : symbol;
+};
+
+var attributesParser = function (node) {
+  var extraAttributes = toArray(node.attributes).reduce(function (acc, attr) {
+    if (acc.name !== 'class' && acc.name !== 'style') {
+      acc[attr.name] = attr.value;
+    }
+    return acc;
+  }, {});
+
+  var title = node.getAttribute('title');
+
+  if (config.autoA11y) {
+    if (title) {
+      extraAttributes['aria-labelledby'] = config.replacementClass + '-title-' + nextUniqueId();
+    } else {
+      extraAttributes['aria-hidden'] = 'true';
+    }
+  }
+
+  return extraAttributes;
+};
+
+var maskParser = function (node) {
+  var mask = node.getAttribute('data-fa-mask');
+
+  if (!mask) {
+    return emptyCanonicalIcon();
+  } else {
+    return getCanonicalIcon(mask.split(' ').map(function (i) {
+      return i.trim();
+    }));
+  }
+};
+
+var blankMeta = {
+  iconName: null,
+  title: null,
+  prefix: null,
+  transform: meaninglessTransform,
+  symbol: false,
+  mask: null,
+  extra: { classes: [], styles: {}, attributes: {} }
+};
+
+function parseMeta(node) {
+  var _classParser = classParser(node),
+      iconName = _classParser.iconName,
+      prefix = _classParser.prefix,
+      extraClasses = _classParser.rest;
+
+  var extraStyles = styleParser(node);
+  var transform = transformParser(node);
+  var symbol = symbolParser(node);
+  var extraAttributes = attributesParser(node);
+  var mask = maskParser(node);
+
+  return {
+    iconName: iconName,
+    title: node.getAttribute('title'),
+    prefix: prefix,
+    transform: transform,
+    symbol: symbol,
+    mask: mask,
+    extra: {
+      classes: extraClasses,
+      styles: extraStyles,
+      attributes: extraAttributes
+    }
+  };
+}
+
+function MissingIcon(error) {
+  this.name = 'MissingIcon';
+  this.message = error || 'Icon unavailable';
+  this.stack = new Error().stack;
+}
+
+MissingIcon.prototype = Object.create(Error.prototype);
+MissingIcon.prototype.constructor = MissingIcon;
+
+var FILL = { fill: 'currentColor' };
+var ANIMATION_BASE = {
+  attributeType: 'XML',
+  repeatCount: 'indefinite',
+  dur: '2s'
+};
+var RING = {
+  tag: 'path',
+  attributes: _extends({}, FILL, {
+    d: 'M156.5,447.7l-12.6,29.5c-18.7-9.5-35.9-21.2-51.5-34.9l22.7-22.7C127.6,430.5,141.5,440,156.5,447.7z M40.6,272H8.5 c1.4,21.2,5.4,41.7,11.7,61.1L50,321.2C45.1,305.5,41.8,289,40.6,272z M40.6,240c1.4-18.8,5.2-37,11.1-54.1l-29.5-12.6 C14.7,194.3,10,216.7,8.5,240H40.6z M64.3,156.5c7.8-14.9,17.2-28.8,28.1-41.5L69.7,92.3c-13.7,15.6-25.5,32.8-34.9,51.5 L64.3,156.5z M397,419.6c-13.9,12-29.4,22.3-46.1,30.4l11.9,29.8c20.7-9.9,39.8-22.6,56.9-37.6L397,419.6z M115,92.4 c13.9-12,29.4-22.3,46.1-30.4l-11.9-29.8c-20.7,9.9-39.8,22.6-56.8,37.6L115,92.4z M447.7,355.5c-7.8,14.9-17.2,28.8-28.1,41.5 l22.7,22.7c13.7-15.6,25.5-32.9,34.9-51.5L447.7,355.5z M471.4,272c-1.4,18.8-5.2,37-11.1,54.1l29.5,12.6 c7.5-21.1,12.2-43.5,13.6-66.8H471.4z M321.2,462c-15.7,5-32.2,8.2-49.2,9.4v32.1c21.2-1.4,41.7-5.4,61.1-11.7L321.2,462z M240,471.4c-18.8-1.4-37-5.2-54.1-11.1l-12.6,29.5c21.1,7.5,43.5,12.2,66.8,13.6V471.4z M462,190.8c5,15.7,8.2,32.2,9.4,49.2h32.1 c-1.4-21.2-5.4-41.7-11.7-61.1L462,190.8z M92.4,397c-12-13.9-22.3-29.4-30.4-46.1l-29.8,11.9c9.9,20.7,22.6,39.8,37.6,56.9 L92.4,397z M272,40.6c18.8,1.4,36.9,5.2,54.1,11.1l12.6-29.5C317.7,14.7,295.3,10,272,8.5V40.6z M190.8,50 c15.7-5,32.2-8.2,49.2-9.4V8.5c-21.2,1.4-41.7,5.4-61.1,11.7L190.8,50z M442.3,92.3L419.6,115c12,13.9,22.3,29.4,30.5,46.1 l29.8-11.9C470,128.5,457.3,109.4,442.3,92.3z M397,92.4l22.7-22.7c-15.6-13.7-32.8-25.5-51.5-34.9l-12.6,29.5 C370.4,72.1,384.4,81.5,397,92.4z'
+  })
+};
+var OPACITY_ANIMATE = _extends({}, ANIMATION_BASE, {
+  attributeName: 'opacity'
+});
+var DOT = {
+  tag: 'circle',
+  attributes: _extends({}, FILL, {
+    cx: '256',
+    cy: '364',
+    r: '28'
+  }),
+  children: [{ tag: 'animate', attributes: _extends({}, ANIMATION_BASE, { attributeName: 'r', values: '28;14;28;28;14;28;' }) }, { tag: 'animate', attributes: _extends({}, OPACITY_ANIMATE, { values: '1;0;1;1;0;1;' }) }]
+};
+var QUESTION = {
+  tag: 'path',
+  attributes: _extends({}, FILL, {
+    opacity: '1',
+    d: 'M263.7,312h-16c-6.6,0-12-5.4-12-12c0-71,77.4-63.9,77.4-107.8c0-20-17.8-40.2-57.4-40.2c-29.1,0-44.3,9.6-59.2,28.7 c-3.9,5-11.1,6-16.2,2.4l-13.1-9.2c-5.6-3.9-6.9-11.8-2.6-17.2c21.2-27.2,46.4-44.7,91.2-44.7c52.3,0,97.4,29.8,97.4,80.2 c0,67.6-77.4,63.5-77.4,107.8C275.7,306.6,270.3,312,263.7,312z'
+  }),
+  children: [{ tag: 'animate', attributes: _extends({}, OPACITY_ANIMATE, { values: '1;0;0;0;0;1;' }) }]
+};
+var EXCLAMATION = {
+  tag: 'path',
+  attributes: _extends({}, FILL, {
+    opacity: '0',
+    d: 'M232.5,134.5l7,168c0.3,6.4,5.6,11.5,12,11.5h9c6.4,0,11.7-5.1,12-11.5l7-168c0.3-6.8-5.2-12.5-12-12.5h-23 C237.7,122,232.2,127.7,232.5,134.5z'
+  }),
+  children: [{ tag: 'animate', attributes: _extends({}, OPACITY_ANIMATE, { values: '0;0;1;1;0;0;' }) }]
+};
+
+var missing = { tag: 'g', children: [RING, DOT, QUESTION, EXCLAMATION] };
+
+var styles = namespace.styles;
+
+var LAYERS_TEXT_CLASSNAME = 'fa-layers-text';
+var FONT_FAMILY_PATTERN = /Font Awesome 5 (Solid|Regular|Light|Brands|Free|Pro)/;
+var STYLE_TO_PREFIX = {
+  'Solid': 'fas',
+  'Regular': 'far',
+  'Light': 'fal',
+  'Brands': 'fab'
+};
+var FONT_WEIGHT_TO_PREFIX = {
+  '900': 'fas',
+  '400': 'far',
+  '300': 'fal'
+};
+
+function findIcon(iconName, prefix) {
+  var val = {
+    found: false,
+    width: 512,
+    height: 512,
+    icon: missing
+  };
+
+  if (iconName && prefix && styles[prefix] && styles[prefix][iconName]) {
+    var icon = styles[prefix][iconName];
+    var width = icon[0];
+    var height = icon[1];
+    var vectorData = icon.slice(4);
+
+    val = {
+      found: true,
+      width: width,
+      height: height,
+      icon: { tag: 'path', attributes: { fill: 'currentColor', d: vectorData[0] } }
+    };
+  } else if (iconName && prefix && !config.showMissingIcons) {
+    throw new MissingIcon('Icon is missing for prefix ' + prefix + ' with icon name ' + iconName);
+  }
+
+  return val;
+}
+
+function generateSvgReplacementMutation(node, nodeMeta) {
+  var iconName = nodeMeta.iconName,
+      title = nodeMeta.title,
+      prefix = nodeMeta.prefix,
+      transform = nodeMeta.transform,
+      symbol = nodeMeta.symbol,
+      mask = nodeMeta.mask,
+      extra = nodeMeta.extra;
+
+
+  return [node, makeInlineSvgAbstract({
+    icons: {
+      main: findIcon(iconName, prefix),
+      mask: findIcon(mask.iconName, mask.prefix)
+    },
+    prefix: prefix,
+    iconName: iconName,
+    transform: transform,
+    symbol: symbol,
+    mask: mask,
+    title: title,
+    extra: extra,
+    watchable: true
+  })];
+}
+
+function generateLayersText(node, nodeMeta) {
+  var title = nodeMeta.title,
+      transform = nodeMeta.transform,
+      extra = nodeMeta.extra;
+
+
+  var width = null;
+  var height = null;
+
+  if (IS_IE) {
+    var computedFontSize = parseInt(getComputedStyle(node).fontSize, 10);
+    var boundingClientRect = node.getBoundingClientRect();
+    width = boundingClientRect.width / computedFontSize;
+    height = boundingClientRect.height / computedFontSize;
+  }
+
+  if (config.autoA11y && !title) {
+    extra.attributes['aria-hidden'] = 'true';
+  }
+
+  return [node, makeLayersTextAbstract({
+    content: node.innerHTML,
+    width: width,
+    height: height,
+    transform: transform,
+    title: title,
+    extra: extra,
+    watchable: true
+  })];
+}
+
+function generateMutation(node) {
+  var nodeMeta = parseMeta(node);
+
+  if (~nodeMeta.extra.classes.indexOf(LAYERS_TEXT_CLASSNAME)) {
+    return generateLayersText(node, nodeMeta);
+  } else {
+    return generateSvgReplacementMutation(node, nodeMeta);
+  }
+}
+
+function searchPseudoElements(root) {
+  if (!IS_DOM) return;
+
+  var end = perf.begin('searchPseudoElements');
+
+  disableObservation(function () {
+    toArray(root.querySelectorAll('*')).filter(function (n) {
+      return n.parentNode !== document.head && !~TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS.indexOf(n.tagName.toUpperCase()) && !n.getAttribute(DATA_FA_PSEUDO_ELEMENT) && (!n.parentNode || n.parentNode.tagName !== 'svg');
+    }).forEach(function (node) {
+      [':before', ':after'].forEach(function (pos) {
+        var children = toArray(node.children);
+        var alreadyProcessedPseudoElement = children.filter(function (c) {
+          return c.getAttribute(DATA_FA_PSEUDO_ELEMENT) === pos;
+        })[0];
+
+        var styles = WINDOW.getComputedStyle(node, pos);
+        var fontFamily = styles.getPropertyValue('font-family').match(FONT_FAMILY_PATTERN);
+        var fontWeight = styles.getPropertyValue('font-weight');
+
+        if (alreadyProcessedPseudoElement && !fontFamily) {
+          // If we've already processed it but the current computed style does not result in a font-family,
+          // that probably means that a class name that was previously present to make the icon has been
+          // removed. So we now should delete the icon.
+          node.removeChild(alreadyProcessedPseudoElement);
+        } else if (fontFamily) {
+          var content = styles.getPropertyValue('content');
+          var prefix = ~['Light', 'Regular', 'Solid', 'Brands'].indexOf(fontFamily[1]) ? STYLE_TO_PREFIX[fontFamily[1]] : FONT_WEIGHT_TO_PREFIX[fontWeight];
+          var iconName = byUnicode(prefix, toHex(content.length === 3 ? content.substr(1, 1) : content));
+          // Only convert the pseudo element in this :before/:after position into an icon if we haven't
+          // already done so with the same prefix and iconName
+          if (!alreadyProcessedPseudoElement || alreadyProcessedPseudoElement.getAttribute(DATA_PREFIX) !== prefix || alreadyProcessedPseudoElement.getAttribute(DATA_ICON) !== iconName) {
+            if (alreadyProcessedPseudoElement) {
+              // Delete the old one, since we're replacing it with a new one
+              node.removeChild(alreadyProcessedPseudoElement);
+            }
+
+            var extra = blankMeta.extra;
+
+            extra.attributes[DATA_FA_PSEUDO_ELEMENT] = pos;
+            var abstract = makeInlineSvgAbstract(_extends({}, blankMeta, {
+              icons: {
+                main: findIcon(iconName, prefix),
+                mask: emptyCanonicalIcon()
+              },
+              prefix: prefix,
+              iconName: iconName,
+              extra: extra,
+              watchable: true
+            }));
+
+            var element = DOCUMENT.createElement('svg');
+
+            if (pos === ':before') {
+              node.insertBefore(element, node.firstChild);
+            } else {
+              node.appendChild(element);
+            }
+
+            element.outerHTML = abstract.map(function (a) {
+              return toHtml(a);
+            }).join('\n');
+          }
+        }
+      });
+    });
+  });
+
+  end();
+}
+
+function onTree(root) {
+  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  if (!IS_DOM) return;
+
+  var htmlClassList = DOCUMENT.documentElement.classList;
+  var hclAdd = function hclAdd(suffix) {
+    return htmlClassList.add(HTML_CLASS_I2SVG_BASE_CLASS + '-' + suffix);
+  };
+  var hclRemove = function hclRemove(suffix) {
+    return htmlClassList.remove(HTML_CLASS_I2SVG_BASE_CLASS + '-' + suffix);
+  };
+  var prefixes = Object.keys(styles);
+  var prefixesDomQuery = ['.' + LAYERS_TEXT_CLASSNAME + ':not([' + DATA_FA_I2SVG + '])'].concat(prefixes.map(function (p) {
+    return '.' + p + ':not([' + DATA_FA_I2SVG + '])';
+  })).join(', ');
+
+  if (prefixesDomQuery.length === 0) {
+    return;
+  }
+
+  var candidates = toArray(root.querySelectorAll(prefixesDomQuery));
+
+  if (candidates.length > 0) {
+    hclAdd('pending');
+    hclRemove('complete');
+  } else {
+    return;
+  }
+
+  var mark = perf.begin('onTree');
+
+  var mutations = candidates.reduce(function (acc, node) {
+    try {
+      var mutation = generateMutation(node);
+
+      if (mutation) {
+        acc.push(mutation);
+      }
+    } catch (e) {
+      if (!PRODUCTION) {
+        if (e instanceof MissingIcon) {
+          console.error(e);
+        }
+      }
+    }
+
+    return acc;
+  }, []);
+
+  mark();
+
+  perform(mutations, function () {
+    hclAdd('active');
+    hclAdd('complete');
+    hclRemove('pending');
+
+    if (typeof callback === 'function') callback();
+  });
+}
+
+function onNode(node) {
+  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  var mutation = generateMutation(node);
+
+  if (mutation) {
+    perform([mutation], callback);
+  }
+}
+
+var baseStyles = "svg:not(:root).svg-inline--fa{overflow:visible}.svg-inline--fa{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-lg{vertical-align:-.225em}.svg-inline--fa.fa-w-1{width:.0625em}.svg-inline--fa.fa-w-2{width:.125em}.svg-inline--fa.fa-w-3{width:.1875em}.svg-inline--fa.fa-w-4{width:.25em}.svg-inline--fa.fa-w-5{width:.3125em}.svg-inline--fa.fa-w-6{width:.375em}.svg-inline--fa.fa-w-7{width:.4375em}.svg-inline--fa.fa-w-8{width:.5em}.svg-inline--fa.fa-w-9{width:.5625em}.svg-inline--fa.fa-w-10{width:.625em}.svg-inline--fa.fa-w-11{width:.6875em}.svg-inline--fa.fa-w-12{width:.75em}.svg-inline--fa.fa-w-13{width:.8125em}.svg-inline--fa.fa-w-14{width:.875em}.svg-inline--fa.fa-w-15{width:.9375em}.svg-inline--fa.fa-w-16{width:1em}.svg-inline--fa.fa-w-17{width:1.0625em}.svg-inline--fa.fa-w-18{width:1.125em}.svg-inline--fa.fa-w-19{width:1.1875em}.svg-inline--fa.fa-w-20{width:1.25em}.svg-inline--fa.fa-pull-left{margin-right:.3em;width:auto}.svg-inline--fa.fa-pull-right{margin-left:.3em;width:auto}.svg-inline--fa.fa-border{height:1.5em}.svg-inline--fa.fa-li{width:2em}.svg-inline--fa.fa-fw{width:1.25em}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:#ff253a;border-radius:1em;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;height:1.5em;line-height:1;max-width:5em;min-width:1.5em;overflow:hidden;padding:.25em;right:0;text-overflow:ellipsis;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:0;right:0;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:0;left:0;right:auto;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{right:0;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:0;right:auto;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top left;transform-origin:top left}.fa-lg{font-size:1.33333em;line-height:.75em;vertical-align:-.0667em}.fa-xs{font-size:.75em}.fa-sm{font-size:.875em}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:2.5em;padding-left:0}.fa-ul>li{position:relative}.fa-li{left:-2em;position:absolute;text-align:center;width:2em;line-height:inherit}.fa-border{border:solid .08em #eee;border-radius:.1em;padding:.2em .25em .15em}.fa-pull-left{float:left}.fa-pull-right{float:right}.fa.fa-pull-left,.fab.fa-pull-left,.fal.fa-pull-left,.far.fa-pull-left,.fas.fa-pull-left{margin-right:.3em}.fa.fa-pull-right,.fab.fa-pull-right,.fal.fa-pull-right,.far.fa-pull-right,.fas.fa-pull-right{margin-left:.3em}.fa-spin{-webkit-animation:fa-spin 2s infinite linear;animation:fa-spin 2s infinite linear}.fa-pulse{-webkit-animation:fa-spin 1s infinite steps(8);animation:fa-spin 1s infinite steps(8)}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}:root .fa-flip-horizontal,:root .fa-flip-vertical,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-rotate-90{-webkit-filter:none;filter:none}.fa-stack{display:inline-block;height:2em;position:relative;width:2em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.svg-inline--fa.fa-stack-1x{height:1em;width:1em}.svg-inline--fa.fa-stack-2x{height:2em;width:2em}.fa-inverse{color:#fff}.sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.sr-only-focusable:active,.sr-only-focusable:focus{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto}";
+
+var css = function () {
+  var dfp = DEFAULT_FAMILY_PREFIX;
+  var drc = DEFAULT_REPLACEMENT_CLASS;
+  var fp = config.familyPrefix;
+  var rc = config.replacementClass;
+  var s = baseStyles;
+
+  if (fp !== dfp || rc !== drc) {
+    var dPatt = new RegExp('\\.' + dfp + '\\-', 'g');
+    var rPatt = new RegExp('\\.' + drc, 'g');
+
+    s = s.replace(dPatt, '.' + fp + '-').replace(rPatt, '.' + rc);
+  }
+
+  return s;
+};
+
+function define(prefix, icons) {
+  var normalized = Object.keys(icons).reduce(function (acc, iconName) {
+    var icon = icons[iconName];
+    var expanded = !!icon.icon;
+
+    if (expanded) {
+      acc[icon.iconName] = icon.icon;
+    } else {
+      acc[iconName] = icon;
+    }
+    return acc;
+  }, {});
+
+  if (typeof namespace.hooks.addPack === 'function') {
+    namespace.hooks.addPack(prefix, normalized);
+  } else {
+    namespace.styles[prefix] = _extends({}, namespace.styles[prefix] || {}, normalized);
+  }
+
+  /**
+   * Font Awesome 4 used the prefix of `fa` for all icons. With the introduction
+   * of new styles we needed to differentiate between them. Prefix `fa` is now an alias
+   * for `fas` so we'll easy the upgrade process for our users by automatically defining
+   * this as well.
+   */
+  if (prefix === 'fas') {
+    define('fa', icons);
+  }
+}
+
+var Library = function () {
+  function Library() {
+    classCallCheck(this, Library);
+
+    this.definitions = {};
+  }
+
+  createClass(Library, [{
+    key: 'add',
+    value: function add() {
+      var _this = this;
+
+      for (var _len = arguments.length, definitions = Array(_len), _key = 0; _key < _len; _key++) {
+        definitions[_key] = arguments[_key];
+      }
+
+      var additions = definitions.reduce(this._pullDefinitions, {});
+
+      Object.keys(additions).forEach(function (key) {
+        _this.definitions[key] = _extends({}, _this.definitions[key] || {}, additions[key]);
+        define(key, additions[key]);
+        build();
+      });
+    }
+  }, {
+    key: 'reset',
+    value: function reset() {
+      this.definitions = {};
+    }
+  }, {
+    key: '_pullDefinitions',
+    value: function _pullDefinitions(additions, definition) {
+      var normalized = definition.prefix && definition.iconName && definition.icon ? { 0: definition } : definition;
+
+      Object.keys(normalized).map(function (key) {
+        var _normalized$key = normalized[key],
+            prefix = _normalized$key.prefix,
+            iconName = _normalized$key.iconName,
+            icon = _normalized$key.icon;
+
+
+        if (!additions[prefix]) additions[prefix] = {};
+
+        additions[prefix][iconName] = icon;
+      });
+
+      return additions;
+    }
+  }]);
+  return Library;
+}();
+
+function prepIcon(icon) {
+  var width = icon[0];
+  var height = icon[1];
+  var vectorData = icon.slice(4);
+
+  return {
+    found: true,
+    width: width,
+    height: height,
+    icon: { tag: 'path', attributes: { fill: 'currentColor', d: vectorData[0] } }
+  };
+}
+
+function ensureCss() {
+  if (config.autoAddCss && !_cssInserted) {
+    insertCss(css());
+    _cssInserted = true;
+  }
+}
+
+function apiObject(val, abstractCreator) {
+  Object.defineProperty(val, 'abstract', {
+    get: abstractCreator
+  });
+
+  Object.defineProperty(val, 'html', {
+    get: function get() {
+      return val.abstract.map(function (a) {
+        return toHtml(a);
+      });
+    }
+  });
+
+  Object.defineProperty(val, 'node', {
+    get: function get() {
+      if (!IS_DOM) return;
+
+      var container = DOCUMENT.createElement('div');
+      container.innerHTML = val.html;
+      return container.children;
+    }
+  });
+
+  return val;
+}
+
+function findIconDefinition(params) {
+  var _params$prefix = params.prefix,
+      prefix = _params$prefix === undefined ? 'fa' : _params$prefix,
+      iconName = params.iconName;
+
+
+  if (!iconName) return;
+
+  return iconFromMapping(library.definitions, prefix, iconName) || iconFromMapping(namespace.styles, prefix, iconName);
+}
+
+function resolveIcons(next) {
+  return function (maybeIconDefinition) {
+    var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    var iconDefinition = (maybeIconDefinition || {}).icon ? maybeIconDefinition : findIconDefinition(maybeIconDefinition || {});
+
+    var mask = params.mask;
+
+
+    if (mask) {
+      mask = (mask || {}).icon ? mask : findIconDefinition(mask || {});
+    }
+
+    return next(iconDefinition, _extends({}, params, { mask: mask }));
+  };
+}
+
+var library = new Library();
+
+var noAuto = function noAuto() {
+  config.autoReplaceSvg = false;
+  config.observeMutations = false;
+
+  disconnect();
+};
+
+var _cssInserted = false;
+
+var dom = {
+  i2svg: function i2svg() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    if (IS_DOM) {
+      ensureCss();
+
+      var _params$node = params.node,
+          node = _params$node === undefined ? DOCUMENT : _params$node,
+          _params$callback = params.callback,
+          callback = _params$callback === undefined ? function () {} : _params$callback;
+
+
+      if (config.searchPseudoElements) {
+        searchPseudoElements(node);
+      }
+
+      onTree(node, callback);
+    }
+  },
+
+  css: css,
+
+  insertCss: function insertCss$$1() {
+    if (!_cssInserted) {
+      insertCss(css());
+      _cssInserted = true;
+    }
+  },
+
+  watch: function watch() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var autoReplaceSvgRoot = params.autoReplaceSvgRoot,
+        observeMutationsRoot = params.observeMutationsRoot;
+
+
+    if (config.autoReplaceSvg === false) {
+      config.autoReplaceSvg = true;
+    }
+
+    config.observeMutations = true;
+
+    domready(function () {
+      autoReplace({
+        autoReplaceSvgRoot: autoReplaceSvgRoot
+      });
+
+      observe({
+        treeCallback: onTree,
+        nodeCallback: onNode,
+        pseudoElementsCallback: searchPseudoElements,
+        observeMutationsRoot: observeMutationsRoot
+      });
+    });
+  }
+};
+
+var parse = {
+  transform: function transform(transformString) {
+    return parseTransformString(transformString);
+  }
+};
+
+var icon = resolveIcons(function (iconDefinition) {
+  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var _params$transform = params.transform,
+      transform = _params$transform === undefined ? meaninglessTransform : _params$transform,
+      _params$symbol = params.symbol,
+      symbol = _params$symbol === undefined ? false : _params$symbol,
+      _params$mask = params.mask,
+      mask = _params$mask === undefined ? null : _params$mask,
+      _params$title = params.title,
+      title = _params$title === undefined ? null : _params$title,
+      _params$classes = params.classes,
+      classes = _params$classes === undefined ? [] : _params$classes,
+      _params$attributes = params.attributes,
+      attributes = _params$attributes === undefined ? {} : _params$attributes,
+      _params$styles = params.styles,
+      styles = _params$styles === undefined ? {} : _params$styles;
+
+
+  if (!iconDefinition) return;
+
+  var prefix = iconDefinition.prefix,
+      iconName = iconDefinition.iconName,
+      icon = iconDefinition.icon;
+
+
+  return apiObject(_extends({ type: 'icon' }, iconDefinition), function () {
+    ensureCss();
+
+    if (config.autoA11y) {
+      if (title) {
+        attributes['aria-labelledby'] = config.replacementClass + '-title-' + nextUniqueId();
+      } else {
+        attributes['aria-hidden'] = 'true';
+      }
+    }
+
+    return makeInlineSvgAbstract({
+      icons: {
+        main: prepIcon(icon),
+        mask: mask ? prepIcon(mask.icon) : { found: false, width: null, height: null, icon: {} }
+      },
+      prefix: prefix,
+      iconName: iconName,
+      transform: _extends({}, meaninglessTransform, transform),
+      symbol: symbol,
+      title: title,
+      extra: {
+        attributes: attributes,
+        styles: styles,
+        classes: classes
+      }
+    });
+  });
+});
+
+var text = function text(content) {
+  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var _params$transform2 = params.transform,
+      transform = _params$transform2 === undefined ? meaninglessTransform : _params$transform2,
+      _params$title2 = params.title,
+      title = _params$title2 === undefined ? null : _params$title2,
+      _params$classes2 = params.classes,
+      classes = _params$classes2 === undefined ? [] : _params$classes2,
+      _params$attributes2 = params.attributes,
+      attributes = _params$attributes2 === undefined ? {} : _params$attributes2,
+      _params$styles2 = params.styles,
+      styles = _params$styles2 === undefined ? {} : _params$styles2;
+
+
+  return apiObject({ type: 'text', content: content }, function () {
+    ensureCss();
+
+    return makeLayersTextAbstract({
+      content: content,
+      transform: _extends({}, meaninglessTransform, transform),
+      title: title,
+      extra: {
+        attributes: attributes,
+        styles: styles,
+        classes: [config.familyPrefix + '-layers-text'].concat(toConsumableArray(classes))
+      }
+    });
+  });
+};
+
+var counter = function counter(content) {
+  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var _params$title3 = params.title,
+      title = _params$title3 === undefined ? null : _params$title3,
+      _params$classes3 = params.classes,
+      classes = _params$classes3 === undefined ? [] : _params$classes3,
+      _params$attributes3 = params.attributes,
+      attributes = _params$attributes3 === undefined ? {} : _params$attributes3,
+      _params$styles3 = params.styles,
+      styles = _params$styles3 === undefined ? {} : _params$styles3;
+
+
+  return apiObject({ type: 'counter', content: content }, function () {
+    ensureCss();
+
+    return makeLayersCounterAbstract({
+      content: content.toString(),
+      title: title,
+      extra: {
+        attributes: attributes,
+        styles: styles,
+        classes: [config.familyPrefix + '-layers-counter'].concat(toConsumableArray(classes))
+      }
+    });
+  });
+};
+
+var layer = function layer(assembler) {
+  return apiObject({ type: 'layer' }, function () {
+    ensureCss();
+
+    var children = [];
+
+    assembler(function (args) {
+      Array.isArray(args) ? args.map(function (a) {
+        children = children.concat(a.abstract);
+      }) : children = children.concat(args.abstract);
+    });
+
+    return [{
+      tag: 'span',
+      attributes: { class: config.familyPrefix + '-layers' },
+      children: children
+    }];
+  });
+};
+
+var api = {
+  noAuto: noAuto,
+  config: config,
+  dom: dom,
+  library: library,
+  parse: parse,
+  findIconDefinition: findIconDefinition,
+  icon: icon,
+  text: text,
+  counter: counter,
+  layer: layer,
+  toHtml: toHtml
+};
+
+var autoReplace = function autoReplace() {
+  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var _params$autoReplaceSv = params.autoReplaceSvgRoot,
+      autoReplaceSvgRoot = _params$autoReplaceSv === undefined ? DOCUMENT : _params$autoReplaceSv;
+
+
+  if (Object.keys(namespace.styles).length > 0 && IS_DOM && config.autoReplaceSvg) api.dom.i2svg({ node: autoReplaceSvgRoot });
+};
+
+function bootstrap() {
+  if (IS_BROWSER) {
+    if (!WINDOW.FontAwesome) {
+      WINDOW.FontAwesome = api;
+    }
+
+    domready(function () {
+      autoReplace();
+
+      observe({
+        treeCallback: onTree,
+        nodeCallback: onNode,
+        pseudoElementsCallback: searchPseudoElements
+      });
+    });
+  }
+
+  namespace.hooks = _extends({}, namespace.hooks, {
+
+    addPack: function addPack(prefix, icons) {
+      namespace.styles[prefix] = _extends({}, namespace.styles[prefix] || {}, icons);
+
+      build();
+      autoReplace();
+    },
+
+    addShims: function addShims(shims) {
+      var _namespace$shims;
+
+      (_namespace$shims = namespace.shims).push.apply(_namespace$shims, toConsumableArray(shims));
+
+      build();
+      autoReplace();
+    }
+  });
+}
+
+bunker(bootstrap);
+
+}());
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+window._ = __webpack_require__(19);
+window.Popper = __webpack_require__(5).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -14038,7 +17601,7 @@ window.Popper = __webpack_require__(4).default;
 try {
   window.$ = window.jQuery = __webpack_require__(2);
 
-  __webpack_require__(17);
+  __webpack_require__(21);
 } catch (e) {}
 
 /**
@@ -14047,7 +17610,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(18);
+window.axios = __webpack_require__(22);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -14083,7 +17646,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -31195,10 +34758,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(16)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(20)(module)))
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -31226,7 +34789,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -31235,7 +34798,7 @@ module.exports = function(module) {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(2), __webpack_require__(4)) :
+   true ? factory(exports, __webpack_require__(2), __webpack_require__(5)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -35176,21 +38739,21 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(19);
+module.exports = __webpack_require__(23);
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(5);
-var Axios = __webpack_require__(21);
+var bind = __webpack_require__(6);
+var Axios = __webpack_require__(25);
 var defaults = __webpack_require__(3);
 
 /**
@@ -35224,15 +38787,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(10);
-axios.CancelToken = __webpack_require__(35);
-axios.isCancel = __webpack_require__(9);
+axios.Cancel = __webpack_require__(11);
+axios.CancelToken = __webpack_require__(39);
+axios.isCancel = __webpack_require__(10);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(36);
+axios.spread = __webpack_require__(40);
 
 module.exports = axios;
 
@@ -35241,7 +38804,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports) {
 
 /*!
@@ -35268,7 +38831,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35276,8 +38839,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(3);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(30);
-var dispatchRequest = __webpack_require__(31);
+var InterceptorManager = __webpack_require__(34);
+var dispatchRequest = __webpack_require__(35);
 
 /**
  * Create a new instance of Axios
@@ -35354,7 +38917,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35373,13 +38936,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -35406,7 +38969,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35434,7 +38997,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35507,7 +39070,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35567,7 +39130,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35642,7 +39205,7 @@ module.exports = (
 
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35685,7 +39248,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35745,7 +39308,7 @@ module.exports = (
 
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35804,18 +39367,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 31 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(32);
-var isCancel = __webpack_require__(9);
+var transformData = __webpack_require__(36);
+var isCancel = __webpack_require__(10);
 var defaults = __webpack_require__(3);
-var isAbsoluteURL = __webpack_require__(33);
-var combineURLs = __webpack_require__(34);
+var isAbsoluteURL = __webpack_require__(37);
+var combineURLs = __webpack_require__(38);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -35897,7 +39460,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 32 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35924,7 +39487,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 33 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35945,7 +39508,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 34 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35966,13 +39529,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(10);
+var Cancel = __webpack_require__(11);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -36030,7 +39593,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 36 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36064,7 +39627,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 37 */
+/* 41 */
 /***/ (function(module, exports) {
 
 $(function () {
@@ -36142,7 +39705,7 @@ $(function () {
 
 $(window).on('load', function () {
 
-    /* In order a thumbnail of any size to be displayed normally */
+    // In order a thumbnail of any size to be displayed normally
     if ($(document).width() > 767) {
 
         var thumbnail = $('.app-thubnail-nav-link .app-thubnail-wrapper');
@@ -36153,13 +39716,12 @@ $(window).on('load', function () {
         }
     }
 
-    /* In order, a CSS transition work properly in google-chrome */
+    // In order, a CSS transition work properly in google-chrome
     $("body").removeClass("preload");
-    $("#current-password").val("");
 });
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports) {
 
 (function ($, window) {
@@ -36252,7 +39814,879 @@ $(window).on('load', function () {
 })(jQuery, window);
 
 /***/ }),
-/* 39 */
+/* 43 */
+/***/ (function(module, exports) {
+
+// ==================================================
+// fancyBox v3.5.6
+//
+// Licensed GPLv3 for open source use
+// or fancyBox Commercial License for commercial use
+//
+// http://fancyapps.com/fancybox/
+// Copyright 2018 fancyApps
+//
+// ==================================================
+!function (t, e, n, o) {
+  "use strict";
+  function i(t, e) {
+    var o,
+        i,
+        a,
+        s = [],
+        r = 0;t && t.isDefaultPrevented() || (t.preventDefault(), e = e || {}, t && t.data && (e = h(t.data.options, e)), o = e.$target || n(t.currentTarget).trigger("blur"), (a = n.fancybox.getInstance()) && a.$trigger && a.$trigger.is(o) || (e.selector ? s = n(e.selector) : (i = o.attr("data-fancybox") || "", i ? (s = t.data ? t.data.items : [], s = s.length ? s.filter('[data-fancybox="' + i + '"]') : n('[data-fancybox="' + i + '"]')) : s = [o]), r = n(s).index(o), r < 0 && (r = 0), a = n.fancybox.open(s, e, r), a.$trigger = o));
+  }if (t.console = t.console || { info: function info(t) {} }, n) {
+    if (n.fn.fancybox) return void console.info("fancyBox already initialized");var a = { closeExisting: !1, loop: !1, gutter: 50, keyboard: !0, preventCaptionOverlap: !0, arrows: !0, infobar: !0, smallBtn: "auto", toolbar: "auto", buttons: ["zoom", "slideShow", "thumbs", "close"], idleTime: 3, protect: !1, modal: !1, image: { preload: !1 }, ajax: { settings: { data: { fancybox: !0 } } }, iframe: { tpl: '<iframe id="fancybox-frame{rnd}" name="fancybox-frame{rnd}" class="fancybox-iframe" allowfullscreen="allowfullscreen" allow="autoplay; fullscreen" src=""></iframe>', preload: !0, css: {}, attr: { scrolling: "auto" } }, video: { tpl: '<video class="fancybox-video" controls controlsList="nodownload" poster="{{poster}}"><source src="{{src}}" type="{{format}}" />Sorry, your browser doesn\'t support embedded videos, <a href="{{src}}">download</a> and watch with your favorite video player!</video>', format: "", autoStart: !0 }, defaultType: "image", animationEffect: "zoom", animationDuration: 366, zoomOpacity: "auto", transitionEffect: "fade", transitionDuration: 366, slideClass: "", baseClass: "", baseTpl: '<div class="fancybox-container" role="dialog" tabindex="-1"><div class="fancybox-bg"></div><div class="fancybox-inner"><div class="fancybox-infobar"><span data-fancybox-index></span>&nbsp;/&nbsp;<span data-fancybox-count></span></div><div class="fancybox-toolbar">{{buttons}}</div><div class="fancybox-navigation">{{arrows}}</div><div class="fancybox-stage"></div><div class="fancybox-caption"><div class="fancybox-caption__body"></div></div></div></div>', spinnerTpl: '<div class="fancybox-loading"></div>', errorTpl: '<div class="fancybox-error"><p>{{ERROR}}</p></div>', btnTpl: { download: '<a download data-fancybox-download class="fancybox-button fancybox-button--download" title="{{DOWNLOAD}}" href="javascript:;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.62 17.09V19H5.38v-1.91zm-2.97-6.96L17 11.45l-5 4.87-5-4.87 1.36-1.32 2.68 2.64V5h1.92v7.77z"/></svg></a>', zoom: '<button data-fancybox-zoom class="fancybox-button fancybox-button--zoom" title="{{ZOOM}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.7 17.3l-3-3a5.9 5.9 0 0 0-.6-7.6 5.9 5.9 0 0 0-8.4 0 5.9 5.9 0 0 0 0 8.4 5.9 5.9 0 0 0 7.7.7l3 3a1 1 0 0 0 1.3 0c.4-.5.4-1 0-1.5zM8.1 13.8a4 4 0 0 1 0-5.7 4 4 0 0 1 5.7 0 4 4 0 0 1 0 5.7 4 4 0 0 1-5.7 0z"/></svg></button>', close: '<button data-fancybox-close class="fancybox-button fancybox-button--close" title="{{CLOSE}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"/></svg></button>', arrowLeft: '<button data-fancybox-prev class="fancybox-button fancybox-button--arrow_left" title="{{PREV}}"><div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.28 15.7l-1.34 1.37L5 12l4.94-5.07 1.34 1.38-2.68 2.72H19v1.94H8.6z"/></svg></div></button>', arrowRight: '<button data-fancybox-next class="fancybox-button fancybox-button--arrow_right" title="{{NEXT}}"><div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.4 12.97l-2.68 2.72 1.34 1.38L19 12l-4.94-5.07-1.34 1.38 2.68 2.72H5v1.94z"/></svg></div></button>', smallBtn: '<button type="button" data-fancybox-close class="fancybox-button fancybox-close-small" title="{{CLOSE}}"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"/></svg></button>' }, parentEl: "body", hideScrollbar: !0, autoFocus: !0, backFocus: !0, trapFocus: !0, fullScreen: { autoStart: !1 }, touch: { vertical: !0, momentum: !0 }, hash: null, media: {}, slideShow: { autoStart: !1, speed: 3e3 }, thumbs: { autoStart: !1, hideOnClose: !0, parentEl: ".fancybox-container", axis: "y" }, wheel: "auto", onInit: n.noop, beforeLoad: n.noop, afterLoad: n.noop, beforeShow: n.noop, afterShow: n.noop, beforeClose: n.noop, afterClose: n.noop, onActivate: n.noop, onDeactivate: n.noop, clickContent: function clickContent(t, e) {
+        return "image" === t.type && "zoom";
+      }, clickSlide: "close", clickOutside: "close", dblclickContent: !1, dblclickSlide: !1, dblclickOutside: !1, mobile: { preventCaptionOverlap: !1, idleTime: !1, clickContent: function clickContent(t, e) {
+          return "image" === t.type && "toggleControls";
+        }, clickSlide: function clickSlide(t, e) {
+          return "image" === t.type ? "toggleControls" : "close";
+        }, dblclickContent: function dblclickContent(t, e) {
+          return "image" === t.type && "zoom";
+        }, dblclickSlide: function dblclickSlide(t, e) {
+          return "image" === t.type && "zoom";
+        } }, lang: "en", i18n: { en: { CLOSE: "Close", NEXT: "Next", PREV: "Previous", ERROR: "The requested content cannot be loaded. <br/> Please try again later.", PLAY_START: "Start slideshow", PLAY_STOP: "Pause slideshow", FULL_SCREEN: "Full screen", THUMBS: "Thumbnails", DOWNLOAD: "Download", SHARE: "Share", ZOOM: "Zoom" }, de: { CLOSE: "Schlie&szlig;en", NEXT: "Weiter", PREV: "Zur&uuml;ck", ERROR: "Die angeforderten Daten konnten nicht geladen werden. <br/> Bitte versuchen Sie es sp&auml;ter nochmal.", PLAY_START: "Diaschau starten", PLAY_STOP: "Diaschau beenden", FULL_SCREEN: "Vollbild", THUMBS: "Vorschaubilder", DOWNLOAD: "Herunterladen", SHARE: "Teilen", ZOOM: "Vergr&ouml;&szlig;ern" } } },
+        s = n(t),
+        r = n(e),
+        c = 0,
+        l = function l(t) {
+      return t && t.hasOwnProperty && t instanceof n;
+    },
+        d = function () {
+      return t.requestAnimationFrame || t.webkitRequestAnimationFrame || t.mozRequestAnimationFrame || t.oRequestAnimationFrame || function (e) {
+        return t.setTimeout(e, 1e3 / 60);
+      };
+    }(),
+        u = function () {
+      return t.cancelAnimationFrame || t.webkitCancelAnimationFrame || t.mozCancelAnimationFrame || t.oCancelAnimationFrame || function (e) {
+        t.clearTimeout(e);
+      };
+    }(),
+        f = function () {
+      var t,
+          n = e.createElement("fakeelement"),
+          o = { transition: "transitionend", OTransition: "oTransitionEnd", MozTransition: "transitionend", WebkitTransition: "webkitTransitionEnd" };for (t in o) {
+        if (void 0 !== n.style[t]) return o[t];
+      }return "transitionend";
+    }(),
+        p = function p(t) {
+      return t && t.length && t[0].offsetHeight;
+    },
+        h = function h(t, e) {
+      var o = n.extend(!0, {}, t, e);return n.each(e, function (t, e) {
+        n.isArray(e) && (o[t] = e);
+      }), o;
+    },
+        g = function g(t) {
+      var o, i;return !(!t || t.ownerDocument !== e) && (n(".fancybox-container").css("pointer-events", "none"), o = { x: t.getBoundingClientRect().left + t.offsetWidth / 2, y: t.getBoundingClientRect().top + t.offsetHeight / 2 }, i = e.elementFromPoint(o.x, o.y) === t, n(".fancybox-container").css("pointer-events", ""), i);
+    },
+        b = function b(t, e, o) {
+      var i = this;i.opts = h({ index: o }, n.fancybox.defaults), n.isPlainObject(e) && (i.opts = h(i.opts, e)), n.fancybox.isMobile && (i.opts = h(i.opts, i.opts.mobile)), i.id = i.opts.id || ++c, i.currIndex = parseInt(i.opts.index, 10) || 0, i.prevIndex = null, i.prevPos = null, i.currPos = 0, i.firstRun = !0, i.group = [], i.slides = {}, i.addContent(t), i.group.length && i.init();
+    };n.extend(b.prototype, { init: function init() {
+        var o,
+            i,
+            a = this,
+            s = a.group[a.currIndex],
+            r = s.opts;r.closeExisting && n.fancybox.close(!0), n("body").addClass("fancybox-active"), !n.fancybox.getInstance() && !1 !== r.hideScrollbar && !n.fancybox.isMobile && e.body.scrollHeight > t.innerHeight && (n("head").append('<style id="fancybox-style-noscroll" type="text/css">.compensate-for-scrollbar{margin-right:' + (t.innerWidth - e.documentElement.clientWidth) + "px;}</style>"), n("body").addClass("compensate-for-scrollbar")), i = "", n.each(r.buttons, function (t, e) {
+          i += r.btnTpl[e] || "";
+        }), o = n(a.translate(a, r.baseTpl.replace("{{buttons}}", i).replace("{{arrows}}", r.btnTpl.arrowLeft + r.btnTpl.arrowRight))).attr("id", "fancybox-container-" + a.id).addClass(r.baseClass).data("FancyBox", a).appendTo(r.parentEl), a.$refs = { container: o }, ["bg", "inner", "infobar", "toolbar", "stage", "caption", "navigation"].forEach(function (t) {
+          a.$refs[t] = o.find(".fancybox-" + t);
+        }), a.trigger("onInit"), a.activate(), a.jumpTo(a.currIndex);
+      }, translate: function translate(t, e) {
+        var n = t.opts.i18n[t.opts.lang] || t.opts.i18n.en;return e.replace(/\{\{(\w+)\}\}/g, function (t, e) {
+          return void 0 === n[e] ? t : n[e];
+        });
+      }, addContent: function addContent(t) {
+        var e,
+            o = this,
+            i = n.makeArray(t);n.each(i, function (t, e) {
+          var i,
+              a,
+              s,
+              r,
+              c,
+              l = {},
+              d = {};n.isPlainObject(e) ? (l = e, d = e.opts || e) : "object" === n.type(e) && n(e).length ? (i = n(e), d = i.data() || {}, d = n.extend(!0, {}, d, d.options), d.$orig = i, l.src = o.opts.src || d.src || i.attr("href"), l.type || l.src || (l.type = "inline", l.src = e)) : l = { type: "html", src: e + "" }, l.opts = n.extend(!0, {}, o.opts, d), n.isArray(d.buttons) && (l.opts.buttons = d.buttons), n.fancybox.isMobile && l.opts.mobile && (l.opts = h(l.opts, l.opts.mobile)), a = l.type || l.opts.type, r = l.src || "", !a && r && ((s = r.match(/\.(mp4|mov|ogv|webm)((\?|#).*)?$/i)) ? (a = "video", l.opts.video.format || (l.opts.video.format = "video/" + ("ogv" === s[1] ? "ogg" : s[1]))) : r.match(/(^data:image\/[a-z0-9+\/=]*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg|ico)((\?|#).*)?$)/i) ? a = "image" : r.match(/\.(pdf)((\?|#).*)?$/i) ? (a = "iframe", l = n.extend(!0, l, { contentType: "pdf", opts: { iframe: { preload: !1 } } })) : "#" === r.charAt(0) && (a = "inline")), a ? l.type = a : o.trigger("objectNeedsType", l), l.contentType || (l.contentType = n.inArray(l.type, ["html", "inline", "ajax"]) > -1 ? "html" : l.type), l.index = o.group.length, "auto" == l.opts.smallBtn && (l.opts.smallBtn = n.inArray(l.type, ["html", "inline", "ajax"]) > -1), "auto" === l.opts.toolbar && (l.opts.toolbar = !l.opts.smallBtn), l.$thumb = l.opts.$thumb || null, l.opts.$trigger && l.index === o.opts.index && (l.$thumb = l.opts.$trigger.find("img:first"), l.$thumb.length && (l.opts.$orig = l.opts.$trigger)), l.$thumb && l.$thumb.length || !l.opts.$orig || (l.$thumb = l.opts.$orig.find("img:first")), l.$thumb && !l.$thumb.length && (l.$thumb = null), l.thumb = l.opts.thumb || (l.$thumb ? l.$thumb[0].src : null), "function" === n.type(l.opts.caption) && (l.opts.caption = l.opts.caption.apply(e, [o, l])), "function" === n.type(o.opts.caption) && (l.opts.caption = o.opts.caption.apply(e, [o, l])), l.opts.caption instanceof n || (l.opts.caption = void 0 === l.opts.caption ? "" : l.opts.caption + ""), "ajax" === l.type && (c = r.split(/\s+/, 2), c.length > 1 && (l.src = c.shift(), l.opts.filter = c.shift())), l.opts.modal && (l.opts = n.extend(!0, l.opts, { trapFocus: !0, infobar: 0, toolbar: 0, smallBtn: 0, keyboard: 0, slideShow: 0, fullScreen: 0, thumbs: 0, touch: 0, clickContent: !1, clickSlide: !1, clickOutside: !1, dblclickContent: !1, dblclickSlide: !1, dblclickOutside: !1 })), o.group.push(l);
+        }), Object.keys(o.slides).length && (o.updateControls(), (e = o.Thumbs) && e.isActive && (e.create(), e.focus()));
+      }, addEvents: function addEvents() {
+        var e = this;e.removeEvents(), e.$refs.container.on("click.fb-close", "[data-fancybox-close]", function (t) {
+          t.stopPropagation(), t.preventDefault(), e.close(t);
+        }).on("touchstart.fb-prev click.fb-prev", "[data-fancybox-prev]", function (t) {
+          t.stopPropagation(), t.preventDefault(), e.previous();
+        }).on("touchstart.fb-next click.fb-next", "[data-fancybox-next]", function (t) {
+          t.stopPropagation(), t.preventDefault(), e.next();
+        }).on("click.fb", "[data-fancybox-zoom]", function (t) {
+          e[e.isScaledDown() ? "scaleToActual" : "scaleToFit"]();
+        }), s.on("orientationchange.fb resize.fb", function (t) {
+          t && t.originalEvent && "resize" === t.originalEvent.type ? (e.requestId && u(e.requestId), e.requestId = d(function () {
+            e.update(t);
+          })) : (e.current && "iframe" === e.current.type && e.$refs.stage.hide(), setTimeout(function () {
+            e.$refs.stage.show(), e.update(t);
+          }, n.fancybox.isMobile ? 600 : 250));
+        }), r.on("keydown.fb", function (t) {
+          var o = n.fancybox ? n.fancybox.getInstance() : null,
+              i = o.current,
+              a = t.keyCode || t.which;if (9 == a) return void (i.opts.trapFocus && e.focus(t));if (!(!i.opts.keyboard || t.ctrlKey || t.altKey || t.shiftKey || n(t.target).is("input,textarea,video,audio"))) return 8 === a || 27 === a ? (t.preventDefault(), void e.close(t)) : 37 === a || 38 === a ? (t.preventDefault(), void e.previous()) : 39 === a || 40 === a ? (t.preventDefault(), void e.next()) : void e.trigger("afterKeydown", t, a);
+        }), e.group[e.currIndex].opts.idleTime && (e.idleSecondsCounter = 0, r.on("mousemove.fb-idle mouseleave.fb-idle mousedown.fb-idle touchstart.fb-idle touchmove.fb-idle scroll.fb-idle keydown.fb-idle", function (t) {
+          e.idleSecondsCounter = 0, e.isIdle && e.showControls(), e.isIdle = !1;
+        }), e.idleInterval = t.setInterval(function () {
+          ++e.idleSecondsCounter >= e.group[e.currIndex].opts.idleTime && !e.isDragging && (e.isIdle = !0, e.idleSecondsCounter = 0, e.hideControls());
+        }, 1e3));
+      }, removeEvents: function removeEvents() {
+        var e = this;s.off("orientationchange.fb resize.fb"), r.off("keydown.fb .fb-idle"), this.$refs.container.off(".fb-close .fb-prev .fb-next"), e.idleInterval && (t.clearInterval(e.idleInterval), e.idleInterval = null);
+      }, previous: function previous(t) {
+        return this.jumpTo(this.currPos - 1, t);
+      }, next: function next(t) {
+        return this.jumpTo(this.currPos + 1, t);
+      }, jumpTo: function jumpTo(t, e) {
+        var o,
+            i,
+            a,
+            s,
+            r,
+            c,
+            l,
+            d,
+            u,
+            f = this,
+            h = f.group.length;if (!(f.isDragging || f.isClosing || f.isAnimating && f.firstRun)) {
+          if (t = parseInt(t, 10), !(a = f.current ? f.current.opts.loop : f.opts.loop) && (t < 0 || t >= h)) return !1;if (o = f.firstRun = !Object.keys(f.slides).length, r = f.current, f.prevIndex = f.currIndex, f.prevPos = f.currPos, s = f.createSlide(t), h > 1 && ((a || s.index < h - 1) && f.createSlide(t + 1), (a || s.index > 0) && f.createSlide(t - 1)), f.current = s, f.currIndex = s.index, f.currPos = s.pos, f.trigger("beforeShow", o), f.updateControls(), s.forcedDuration = void 0, n.isNumeric(e) ? s.forcedDuration = e : e = s.opts[o ? "animationDuration" : "transitionDuration"], e = parseInt(e, 10), i = f.isMoved(s), s.$slide.addClass("fancybox-slide--current"), o) return s.opts.animationEffect && e && f.$refs.container.css("transition-duration", e + "ms"), f.$refs.container.addClass("fancybox-is-open").trigger("focus"), f.loadSlide(s), void f.preload("image");c = n.fancybox.getTranslate(r.$slide), l = n.fancybox.getTranslate(f.$refs.stage), n.each(f.slides, function (t, e) {
+            n.fancybox.stop(e.$slide, !0);
+          }), r.pos !== s.pos && (r.isComplete = !1), r.$slide.removeClass("fancybox-slide--complete fancybox-slide--current"), i ? (u = c.left - (r.pos * c.width + r.pos * r.opts.gutter), n.each(f.slides, function (t, o) {
+            o.$slide.removeClass("fancybox-animated").removeClass(function (t, e) {
+              return (e.match(/(^|\s)fancybox-fx-\S+/g) || []).join(" ");
+            });var i = o.pos * c.width + o.pos * o.opts.gutter;n.fancybox.setTranslate(o.$slide, { top: 0, left: i - l.left + u }), o.pos !== s.pos && o.$slide.addClass("fancybox-slide--" + (o.pos > s.pos ? "next" : "previous")), p(o.$slide), n.fancybox.animate(o.$slide, { top: 0, left: (o.pos - s.pos) * c.width + (o.pos - s.pos) * o.opts.gutter }, e, function () {
+              o.$slide.css({ transform: "", opacity: "" }).removeClass("fancybox-slide--next fancybox-slide--previous"), o.pos === f.currPos && f.complete();
+            });
+          })) : e && s.opts.transitionEffect && (d = "fancybox-animated fancybox-fx-" + s.opts.transitionEffect, r.$slide.addClass("fancybox-slide--" + (r.pos > s.pos ? "next" : "previous")), n.fancybox.animate(r.$slide, d, e, function () {
+            r.$slide.removeClass(d).removeClass("fancybox-slide--next fancybox-slide--previous");
+          }, !1)), s.isLoaded ? f.revealContent(s) : f.loadSlide(s), f.preload("image");
+        }
+      }, createSlide: function createSlide(t) {
+        var e,
+            o,
+            i = this;return o = t % i.group.length, o = o < 0 ? i.group.length + o : o, !i.slides[t] && i.group[o] && (e = n('<div class="fancybox-slide"></div>').appendTo(i.$refs.stage), i.slides[t] = n.extend(!0, {}, i.group[o], { pos: t, $slide: e, isLoaded: !1 }), i.updateSlide(i.slides[t])), i.slides[t];
+      }, scaleToActual: function scaleToActual(t, e, o) {
+        var i,
+            a,
+            s,
+            r,
+            c,
+            l = this,
+            d = l.current,
+            u = d.$content,
+            f = n.fancybox.getTranslate(d.$slide).width,
+            p = n.fancybox.getTranslate(d.$slide).height,
+            h = d.width,
+            g = d.height;l.isAnimating || l.isMoved() || !u || "image" != d.type || !d.isLoaded || d.hasError || (l.isAnimating = !0, n.fancybox.stop(u), t = void 0 === t ? .5 * f : t, e = void 0 === e ? .5 * p : e, i = n.fancybox.getTranslate(u), i.top -= n.fancybox.getTranslate(d.$slide).top, i.left -= n.fancybox.getTranslate(d.$slide).left, r = h / i.width, c = g / i.height, a = .5 * f - .5 * h, s = .5 * p - .5 * g, h > f && (a = i.left * r - (t * r - t), a > 0 && (a = 0), a < f - h && (a = f - h)), g > p && (s = i.top * c - (e * c - e), s > 0 && (s = 0), s < p - g && (s = p - g)), l.updateCursor(h, g), n.fancybox.animate(u, { top: s, left: a, scaleX: r, scaleY: c }, o || 366, function () {
+          l.isAnimating = !1;
+        }), l.SlideShow && l.SlideShow.isActive && l.SlideShow.stop());
+      }, scaleToFit: function scaleToFit(t) {
+        var e,
+            o = this,
+            i = o.current,
+            a = i.$content;o.isAnimating || o.isMoved() || !a || "image" != i.type || !i.isLoaded || i.hasError || (o.isAnimating = !0, n.fancybox.stop(a), e = o.getFitPos(i), o.updateCursor(e.width, e.height), n.fancybox.animate(a, { top: e.top, left: e.left, scaleX: e.width / a.width(), scaleY: e.height / a.height() }, t || 366, function () {
+          o.isAnimating = !1;
+        }));
+      }, getFitPos: function getFitPos(t) {
+        var e,
+            o,
+            i,
+            a,
+            s = this,
+            r = t.$content,
+            c = t.$slide,
+            l = t.width || t.opts.width,
+            d = t.height || t.opts.height,
+            u = {};return !!(t.isLoaded && r && r.length) && (e = n.fancybox.getTranslate(s.$refs.stage).width, o = n.fancybox.getTranslate(s.$refs.stage).height, e -= parseFloat(c.css("paddingLeft")) + parseFloat(c.css("paddingRight")) + parseFloat(r.css("marginLeft")) + parseFloat(r.css("marginRight")), o -= parseFloat(c.css("paddingTop")) + parseFloat(c.css("paddingBottom")) + parseFloat(r.css("marginTop")) + parseFloat(r.css("marginBottom")), l && d || (l = e, d = o), i = Math.min(1, e / l, o / d), l *= i, d *= i, l > e - .5 && (l = e), d > o - .5 && (d = o), "image" === t.type ? (u.top = Math.floor(.5 * (o - d)) + parseFloat(c.css("paddingTop")), u.left = Math.floor(.5 * (e - l)) + parseFloat(c.css("paddingLeft"))) : "video" === t.contentType && (a = t.opts.width && t.opts.height ? l / d : t.opts.ratio || 16 / 9, d > l / a ? d = l / a : l > d * a && (l = d * a)), u.width = l, u.height = d, u);
+      }, update: function update(t) {
+        var e = this;n.each(e.slides, function (n, o) {
+          e.updateSlide(o, t);
+        });
+      }, updateSlide: function updateSlide(t, e) {
+        var o = this,
+            i = t && t.$content,
+            a = t.width || t.opts.width,
+            s = t.height || t.opts.height,
+            r = t.$slide;o.adjustCaption(t), i && (a || s || "video" === t.contentType) && !t.hasError && (n.fancybox.stop(i), n.fancybox.setTranslate(i, o.getFitPos(t)), t.pos === o.currPos && (o.isAnimating = !1, o.updateCursor())), o.adjustLayout(t), r.length && (r.trigger("refresh"), t.pos === o.currPos && o.$refs.toolbar.add(o.$refs.navigation.find(".fancybox-button--arrow_right")).toggleClass("compensate-for-scrollbar", r.get(0).scrollHeight > r.get(0).clientHeight)), o.trigger("onUpdate", t, e);
+      }, centerSlide: function centerSlide(t) {
+        var e = this,
+            o = e.current,
+            i = o.$slide;!e.isClosing && o && (i.siblings().css({ transform: "", opacity: "" }), i.parent().children().removeClass("fancybox-slide--previous fancybox-slide--next"), n.fancybox.animate(i, { top: 0, left: 0, opacity: 1 }, void 0 === t ? 0 : t, function () {
+          i.css({ transform: "", opacity: "" }), o.isComplete || e.complete();
+        }, !1));
+      }, isMoved: function isMoved(t) {
+        var e,
+            o,
+            i = t || this.current;return !!i && (o = n.fancybox.getTranslate(this.$refs.stage), e = n.fancybox.getTranslate(i.$slide), !i.$slide.hasClass("fancybox-animated") && (Math.abs(e.top - o.top) > .5 || Math.abs(e.left - o.left) > .5));
+      }, updateCursor: function updateCursor(t, e) {
+        var o,
+            i,
+            a = this,
+            s = a.current,
+            r = a.$refs.container;s && !a.isClosing && a.Guestures && (r.removeClass("fancybox-is-zoomable fancybox-can-zoomIn fancybox-can-zoomOut fancybox-can-swipe fancybox-can-pan"), o = a.canPan(t, e), i = !!o || a.isZoomable(), r.toggleClass("fancybox-is-zoomable", i), n("[data-fancybox-zoom]").prop("disabled", !i), o ? r.addClass("fancybox-can-pan") : i && ("zoom" === s.opts.clickContent || n.isFunction(s.opts.clickContent) && "zoom" == s.opts.clickContent(s)) ? r.addClass("fancybox-can-zoomIn") : s.opts.touch && (s.opts.touch.vertical || a.group.length > 1) && "video" !== s.contentType && r.addClass("fancybox-can-swipe"));
+      }, isZoomable: function isZoomable() {
+        var t,
+            e = this,
+            n = e.current;if (n && !e.isClosing && "image" === n.type && !n.hasError) {
+          if (!n.isLoaded) return !0;if ((t = e.getFitPos(n)) && (n.width > t.width || n.height > t.height)) return !0;
+        }return !1;
+      }, isScaledDown: function isScaledDown(t, e) {
+        var o = this,
+            i = !1,
+            a = o.current,
+            s = a.$content;return void 0 !== t && void 0 !== e ? i = t < a.width && e < a.height : s && (i = n.fancybox.getTranslate(s), i = i.width < a.width && i.height < a.height), i;
+      }, canPan: function canPan(t, e) {
+        var o = this,
+            i = o.current,
+            a = null,
+            s = !1;return "image" === i.type && (i.isComplete || t && e) && !i.hasError && (s = o.getFitPos(i), void 0 !== t && void 0 !== e ? a = { width: t, height: e } : i.isComplete && (a = n.fancybox.getTranslate(i.$content)), a && s && (s = Math.abs(a.width - s.width) > 1.5 || Math.abs(a.height - s.height) > 1.5)), s;
+      }, loadSlide: function loadSlide(t) {
+        var e,
+            o,
+            i,
+            a = this;if (!t.isLoading && !t.isLoaded) {
+          if (t.isLoading = !0, !1 === a.trigger("beforeLoad", t)) return t.isLoading = !1, !1;switch (e = t.type, o = t.$slide, o.off("refresh").trigger("onReset").addClass(t.opts.slideClass), e) {case "image":
+              a.setImage(t);break;case "iframe":
+              a.setIframe(t);break;case "html":
+              a.setContent(t, t.src || t.content);break;case "video":
+              a.setContent(t, t.opts.video.tpl.replace(/\{\{src\}\}/gi, t.src).replace("{{format}}", t.opts.videoFormat || t.opts.video.format || "").replace("{{poster}}", t.thumb || ""));break;case "inline":
+              n(t.src).length ? a.setContent(t, n(t.src)) : a.setError(t);break;case "ajax":
+              a.showLoading(t), i = n.ajax(n.extend({}, t.opts.ajax.settings, { url: t.src, success: function success(e, n) {
+                  "success" === n && a.setContent(t, e);
+                }, error: function error(e, n) {
+                  e && "abort" !== n && a.setError(t);
+                } })), o.one("onReset", function () {
+                i.abort();
+              });break;default:
+              a.setError(t);}return !0;
+        }
+      }, setImage: function setImage(t) {
+        var o,
+            i = this;setTimeout(function () {
+          var e = t.$image;i.isClosing || !t.isLoading || e && e.length && e[0].complete || t.hasError || i.showLoading(t);
+        }, 50), i.checkSrcset(t), t.$content = n('<div class="fancybox-content"></div>').addClass("fancybox-is-hidden").appendTo(t.$slide.addClass("fancybox-slide--image")), !1 !== t.opts.preload && t.opts.width && t.opts.height && t.thumb && (t.width = t.opts.width, t.height = t.opts.height, o = e.createElement("img"), o.onerror = function () {
+          n(this).remove(), t.$ghost = null;
+        }, o.onload = function () {
+          i.afterLoad(t);
+        }, t.$ghost = n(o).addClass("fancybox-image").appendTo(t.$content).attr("src", t.thumb)), i.setBigImage(t);
+      }, checkSrcset: function checkSrcset(e) {
+        var n,
+            o,
+            i,
+            a,
+            s = e.opts.srcset || e.opts.image.srcset;if (s) {
+          i = t.devicePixelRatio || 1, a = t.innerWidth * i, o = s.split(",").map(function (t) {
+            var e = {};return t.trim().split(/\s+/).forEach(function (t, n) {
+              var o = parseInt(t.substring(0, t.length - 1), 10);if (0 === n) return e.url = t;o && (e.value = o, e.postfix = t[t.length - 1]);
+            }), e;
+          }), o.sort(function (t, e) {
+            return t.value - e.value;
+          });for (var r = 0; r < o.length; r++) {
+            var c = o[r];if ("w" === c.postfix && c.value >= a || "x" === c.postfix && c.value >= i) {
+              n = c;break;
+            }
+          }!n && o.length && (n = o[o.length - 1]), n && (e.src = n.url, e.width && e.height && "w" == n.postfix && (e.height = e.width / e.height * n.value, e.width = n.value), e.opts.srcset = s);
+        }
+      }, setBigImage: function setBigImage(t) {
+        var o = this,
+            i = e.createElement("img"),
+            a = n(i);t.$image = a.one("error", function () {
+          o.setError(t);
+        }).one("load", function () {
+          var e;t.$ghost || (o.resolveImageSlideSize(t, this.naturalWidth, this.naturalHeight), o.afterLoad(t)), o.isClosing || (t.opts.srcset && (e = t.opts.sizes, e && "auto" !== e || (e = (t.width / t.height > 1 && s.width() / s.height() > 1 ? "100" : Math.round(t.width / t.height * 100)) + "vw"), a.attr("sizes", e).attr("srcset", t.opts.srcset)), t.$ghost && setTimeout(function () {
+            t.$ghost && !o.isClosing && t.$ghost.hide();
+          }, Math.min(300, Math.max(1e3, t.height / 1600))), o.hideLoading(t));
+        }).addClass("fancybox-image").attr("src", t.src).appendTo(t.$content), (i.complete || "complete" == i.readyState) && a.naturalWidth && a.naturalHeight ? a.trigger("load") : i.error && a.trigger("error");
+      }, resolveImageSlideSize: function resolveImageSlideSize(t, e, n) {
+        var o = parseInt(t.opts.width, 10),
+            i = parseInt(t.opts.height, 10);t.width = e, t.height = n, o > 0 && (t.width = o, t.height = Math.floor(o * n / e)), i > 0 && (t.width = Math.floor(i * e / n), t.height = i);
+      }, setIframe: function setIframe(t) {
+        var e,
+            o = this,
+            i = t.opts.iframe,
+            a = t.$slide;t.$content = n('<div class="fancybox-content' + (i.preload ? " fancybox-is-hidden" : "") + '"></div>').css(i.css).appendTo(a), a.addClass("fancybox-slide--" + t.contentType), t.$iframe = e = n(i.tpl.replace(/\{rnd\}/g, new Date().getTime())).attr(i.attr).appendTo(t.$content), i.preload ? (o.showLoading(t), e.on("load.fb error.fb", function (e) {
+          this.isReady = 1, t.$slide.trigger("refresh"), o.afterLoad(t);
+        }), a.on("refresh.fb", function () {
+          var n,
+              o,
+              s = t.$content,
+              r = i.css.width,
+              c = i.css.height;if (1 === e[0].isReady) {
+            try {
+              n = e.contents(), o = n.find("body");
+            } catch (t) {}o && o.length && o.children().length && (a.css("overflow", "visible"), s.css({ width: "100%", "max-width": "100%", height: "9999px" }), void 0 === r && (r = Math.ceil(Math.max(o[0].clientWidth, o.outerWidth(!0)))), s.css("width", r || "").css("max-width", ""), void 0 === c && (c = Math.ceil(Math.max(o[0].clientHeight, o.outerHeight(!0)))), s.css("height", c || ""), a.css("overflow", "auto")), s.removeClass("fancybox-is-hidden");
+          }
+        })) : o.afterLoad(t), e.attr("src", t.src), a.one("onReset", function () {
+          try {
+            n(this).find("iframe").hide().unbind().attr("src", "//about:blank");
+          } catch (t) {}n(this).off("refresh.fb").empty(), t.isLoaded = !1, t.isRevealed = !1;
+        });
+      }, setContent: function setContent(t, e) {
+        var o = this;o.isClosing || (o.hideLoading(t), t.$content && n.fancybox.stop(t.$content), t.$slide.empty(), l(e) && e.parent().length ? ((e.hasClass("fancybox-content") || e.parent().hasClass("fancybox-content")) && e.parents(".fancybox-slide").trigger("onReset"), t.$placeholder = n("<div>").hide().insertAfter(e), e.css("display", "inline-block")) : t.hasError || ("string" === n.type(e) && (e = n("<div>").append(n.trim(e)).contents()), t.opts.filter && (e = n("<div>").html(e).find(t.opts.filter))), t.$slide.one("onReset", function () {
+          n(this).find("video,audio").trigger("pause"), t.$placeholder && (t.$placeholder.after(e.removeClass("fancybox-content").hide()).remove(), t.$placeholder = null), t.$smallBtn && (t.$smallBtn.remove(), t.$smallBtn = null), t.hasError || (n(this).empty(), t.isLoaded = !1, t.isRevealed = !1);
+        }), n(e).appendTo(t.$slide), n(e).is("video,audio") && (n(e).addClass("fancybox-video"), n(e).wrap("<div></div>"), t.contentType = "video", t.opts.width = t.opts.width || n(e).attr("width"), t.opts.height = t.opts.height || n(e).attr("height")), t.$content = t.$slide.children().filter("div,form,main,video,audio,article,.fancybox-content").first(), t.$content.siblings().hide(), t.$content.length || (t.$content = t.$slide.wrapInner("<div></div>").children().first()), t.$content.addClass("fancybox-content"), t.$slide.addClass("fancybox-slide--" + t.contentType), o.afterLoad(t));
+      }, setError: function setError(t) {
+        t.hasError = !0, t.$slide.trigger("onReset").removeClass("fancybox-slide--" + t.contentType).addClass("fancybox-slide--error"), t.contentType = "html", this.setContent(t, this.translate(t, t.opts.errorTpl)), t.pos === this.currPos && (this.isAnimating = !1);
+      }, showLoading: function showLoading(t) {
+        var e = this;(t = t || e.current) && !t.$spinner && (t.$spinner = n(e.translate(e, e.opts.spinnerTpl)).appendTo(t.$slide).hide().fadeIn("fast"));
+      }, hideLoading: function hideLoading(t) {
+        var e = this;(t = t || e.current) && t.$spinner && (t.$spinner.stop().remove(), delete t.$spinner);
+      }, afterLoad: function afterLoad(t) {
+        var e = this;e.isClosing || (t.isLoading = !1, t.isLoaded = !0, e.trigger("afterLoad", t), e.hideLoading(t), !t.opts.smallBtn || t.$smallBtn && t.$smallBtn.length || (t.$smallBtn = n(e.translate(t, t.opts.btnTpl.smallBtn)).appendTo(t.$content)), t.opts.protect && t.$content && !t.hasError && (t.$content.on("contextmenu.fb", function (t) {
+          return 2 == t.button && t.preventDefault(), !0;
+        }), "image" === t.type && n('<div class="fancybox-spaceball"></div>').appendTo(t.$content)), e.adjustCaption(t), e.adjustLayout(t), t.pos === e.currPos && e.updateCursor(), e.revealContent(t));
+      }, adjustCaption: function adjustCaption(t) {
+        var e,
+            n = this,
+            o = t || n.current,
+            i = o.opts.caption,
+            a = o.opts.preventCaptionOverlap,
+            s = n.$refs.caption,
+            r = !1;s.toggleClass("fancybox-caption--separate", a), a && i && i.length && (o.pos !== n.currPos ? (e = s.clone().appendTo(s.parent()), e.children().eq(0).empty().html(i), r = e.outerHeight(!0), e.empty().remove()) : n.$caption && (r = n.$caption.outerHeight(!0)), o.$slide.css("padding-bottom", r || ""));
+      }, adjustLayout: function adjustLayout(t) {
+        var e,
+            n,
+            o,
+            i,
+            a = this,
+            s = t || a.current;s.isLoaded && !0 !== s.opts.disableLayoutFix && (s.$content.css("margin-bottom", ""), s.$content.outerHeight() > s.$slide.height() + .5 && (o = s.$slide[0].style["padding-bottom"], i = s.$slide.css("padding-bottom"), parseFloat(i) > 0 && (e = s.$slide[0].scrollHeight, s.$slide.css("padding-bottom", 0), Math.abs(e - s.$slide[0].scrollHeight) < 1 && (n = i), s.$slide.css("padding-bottom", o))), s.$content.css("margin-bottom", n));
+      }, revealContent: function revealContent(t) {
+        var e,
+            o,
+            i,
+            a,
+            s = this,
+            r = t.$slide,
+            c = !1,
+            l = !1,
+            d = s.isMoved(t),
+            u = t.isRevealed;return t.isRevealed = !0, e = t.opts[s.firstRun ? "animationEffect" : "transitionEffect"], i = t.opts[s.firstRun ? "animationDuration" : "transitionDuration"], i = parseInt(void 0 === t.forcedDuration ? i : t.forcedDuration, 10), !d && t.pos === s.currPos && i || (e = !1), "zoom" === e && (t.pos === s.currPos && i && "image" === t.type && !t.hasError && (l = s.getThumbPos(t)) ? c = s.getFitPos(t) : e = "fade"), "zoom" === e ? (s.isAnimating = !0, c.scaleX = c.width / l.width, c.scaleY = c.height / l.height, a = t.opts.zoomOpacity, "auto" == a && (a = Math.abs(t.width / t.height - l.width / l.height) > .1), a && (l.opacity = .1, c.opacity = 1), n.fancybox.setTranslate(t.$content.removeClass("fancybox-is-hidden"), l), p(t.$content), void n.fancybox.animate(t.$content, c, i, function () {
+          s.isAnimating = !1, s.complete();
+        })) : (s.updateSlide(t), e ? (n.fancybox.stop(r), o = "fancybox-slide--" + (t.pos >= s.prevPos ? "next" : "previous") + " fancybox-animated fancybox-fx-" + e, r.addClass(o).removeClass("fancybox-slide--current"), t.$content.removeClass("fancybox-is-hidden"), p(r), "image" !== t.type && t.$content.hide().show(0), void n.fancybox.animate(r, "fancybox-slide--current", i, function () {
+          r.removeClass(o).css({ transform: "", opacity: "" }), t.pos === s.currPos && s.complete();
+        }, !0)) : (t.$content.removeClass("fancybox-is-hidden"), u || !d || "image" !== t.type || t.hasError || t.$content.hide().fadeIn("fast"), void (t.pos === s.currPos && s.complete())));
+      }, getThumbPos: function getThumbPos(t) {
+        var e,
+            o,
+            i,
+            a,
+            s,
+            r = !1,
+            c = t.$thumb;return !(!c || !g(c[0])) && (e = n.fancybox.getTranslate(c), o = parseFloat(c.css("border-top-width") || 0), i = parseFloat(c.css("border-right-width") || 0), a = parseFloat(c.css("border-bottom-width") || 0), s = parseFloat(c.css("border-left-width") || 0), r = { top: e.top + o, left: e.left + s, width: e.width - i - s, height: e.height - o - a, scaleX: 1, scaleY: 1 }, e.width > 0 && e.height > 0 && r);
+      }, complete: function complete() {
+        var t,
+            e = this,
+            o = e.current,
+            i = {};!e.isMoved() && o.isLoaded && (o.isComplete || (o.isComplete = !0, o.$slide.siblings().trigger("onReset"), e.preload("inline"), p(o.$slide), o.$slide.addClass("fancybox-slide--complete"), n.each(e.slides, function (t, o) {
+          o.pos >= e.currPos - 1 && o.pos <= e.currPos + 1 ? i[o.pos] = o : o && (n.fancybox.stop(o.$slide), o.$slide.off().remove());
+        }), e.slides = i), e.isAnimating = !1, e.updateCursor(), e.trigger("afterShow"), o.opts.video.autoStart && o.$slide.find("video,audio").filter(":visible:first").trigger("play").one("ended", function () {
+          this.webkitExitFullscreen && this.webkitExitFullscreen(), e.next();
+        }), o.opts.autoFocus && "html" === o.contentType && (t = o.$content.find("input[autofocus]:enabled:visible:first"), t.length ? t.trigger("focus") : e.focus(null, !0)), o.$slide.scrollTop(0).scrollLeft(0));
+      }, preload: function preload(t) {
+        var e,
+            n,
+            o = this;o.group.length < 2 || (n = o.slides[o.currPos + 1], e = o.slides[o.currPos - 1], e && e.type === t && o.loadSlide(e), n && n.type === t && o.loadSlide(n));
+      }, focus: function focus(t, o) {
+        var i,
+            a,
+            s = this,
+            r = ["a[href]", "area[href]", 'input:not([disabled]):not([type="hidden"]):not([aria-hidden])', "select:not([disabled]):not([aria-hidden])", "textarea:not([disabled]):not([aria-hidden])", "button:not([disabled]):not([aria-hidden])", "iframe", "object", "embed", "video", "audio", "[contenteditable]", '[tabindex]:not([tabindex^="-"])'].join(",");s.isClosing || (i = !t && s.current && s.current.isComplete ? s.current.$slide.find("*:visible" + (o ? ":not(.fancybox-close-small)" : "")) : s.$refs.container.find("*:visible"), i = i.filter(r).filter(function () {
+          return "hidden" !== n(this).css("visibility") && !n(this).hasClass("disabled");
+        }), i.length ? (a = i.index(e.activeElement), t && t.shiftKey ? (a < 0 || 0 == a) && (t.preventDefault(), i.eq(i.length - 1).trigger("focus")) : (a < 0 || a == i.length - 1) && (t && t.preventDefault(), i.eq(0).trigger("focus"))) : s.$refs.container.trigger("focus"));
+      }, activate: function activate() {
+        var t = this;n(".fancybox-container").each(function () {
+          var e = n(this).data("FancyBox");e && e.id !== t.id && !e.isClosing && (e.trigger("onDeactivate"), e.removeEvents(), e.isVisible = !1);
+        }), t.isVisible = !0, (t.current || t.isIdle) && (t.update(), t.updateControls()), t.trigger("onActivate"), t.addEvents();
+      }, close: function close(t, e) {
+        var o,
+            i,
+            a,
+            s,
+            r,
+            c,
+            l,
+            u = this,
+            f = u.current,
+            h = function h() {
+          u.cleanUp(t);
+        };return !u.isClosing && (u.isClosing = !0, !1 === u.trigger("beforeClose", t) ? (u.isClosing = !1, d(function () {
+          u.update();
+        }), !1) : (u.removeEvents(), a = f.$content, o = f.opts.animationEffect, i = n.isNumeric(e) ? e : o ? f.opts.animationDuration : 0, f.$slide.removeClass("fancybox-slide--complete fancybox-slide--next fancybox-slide--previous fancybox-animated"), !0 !== t ? n.fancybox.stop(f.$slide) : o = !1, f.$slide.siblings().trigger("onReset").remove(), i && u.$refs.container.removeClass("fancybox-is-open").addClass("fancybox-is-closing").css("transition-duration", i + "ms"), u.hideLoading(f), u.hideControls(!0), u.updateCursor(), "zoom" !== o || a && i && "image" === f.type && !u.isMoved() && !f.hasError && (l = u.getThumbPos(f)) || (o = "fade"), "zoom" === o ? (n.fancybox.stop(a), s = n.fancybox.getTranslate(a), c = { top: s.top, left: s.left, scaleX: s.width / l.width, scaleY: s.height / l.height, width: l.width, height: l.height }, r = f.opts.zoomOpacity, "auto" == r && (r = Math.abs(f.width / f.height - l.width / l.height) > .1), r && (l.opacity = 0), n.fancybox.setTranslate(a, c), p(a), n.fancybox.animate(a, l, i, h), !0) : (o && i ? n.fancybox.animate(f.$slide.addClass("fancybox-slide--previous").removeClass("fancybox-slide--current"), "fancybox-animated fancybox-fx-" + o, i, h) : !0 === t ? setTimeout(h, i) : h(), !0)));
+      }, cleanUp: function cleanUp(e) {
+        var o,
+            i,
+            a,
+            s = this,
+            r = s.current.opts.$orig;s.current.$slide.trigger("onReset"), s.$refs.container.empty().remove(), s.trigger("afterClose", e), s.current.opts.backFocus && (r && r.length && r.is(":visible") || (r = s.$trigger), r && r.length && (i = t.scrollX, a = t.scrollY, r.trigger("focus"), n("html, body").scrollTop(a).scrollLeft(i))), s.current = null, o = n.fancybox.getInstance(), o ? o.activate() : (n("body").removeClass("fancybox-active compensate-for-scrollbar"), n("#fancybox-style-noscroll").remove());
+      }, trigger: function trigger(t, e) {
+        var o,
+            i = Array.prototype.slice.call(arguments, 1),
+            a = this,
+            s = e && e.opts ? e : a.current;if (s ? i.unshift(s) : s = a, i.unshift(a), n.isFunction(s.opts[t]) && (o = s.opts[t].apply(s, i)), !1 === o) return o;"afterClose" !== t && a.$refs ? a.$refs.container.trigger(t + ".fb", i) : r.trigger(t + ".fb", i);
+      }, updateControls: function updateControls() {
+        var t = this,
+            o = t.current,
+            i = o.index,
+            a = t.$refs.container,
+            s = t.$refs.caption,
+            r = o.opts.caption;o.$slide.trigger("refresh"), r && r.length ? (t.$caption = s, s.children().eq(0).html(r)) : t.$caption = null, t.hasHiddenControls || t.isIdle || t.showControls(), a.find("[data-fancybox-count]").html(t.group.length), a.find("[data-fancybox-index]").html(i + 1), a.find("[data-fancybox-prev]").prop("disabled", !o.opts.loop && i <= 0), a.find("[data-fancybox-next]").prop("disabled", !o.opts.loop && i >= t.group.length - 1), "image" === o.type ? a.find("[data-fancybox-zoom]").show().end().find("[data-fancybox-download]").attr("href", o.opts.image.src || o.src).show() : o.opts.toolbar && a.find("[data-fancybox-download],[data-fancybox-zoom]").hide(), n(e.activeElement).is(":hidden,[disabled]") && t.$refs.container.trigger("focus");
+      }, hideControls: function hideControls(t) {
+        var e = this,
+            n = ["infobar", "toolbar", "nav"];!t && e.current.opts.preventCaptionOverlap || n.push("caption"), this.$refs.container.removeClass(n.map(function (t) {
+          return "fancybox-show-" + t;
+        }).join(" ")), this.hasHiddenControls = !0;
+      }, showControls: function showControls() {
+        var t = this,
+            e = t.current ? t.current.opts : t.opts,
+            n = t.$refs.container;t.hasHiddenControls = !1, t.idleSecondsCounter = 0, n.toggleClass("fancybox-show-toolbar", !(!e.toolbar || !e.buttons)).toggleClass("fancybox-show-infobar", !!(e.infobar && t.group.length > 1)).toggleClass("fancybox-show-caption", !!t.$caption).toggleClass("fancybox-show-nav", !!(e.arrows && t.group.length > 1)).toggleClass("fancybox-is-modal", !!e.modal);
+      }, toggleControls: function toggleControls() {
+        this.hasHiddenControls ? this.showControls() : this.hideControls();
+      } }), n.fancybox = { version: "3.5.6", defaults: a, getInstance: function getInstance(t) {
+        var e = n('.fancybox-container:not(".fancybox-is-closing"):last').data("FancyBox"),
+            o = Array.prototype.slice.call(arguments, 1);return e instanceof b && ("string" === n.type(t) ? e[t].apply(e, o) : "function" === n.type(t) && t.apply(e, o), e);
+      }, open: function open(t, e, n) {
+        return new b(t, e, n);
+      }, close: function close(t) {
+        var e = this.getInstance();e && (e.close(), !0 === t && this.close(t));
+      }, destroy: function destroy() {
+        this.close(!0), r.add("body").off("click.fb-start", "**");
+      }, isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), use3d: function () {
+        var n = e.createElement("div");return t.getComputedStyle && t.getComputedStyle(n) && t.getComputedStyle(n).getPropertyValue("transform") && !(e.documentMode && e.documentMode < 11);
+      }(), getTranslate: function getTranslate(t) {
+        var e;return !(!t || !t.length) && (e = t[0].getBoundingClientRect(), { top: e.top || 0, left: e.left || 0, width: e.width, height: e.height, opacity: parseFloat(t.css("opacity")) });
+      }, setTranslate: function setTranslate(t, e) {
+        var n = "",
+            o = {};if (t && e) return void 0 === e.left && void 0 === e.top || (n = (void 0 === e.left ? t.position().left : e.left) + "px, " + (void 0 === e.top ? t.position().top : e.top) + "px", n = this.use3d ? "translate3d(" + n + ", 0px)" : "translate(" + n + ")"), void 0 !== e.scaleX && void 0 !== e.scaleY ? n += " scale(" + e.scaleX + ", " + e.scaleY + ")" : void 0 !== e.scaleX && (n += " scaleX(" + e.scaleX + ")"), n.length && (o.transform = n), void 0 !== e.opacity && (o.opacity = e.opacity), void 0 !== e.width && (o.width = e.width), void 0 !== e.height && (o.height = e.height), t.css(o);
+      }, animate: function animate(t, e, o, i, a) {
+        var s,
+            r = this;n.isFunction(o) && (i = o, o = null), r.stop(t), s = r.getTranslate(t), t.on(f, function (c) {
+          (!c || !c.originalEvent || t.is(c.originalEvent.target) && "z-index" != c.originalEvent.propertyName) && (r.stop(t), n.isNumeric(o) && t.css("transition-duration", ""), n.isPlainObject(e) ? void 0 !== e.scaleX && void 0 !== e.scaleY && r.setTranslate(t, { top: e.top, left: e.left, width: s.width * e.scaleX, height: s.height * e.scaleY, scaleX: 1, scaleY: 1 }) : !0 !== a && t.removeClass(e), n.isFunction(i) && i(c));
+        }), n.isNumeric(o) && t.css("transition-duration", o + "ms"), n.isPlainObject(e) ? (void 0 !== e.scaleX && void 0 !== e.scaleY && (delete e.width, delete e.height, t.parent().hasClass("fancybox-slide--image") && t.parent().addClass("fancybox-is-scaling")), n.fancybox.setTranslate(t, e)) : t.addClass(e), t.data("timer", setTimeout(function () {
+          t.trigger(f);
+        }, o + 33));
+      }, stop: function stop(t, e) {
+        t && t.length && (clearTimeout(t.data("timer")), e && t.trigger(f), t.off(f).css("transition-duration", ""), t.parent().removeClass("fancybox-is-scaling"));
+      } }, n.fn.fancybox = function (t) {
+      var e;return t = t || {}, e = t.selector || !1, e ? n("body").off("click.fb-start", e).on("click.fb-start", e, { options: t }, i) : this.off("click.fb-start").on("click.fb-start", { items: this, options: t }, i), this;
+    }, r.on("click.fb-start", "[data-fancybox]", i), r.on("click.fb-start", "[data-fancybox-trigger]", function (t) {
+      n('[data-fancybox="' + n(this).attr("data-fancybox-trigger") + '"]').eq(n(this).attr("data-fancybox-index") || 0).trigger("click.fb-start", { $trigger: n(this) });
+    }), function () {
+      var t = null;r.on("mousedown mouseup focus blur", ".fancybox-button", function (e) {
+        switch (e.type) {case "mousedown":
+            t = n(this);break;case "mouseup":
+            t = null;break;case "focusin":
+            n(".fancybox-button").removeClass("fancybox-focus"), n(this).is(t) || n(this).is("[disabled]") || n(this).addClass("fancybox-focus");break;case "focusout":
+            n(".fancybox-button").removeClass("fancybox-focus");}
+      });
+    }();
+  }
+}(window, document, jQuery), function (t) {
+  "use strict";
+  var e = { youtube: { matcher: /(youtube\.com|youtu\.be|youtube\-nocookie\.com)\/(watch\?(.*&)?v=|v\/|u\/|embed\/?)?(videoseries\?list=(.*)|[\w-]{11}|\?listType=(.*)&list=(.*))(.*)/i, params: { autoplay: 1, autohide: 1, fs: 1, rel: 0, hd: 1, wmode: "transparent", enablejsapi: 1, html5: 1 }, paramPlace: 8, type: "iframe", url: "https://www.youtube-nocookie.com/embed/$4", thumb: "https://img.youtube.com/vi/$4/hqdefault.jpg" }, vimeo: { matcher: /^.+vimeo.com\/(.*\/)?([\d]+)(.*)?/, params: { autoplay: 1, hd: 1, show_title: 1, show_byline: 1, show_portrait: 0, fullscreen: 1 }, paramPlace: 3, type: "iframe", url: "//player.vimeo.com/video/$2" }, instagram: { matcher: /(instagr\.am|instagram\.com)\/p\/([a-zA-Z0-9_\-]+)\/?/i, type: "image", url: "//$1/p/$2/media/?size=l" }, gmap_place: { matcher: /(maps\.)?google\.([a-z]{2,3}(\.[a-z]{2})?)\/(((maps\/(place\/(.*)\/)?\@(.*),(\d+.?\d+?)z))|(\?ll=))(.*)?/i, type: "iframe", url: function url(t) {
+        return "//maps.google." + t[2] + "/?ll=" + (t[9] ? t[9] + "&z=" + Math.floor(t[10]) + (t[12] ? t[12].replace(/^\//, "&") : "") : t[12] + "").replace(/\?/, "&") + "&output=" + (t[12] && t[12].indexOf("layer=c") > 0 ? "svembed" : "embed");
+      } }, gmap_search: { matcher: /(maps\.)?google\.([a-z]{2,3}(\.[a-z]{2})?)\/(maps\/search\/)(.*)/i, type: "iframe", url: function url(t) {
+        return "//maps.google." + t[2] + "/maps?q=" + t[5].replace("query=", "q=").replace("api=1", "") + "&output=embed";
+      } } },
+      n = function n(e, _n, o) {
+    if (e) return o = o || "", "object" === t.type(o) && (o = t.param(o, !0)), t.each(_n, function (t, n) {
+      e = e.replace("$" + t, n || "");
+    }), o.length && (e += (e.indexOf("?") > 0 ? "&" : "?") + o), e;
+  };t(document).on("objectNeedsType.fb", function (o, i, a) {
+    var s,
+        r,
+        c,
+        l,
+        d,
+        u,
+        f,
+        p = a.src || "",
+        h = !1;s = t.extend(!0, {}, e, a.opts.media), t.each(s, function (e, o) {
+      if (c = p.match(o.matcher)) {
+        if (h = o.type, f = e, u = {}, o.paramPlace && c[o.paramPlace]) {
+          d = c[o.paramPlace], "?" == d[0] && (d = d.substring(1)), d = d.split("&");for (var i = 0; i < d.length; ++i) {
+            var s = d[i].split("=", 2);2 == s.length && (u[s[0]] = decodeURIComponent(s[1].replace(/\+/g, " ")));
+          }
+        }return l = t.extend(!0, {}, o.params, a.opts[e], u), p = "function" === t.type(o.url) ? o.url.call(this, c, l, a) : n(o.url, c, l), r = "function" === t.type(o.thumb) ? o.thumb.call(this, c, l, a) : n(o.thumb, c), "youtube" === e ? p = p.replace(/&t=((\d+)m)?(\d+)s/, function (t, e, n, o) {
+          return "&start=" + ((n ? 60 * parseInt(n, 10) : 0) + parseInt(o, 10));
+        }) : "vimeo" === e && (p = p.replace("&%23", "#")), !1;
+      }
+    }), h ? (a.opts.thumb || a.opts.$thumb && a.opts.$thumb.length || (a.opts.thumb = r), "iframe" === h && (a.opts = t.extend(!0, a.opts, { iframe: { preload: !1, attr: { scrolling: "no" } } })), t.extend(a, { type: h, src: p, origSrc: a.src, contentSource: f, contentType: "image" === h ? "image" : "gmap_place" == f || "gmap_search" == f ? "map" : "video" })) : p && (a.type = a.opts.defaultType);
+  });var o = { youtube: { src: "https://www.youtube.com/iframe_api", class: "YT", loading: !1, loaded: !1 }, vimeo: { src: "https://player.vimeo.com/api/player.js", class: "Vimeo", loading: !1, loaded: !1 }, load: function load(t) {
+      var e,
+          n = this;if (this[t].loaded) return void setTimeout(function () {
+        n.done(t);
+      });this[t].loading || (this[t].loading = !0, e = document.createElement("script"), e.type = "text/javascript", e.src = this[t].src, "youtube" === t ? window.onYouTubeIframeAPIReady = function () {
+        n[t].loaded = !0, n.done(t);
+      } : e.onload = function () {
+        n[t].loaded = !0, n.done(t);
+      }, document.body.appendChild(e));
+    }, done: function done(e) {
+      var n, o, i;"youtube" === e && delete window.onYouTubeIframeAPIReady, (n = t.fancybox.getInstance()) && (o = n.current.$content.find("iframe"), "youtube" === e && void 0 !== YT && YT ? i = new YT.Player(o.attr("id"), { events: { onStateChange: function onStateChange(t) {
+            0 == t.data && n.next();
+          } } }) : "vimeo" === e && void 0 !== Vimeo && Vimeo && (i = new Vimeo.Player(o), i.on("ended", function () {
+        n.next();
+      })));
+    } };t(document).on({ "afterShow.fb": function afterShowFb(t, e, n) {
+      e.group.length > 1 && ("youtube" === n.contentSource || "vimeo" === n.contentSource) && o.load(n.contentSource);
+    } });
+}(jQuery), function (t, e, n) {
+  "use strict";
+  var o = function () {
+    return t.requestAnimationFrame || t.webkitRequestAnimationFrame || t.mozRequestAnimationFrame || t.oRequestAnimationFrame || function (e) {
+      return t.setTimeout(e, 1e3 / 60);
+    };
+  }(),
+      i = function () {
+    return t.cancelAnimationFrame || t.webkitCancelAnimationFrame || t.mozCancelAnimationFrame || t.oCancelAnimationFrame || function (e) {
+      t.clearTimeout(e);
+    };
+  }(),
+      a = function a(e) {
+    var n = [];e = e.originalEvent || e || t.e, e = e.touches && e.touches.length ? e.touches : e.changedTouches && e.changedTouches.length ? e.changedTouches : [e];for (var o in e) {
+      e[o].pageX ? n.push({ x: e[o].pageX, y: e[o].pageY }) : e[o].clientX && n.push({ x: e[o].clientX, y: e[o].clientY });
+    }return n;
+  },
+      s = function s(t, e, n) {
+    return e && t ? "x" === n ? t.x - e.x : "y" === n ? t.y - e.y : Math.sqrt(Math.pow(t.x - e.x, 2) + Math.pow(t.y - e.y, 2)) : 0;
+  },
+      r = function r(t) {
+    if (t.is('a,area,button,[role="button"],input,label,select,summary,textarea,video,audio,iframe') || n.isFunction(t.get(0).onclick) || t.data("selectable")) return !0;for (var e = 0, o = t[0].attributes, i = o.length; e < i; e++) {
+      if ("data-fancybox-" === o[e].nodeName.substr(0, 14)) return !0;
+    }return !1;
+  },
+      c = function c(e) {
+    var n = t.getComputedStyle(e)["overflow-y"],
+        o = t.getComputedStyle(e)["overflow-x"],
+        i = ("scroll" === n || "auto" === n) && e.scrollHeight > e.clientHeight,
+        a = ("scroll" === o || "auto" === o) && e.scrollWidth > e.clientWidth;return i || a;
+  },
+      l = function l(t) {
+    for (var e = !1;;) {
+      if (e = c(t.get(0))) break;if (t = t.parent(), !t.length || t.hasClass("fancybox-stage") || t.is("body")) break;
+    }return e;
+  },
+      d = function d(t) {
+    var e = this;e.instance = t, e.$bg = t.$refs.bg, e.$stage = t.$refs.stage, e.$container = t.$refs.container, e.destroy(), e.$container.on("touchstart.fb.touch mousedown.fb.touch", n.proxy(e, "ontouchstart"));
+  };d.prototype.destroy = function () {
+    var t = this;t.$container.off(".fb.touch"), n(e).off(".fb.touch"), t.requestId && (i(t.requestId), t.requestId = null), t.tapped && (clearTimeout(t.tapped), t.tapped = null);
+  }, d.prototype.ontouchstart = function (o) {
+    var i = this,
+        c = n(o.target),
+        d = i.instance,
+        u = d.current,
+        f = u.$slide,
+        p = u.$content,
+        h = "touchstart" == o.type;if (h && i.$container.off("mousedown.fb.touch"), (!o.originalEvent || 2 != o.originalEvent.button) && f.length && c.length && !r(c) && !r(c.parent()) && (c.is("img") || !(o.originalEvent.clientX > c[0].clientWidth + c.offset().left))) {
+      if (!u || d.isAnimating || u.$slide.hasClass("fancybox-animated")) return o.stopPropagation(), void o.preventDefault();i.realPoints = i.startPoints = a(o), i.startPoints.length && (u.touch && o.stopPropagation(), i.startEvent = o, i.canTap = !0, i.$target = c, i.$content = p, i.opts = u.opts.touch, i.isPanning = !1, i.isSwiping = !1, i.isZooming = !1, i.isScrolling = !1, i.canPan = d.canPan(), i.startTime = new Date().getTime(), i.distanceX = i.distanceY = i.distance = 0, i.canvasWidth = Math.round(f[0].clientWidth), i.canvasHeight = Math.round(f[0].clientHeight), i.contentLastPos = null, i.contentStartPos = n.fancybox.getTranslate(i.$content) || { top: 0, left: 0 }, i.sliderStartPos = n.fancybox.getTranslate(f), i.stagePos = n.fancybox.getTranslate(d.$refs.stage), i.sliderStartPos.top -= i.stagePos.top, i.sliderStartPos.left -= i.stagePos.left, i.contentStartPos.top -= i.stagePos.top, i.contentStartPos.left -= i.stagePos.left, n(e).off(".fb.touch").on(h ? "touchend.fb.touch touchcancel.fb.touch" : "mouseup.fb.touch mouseleave.fb.touch", n.proxy(i, "ontouchend")).on(h ? "touchmove.fb.touch" : "mousemove.fb.touch", n.proxy(i, "ontouchmove")), n.fancybox.isMobile && e.addEventListener("scroll", i.onscroll, !0), ((i.opts || i.canPan) && (c.is(i.$stage) || i.$stage.find(c).length) || (c.is(".fancybox-image") && o.preventDefault(), n.fancybox.isMobile && c.parents(".fancybox-caption").length)) && (i.isScrollable = l(c) || l(c.parent()), n.fancybox.isMobile && i.isScrollable || o.preventDefault(), (1 === i.startPoints.length || u.hasError) && (i.canPan ? (n.fancybox.stop(i.$content), i.isPanning = !0) : i.isSwiping = !0, i.$container.addClass("fancybox-is-grabbing")), 2 === i.startPoints.length && "image" === u.type && (u.isLoaded || u.$ghost) && (i.canTap = !1, i.isSwiping = !1, i.isPanning = !1, i.isZooming = !0, n.fancybox.stop(i.$content), i.centerPointStartX = .5 * (i.startPoints[0].x + i.startPoints[1].x) - n(t).scrollLeft(), i.centerPointStartY = .5 * (i.startPoints[0].y + i.startPoints[1].y) - n(t).scrollTop(), i.percentageOfImageAtPinchPointX = (i.centerPointStartX - i.contentStartPos.left) / i.contentStartPos.width, i.percentageOfImageAtPinchPointY = (i.centerPointStartY - i.contentStartPos.top) / i.contentStartPos.height, i.startDistanceBetweenFingers = s(i.startPoints[0], i.startPoints[1]))));
+    }
+  }, d.prototype.onscroll = function (t) {
+    var n = this;n.isScrolling = !0, e.removeEventListener("scroll", n.onscroll, !0);
+  }, d.prototype.ontouchmove = function (t) {
+    var e = this;return void 0 !== t.originalEvent.buttons && 0 === t.originalEvent.buttons ? void e.ontouchend(t) : e.isScrolling ? void (e.canTap = !1) : (e.newPoints = a(t), void ((e.opts || e.canPan) && e.newPoints.length && e.newPoints.length && (e.isSwiping && !0 === e.isSwiping || t.preventDefault(), e.distanceX = s(e.newPoints[0], e.startPoints[0], "x"), e.distanceY = s(e.newPoints[0], e.startPoints[0], "y"), e.distance = s(e.newPoints[0], e.startPoints[0]), e.distance > 0 && (e.isSwiping ? e.onSwipe(t) : e.isPanning ? e.onPan() : e.isZooming && e.onZoom()))));
+  }, d.prototype.onSwipe = function (e) {
+    var a,
+        s = this,
+        r = s.instance,
+        c = s.isSwiping,
+        l = s.sliderStartPos.left || 0;if (!0 !== c) "x" == c && (s.distanceX > 0 && (s.instance.group.length < 2 || 0 === s.instance.current.index && !s.instance.current.opts.loop) ? l += Math.pow(s.distanceX, .8) : s.distanceX < 0 && (s.instance.group.length < 2 || s.instance.current.index === s.instance.group.length - 1 && !s.instance.current.opts.loop) ? l -= Math.pow(-s.distanceX, .8) : l += s.distanceX), s.sliderLastPos = { top: "x" == c ? 0 : s.sliderStartPos.top + s.distanceY, left: l }, s.requestId && (i(s.requestId), s.requestId = null), s.requestId = o(function () {
+      s.sliderLastPos && (n.each(s.instance.slides, function (t, e) {
+        var o = e.pos - s.instance.currPos;n.fancybox.setTranslate(e.$slide, { top: s.sliderLastPos.top, left: s.sliderLastPos.left + o * s.canvasWidth + o * e.opts.gutter });
+      }), s.$container.addClass("fancybox-is-sliding"));
+    });else if (Math.abs(s.distance) > 10) {
+      if (s.canTap = !1, r.group.length < 2 && s.opts.vertical ? s.isSwiping = "y" : r.isDragging || !1 === s.opts.vertical || "auto" === s.opts.vertical && n(t).width() > 800 ? s.isSwiping = "x" : (a = Math.abs(180 * Math.atan2(s.distanceY, s.distanceX) / Math.PI), s.isSwiping = a > 45 && a < 135 ? "y" : "x"), "y" === s.isSwiping && n.fancybox.isMobile && s.isScrollable) return void (s.isScrolling = !0);r.isDragging = s.isSwiping, s.startPoints = s.newPoints, n.each(r.slides, function (t, e) {
+        var o, i;n.fancybox.stop(e.$slide), o = n.fancybox.getTranslate(e.$slide), i = n.fancybox.getTranslate(r.$refs.stage), e.$slide.css({ transform: "", opacity: "", "transition-duration": "" }).removeClass("fancybox-animated").removeClass(function (t, e) {
+          return (e.match(/(^|\s)fancybox-fx-\S+/g) || []).join(" ");
+        }), e.pos === r.current.pos && (s.sliderStartPos.top = o.top - i.top, s.sliderStartPos.left = o.left - i.left), n.fancybox.setTranslate(e.$slide, { top: o.top - i.top, left: o.left - i.left });
+      }), r.SlideShow && r.SlideShow.isActive && r.SlideShow.stop();
+    }
+  }, d.prototype.onPan = function () {
+    var t = this;if (s(t.newPoints[0], t.realPoints[0]) < (n.fancybox.isMobile ? 10 : 5)) return void (t.startPoints = t.newPoints);t.canTap = !1, t.contentLastPos = t.limitMovement(), t.requestId && i(t.requestId), t.requestId = o(function () {
+      n.fancybox.setTranslate(t.$content, t.contentLastPos);
+    });
+  }, d.prototype.limitMovement = function () {
+    var t,
+        e,
+        n,
+        o,
+        i,
+        a,
+        s = this,
+        r = s.canvasWidth,
+        c = s.canvasHeight,
+        l = s.distanceX,
+        d = s.distanceY,
+        u = s.contentStartPos,
+        f = u.left,
+        p = u.top,
+        h = u.width,
+        g = u.height;return i = h > r ? f + l : f, a = p + d, t = Math.max(0, .5 * r - .5 * h), e = Math.max(0, .5 * c - .5 * g), n = Math.min(r - h, .5 * r - .5 * h), o = Math.min(c - g, .5 * c - .5 * g), l > 0 && i > t && (i = t - 1 + Math.pow(-t + f + l, .8) || 0), l < 0 && i < n && (i = n + 1 - Math.pow(n - f - l, .8) || 0), d > 0 && a > e && (a = e - 1 + Math.pow(-e + p + d, .8) || 0), d < 0 && a < o && (a = o + 1 - Math.pow(o - p - d, .8) || 0), { top: a, left: i };
+  }, d.prototype.limitPosition = function (t, e, n, o) {
+    var i = this,
+        a = i.canvasWidth,
+        s = i.canvasHeight;return n > a ? (t = t > 0 ? 0 : t, t = t < a - n ? a - n : t) : t = Math.max(0, a / 2 - n / 2), o > s ? (e = e > 0 ? 0 : e, e = e < s - o ? s - o : e) : e = Math.max(0, s / 2 - o / 2), { top: e, left: t };
+  }, d.prototype.onZoom = function () {
+    var e = this,
+        a = e.contentStartPos,
+        r = a.width,
+        c = a.height,
+        l = a.left,
+        d = a.top,
+        u = s(e.newPoints[0], e.newPoints[1]),
+        f = u / e.startDistanceBetweenFingers,
+        p = Math.floor(r * f),
+        h = Math.floor(c * f),
+        g = (r - p) * e.percentageOfImageAtPinchPointX,
+        b = (c - h) * e.percentageOfImageAtPinchPointY,
+        m = (e.newPoints[0].x + e.newPoints[1].x) / 2 - n(t).scrollLeft(),
+        v = (e.newPoints[0].y + e.newPoints[1].y) / 2 - n(t).scrollTop(),
+        y = m - e.centerPointStartX,
+        x = v - e.centerPointStartY,
+        w = l + (g + y),
+        $ = d + (b + x),
+        S = { top: $, left: w, scaleX: f, scaleY: f };e.canTap = !1, e.newWidth = p, e.newHeight = h, e.contentLastPos = S, e.requestId && i(e.requestId), e.requestId = o(function () {
+      n.fancybox.setTranslate(e.$content, e.contentLastPos);
+    });
+  }, d.prototype.ontouchend = function (t) {
+    var o = this,
+        s = o.isSwiping,
+        r = o.isPanning,
+        c = o.isZooming,
+        l = o.isScrolling;if (o.endPoints = a(t), o.dMs = Math.max(new Date().getTime() - o.startTime, 1), o.$container.removeClass("fancybox-is-grabbing"), n(e).off(".fb.touch"), e.removeEventListener("scroll", o.onscroll, !0), o.requestId && (i(o.requestId), o.requestId = null), o.isSwiping = !1, o.isPanning = !1, o.isZooming = !1, o.isScrolling = !1, o.instance.isDragging = !1, o.canTap) return o.onTap(t);o.speed = 100, o.velocityX = o.distanceX / o.dMs * .5, o.velocityY = o.distanceY / o.dMs * .5, r ? o.endPanning() : c ? o.endZooming() : o.endSwiping(s, l);
+  }, d.prototype.endSwiping = function (t, e) {
+    var o = this,
+        i = !1,
+        a = o.instance.group.length,
+        s = Math.abs(o.distanceX),
+        r = "x" == t && a > 1 && (o.dMs > 130 && s > 10 || s > 50);o.sliderLastPos = null, "y" == t && !e && Math.abs(o.distanceY) > 50 ? (n.fancybox.animate(o.instance.current.$slide, { top: o.sliderStartPos.top + o.distanceY + 150 * o.velocityY, opacity: 0 }, 200), i = o.instance.close(!0, 250)) : r && o.distanceX > 0 ? i = o.instance.previous(300) : r && o.distanceX < 0 && (i = o.instance.next(300)), !1 !== i || "x" != t && "y" != t || o.instance.centerSlide(200), o.$container.removeClass("fancybox-is-sliding");
+  }, d.prototype.endPanning = function () {
+    var t,
+        e,
+        o,
+        i = this;i.contentLastPos && (!1 === i.opts.momentum || i.dMs > 350 ? (t = i.contentLastPos.left, e = i.contentLastPos.top) : (t = i.contentLastPos.left + 500 * i.velocityX, e = i.contentLastPos.top + 500 * i.velocityY), o = i.limitPosition(t, e, i.contentStartPos.width, i.contentStartPos.height), o.width = i.contentStartPos.width, o.height = i.contentStartPos.height, n.fancybox.animate(i.$content, o, 366));
+  }, d.prototype.endZooming = function () {
+    var t,
+        e,
+        o,
+        i,
+        a = this,
+        s = a.instance.current,
+        r = a.newWidth,
+        c = a.newHeight;a.contentLastPos && (t = a.contentLastPos.left, e = a.contentLastPos.top, i = { top: e, left: t, width: r, height: c, scaleX: 1, scaleY: 1 }, n.fancybox.setTranslate(a.$content, i), r < a.canvasWidth && c < a.canvasHeight ? a.instance.scaleToFit(150) : r > s.width || c > s.height ? a.instance.scaleToActual(a.centerPointStartX, a.centerPointStartY, 150) : (o = a.limitPosition(t, e, r, c), n.fancybox.animate(a.$content, o, 150)));
+  }, d.prototype.onTap = function (e) {
+    var o,
+        i = this,
+        s = n(e.target),
+        r = i.instance,
+        c = r.current,
+        l = e && a(e) || i.startPoints,
+        d = l[0] ? l[0].x - n(t).scrollLeft() - i.stagePos.left : 0,
+        u = l[0] ? l[0].y - n(t).scrollTop() - i.stagePos.top : 0,
+        f = function f(t) {
+      var o = c.opts[t];if (n.isFunction(o) && (o = o.apply(r, [c, e])), o) switch (o) {case "close":
+          r.close(i.startEvent);break;case "toggleControls":
+          r.toggleControls();break;case "next":
+          r.next();break;case "nextOrClose":
+          r.group.length > 1 ? r.next() : r.close(i.startEvent);break;case "zoom":
+          "image" == c.type && (c.isLoaded || c.$ghost) && (r.canPan() ? r.scaleToFit() : r.isScaledDown() ? r.scaleToActual(d, u) : r.group.length < 2 && r.close(i.startEvent));}
+    };if ((!e.originalEvent || 2 != e.originalEvent.button) && (s.is("img") || !(d > s[0].clientWidth + s.offset().left))) {
+      if (s.is(".fancybox-bg,.fancybox-inner,.fancybox-outer,.fancybox-container")) o = "Outside";else if (s.is(".fancybox-slide")) o = "Slide";else {
+        if (!r.current.$content || !r.current.$content.find(s).addBack().filter(s).length) return;o = "Content";
+      }if (i.tapped) {
+        if (clearTimeout(i.tapped), i.tapped = null, Math.abs(d - i.tapX) > 50 || Math.abs(u - i.tapY) > 50) return this;f("dblclick" + o);
+      } else i.tapX = d, i.tapY = u, c.opts["dblclick" + o] && c.opts["dblclick" + o] !== c.opts["click" + o] ? i.tapped = setTimeout(function () {
+        i.tapped = null, r.isAnimating || f("click" + o);
+      }, 500) : f("click" + o);return this;
+    }
+  }, n(e).on("onActivate.fb", function (t, e) {
+    e && !e.Guestures && (e.Guestures = new d(e));
+  }).on("beforeClose.fb", function (t, e) {
+    e && e.Guestures && e.Guestures.destroy();
+  });
+}(window, document, jQuery), function (t, e) {
+  "use strict";
+  e.extend(!0, e.fancybox.defaults, { btnTpl: { slideShow: '<button data-fancybox-play class="fancybox-button fancybox-button--play" title="{{PLAY_START}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 5.4v13.2l11-6.6z"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.33 5.75h2.2v12.5h-2.2V5.75zm5.15 0h2.2v12.5h-2.2V5.75z"/></svg></button>' }, slideShow: { autoStart: !1, speed: 3e3, progress: !0 } });var n = function n(t) {
+    this.instance = t, this.init();
+  };e.extend(n.prototype, { timer: null, isActive: !1, $button: null, init: function init() {
+      var t = this,
+          n = t.instance,
+          o = n.group[n.currIndex].opts.slideShow;t.$button = n.$refs.toolbar.find("[data-fancybox-play]").on("click", function () {
+        t.toggle();
+      }), n.group.length < 2 || !o ? t.$button.hide() : o.progress && (t.$progress = e('<div class="fancybox-progress"></div>').appendTo(n.$refs.inner));
+    }, set: function set(t) {
+      var n = this,
+          o = n.instance,
+          i = o.current;i && (!0 === t || i.opts.loop || o.currIndex < o.group.length - 1) ? n.isActive && "video" !== i.contentType && (n.$progress && e.fancybox.animate(n.$progress.show(), { scaleX: 1 }, i.opts.slideShow.speed), n.timer = setTimeout(function () {
+        o.current.opts.loop || o.current.index != o.group.length - 1 ? o.next() : o.jumpTo(0);
+      }, i.opts.slideShow.speed)) : (n.stop(), o.idleSecondsCounter = 0, o.showControls());
+    }, clear: function clear() {
+      var t = this;clearTimeout(t.timer), t.timer = null, t.$progress && t.$progress.removeAttr("style").hide();
+    }, start: function start() {
+      var t = this,
+          e = t.instance.current;e && (t.$button.attr("title", (e.opts.i18n[e.opts.lang] || e.opts.i18n.en).PLAY_STOP).removeClass("fancybox-button--play").addClass("fancybox-button--pause"), t.isActive = !0, e.isComplete && t.set(!0), t.instance.trigger("onSlideShowChange", !0));
+    }, stop: function stop() {
+      var t = this,
+          e = t.instance.current;t.clear(), t.$button.attr("title", (e.opts.i18n[e.opts.lang] || e.opts.i18n.en).PLAY_START).removeClass("fancybox-button--pause").addClass("fancybox-button--play"), t.isActive = !1, t.instance.trigger("onSlideShowChange", !1), t.$progress && t.$progress.removeAttr("style").hide();
+    }, toggle: function toggle() {
+      var t = this;t.isActive ? t.stop() : t.start();
+    } }), e(t).on({ "onInit.fb": function onInitFb(t, e) {
+      e && !e.SlideShow && (e.SlideShow = new n(e));
+    }, "beforeShow.fb": function beforeShowFb(t, e, n, o) {
+      var i = e && e.SlideShow;o ? i && n.opts.slideShow.autoStart && i.start() : i && i.isActive && i.clear();
+    }, "afterShow.fb": function afterShowFb(t, e, n) {
+      var o = e && e.SlideShow;o && o.isActive && o.set();
+    }, "afterKeydown.fb": function afterKeydownFb(n, o, i, a, s) {
+      var r = o && o.SlideShow;!r || !i.opts.slideShow || 80 !== s && 32 !== s || e(t.activeElement).is("button,a,input") || (a.preventDefault(), r.toggle());
+    }, "beforeClose.fb onDeactivate.fb": function beforeCloseFbOnDeactivateFb(t, e) {
+      var n = e && e.SlideShow;n && n.stop();
+    } }), e(t).on("visibilitychange", function () {
+    var n = e.fancybox.getInstance(),
+        o = n && n.SlideShow;o && o.isActive && (t.hidden ? o.clear() : o.set());
+  });
+}(document, jQuery), function (t, e) {
+  "use strict";
+  var n = function () {
+    for (var e = [["requestFullscreen", "exitFullscreen", "fullscreenElement", "fullscreenEnabled", "fullscreenchange", "fullscreenerror"], ["webkitRequestFullscreen", "webkitExitFullscreen", "webkitFullscreenElement", "webkitFullscreenEnabled", "webkitfullscreenchange", "webkitfullscreenerror"], ["webkitRequestFullScreen", "webkitCancelFullScreen", "webkitCurrentFullScreenElement", "webkitCancelFullScreen", "webkitfullscreenchange", "webkitfullscreenerror"], ["mozRequestFullScreen", "mozCancelFullScreen", "mozFullScreenElement", "mozFullScreenEnabled", "mozfullscreenchange", "mozfullscreenerror"], ["msRequestFullscreen", "msExitFullscreen", "msFullscreenElement", "msFullscreenEnabled", "MSFullscreenChange", "MSFullscreenError"]], n = {}, o = 0; o < e.length; o++) {
+      var i = e[o];if (i && i[1] in t) {
+        for (var a = 0; a < i.length; a++) {
+          n[e[0][a]] = i[a];
+        }return n;
+      }
+    }return !1;
+  }();if (n) {
+    var o = { request: function request(e) {
+        e = e || t.documentElement, e[n.requestFullscreen](e.ALLOW_KEYBOARD_INPUT);
+      }, exit: function exit() {
+        t[n.exitFullscreen]();
+      }, toggle: function toggle(e) {
+        e = e || t.documentElement, this.isFullscreen() ? this.exit() : this.request(e);
+      }, isFullscreen: function isFullscreen() {
+        return Boolean(t[n.fullscreenElement]);
+      }, enabled: function enabled() {
+        return Boolean(t[n.fullscreenEnabled]);
+      } };e.extend(!0, e.fancybox.defaults, { btnTpl: { fullScreen: '<button data-fancybox-fullscreen class="fancybox-button fancybox-button--fsenter" title="{{FULL_SCREEN}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5zm3-8H5v2h5V5H8zm6 11h2v-3h3v-2h-5zm2-11V5h-2v5h5V8z"/></svg></button>' }, fullScreen: { autoStart: !1 } }), e(t).on(n.fullscreenchange, function () {
+      var t = o.isFullscreen(),
+          n = e.fancybox.getInstance();n && (n.current && "image" === n.current.type && n.isAnimating && (n.isAnimating = !1, n.update(!0, !0, 0), n.isComplete || n.complete()), n.trigger("onFullscreenChange", t), n.$refs.container.toggleClass("fancybox-is-fullscreen", t), n.$refs.toolbar.find("[data-fancybox-fullscreen]").toggleClass("fancybox-button--fsenter", !t).toggleClass("fancybox-button--fsexit", t));
+    });
+  }e(t).on({ "onInit.fb": function onInitFb(t, e) {
+      var i;if (!n) return void e.$refs.toolbar.find("[data-fancybox-fullscreen]").remove();e && e.group[e.currIndex].opts.fullScreen ? (i = e.$refs.container, i.on("click.fb-fullscreen", "[data-fancybox-fullscreen]", function (t) {
+        t.stopPropagation(), t.preventDefault(), o.toggle();
+      }), e.opts.fullScreen && !0 === e.opts.fullScreen.autoStart && o.request(), e.FullScreen = o) : e && e.$refs.toolbar.find("[data-fancybox-fullscreen]").hide();
+    }, "afterKeydown.fb": function afterKeydownFb(t, e, n, o, i) {
+      e && e.FullScreen && 70 === i && (o.preventDefault(), e.FullScreen.toggle());
+    }, "beforeClose.fb": function beforeCloseFb(t, e) {
+      e && e.FullScreen && e.$refs.container.hasClass("fancybox-is-fullscreen") && o.exit();
+    } });
+}(document, jQuery), function (t, e) {
+  "use strict";
+  var n = "fancybox-thumbs";e.fancybox.defaults = e.extend(!0, { btnTpl: { thumbs: '<button data-fancybox-thumbs class="fancybox-button fancybox-button--thumbs" title="{{THUMBS}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.59 14.59h3.76v3.76h-3.76v-3.76zm-4.47 0h3.76v3.76h-3.76v-3.76zm-4.47 0h3.76v3.76H5.65v-3.76zm8.94-4.47h3.76v3.76h-3.76v-3.76zm-4.47 0h3.76v3.76h-3.76v-3.76zm-4.47 0h3.76v3.76H5.65v-3.76zm8.94-4.47h3.76v3.76h-3.76V5.65zm-4.47 0h3.76v3.76h-3.76V5.65zm-4.47 0h3.76v3.76H5.65V5.65z"/></svg></button>' }, thumbs: { autoStart: !1, hideOnClose: !0, parentEl: ".fancybox-container", axis: "y" } }, e.fancybox.defaults);var o = function o(t) {
+    this.init(t);
+  };e.extend(o.prototype, { $button: null, $grid: null, $list: null, isVisible: !1, isActive: !1, init: function init(t) {
+      var e = this,
+          n = t.group,
+          o = 0;e.instance = t, e.opts = n[t.currIndex].opts.thumbs, t.Thumbs = e, e.$button = t.$refs.toolbar.find("[data-fancybox-thumbs]");for (var i = 0, a = n.length; i < a && (n[i].thumb && o++, !(o > 1)); i++) {}o > 1 && e.opts ? (e.$button.removeAttr("style").on("click", function () {
+        e.toggle();
+      }), e.isActive = !0) : e.$button.hide();
+    }, create: function create() {
+      var t,
+          o = this,
+          i = o.instance,
+          a = o.opts.parentEl,
+          s = [];o.$grid || (o.$grid = e('<div class="' + n + " " + n + "-" + o.opts.axis + '"></div>').appendTo(i.$refs.container.find(a).addBack().filter(a)), o.$grid.on("click", "a", function () {
+        i.jumpTo(e(this).attr("data-index"));
+      })), o.$list || (o.$list = e('<div class="' + n + '__list">').appendTo(o.$grid)), e.each(i.group, function (e, n) {
+        t = n.thumb, t || "image" !== n.type || (t = n.src), s.push('<a href="javascript:;" tabindex="0" data-index="' + e + '"' + (t && t.length ? ' style="background-image:url(' + t + ')"' : 'class="fancybox-thumbs-missing"') + "></a>");
+      }), o.$list[0].innerHTML = s.join(""), "x" === o.opts.axis && o.$list.width(parseInt(o.$grid.css("padding-right"), 10) + i.group.length * o.$list.children().eq(0).outerWidth(!0));
+    }, focus: function focus(t) {
+      var e,
+          n,
+          o = this,
+          i = o.$list,
+          a = o.$grid;o.instance.current && (e = i.children().removeClass("fancybox-thumbs-active").filter('[data-index="' + o.instance.current.index + '"]').addClass("fancybox-thumbs-active"), n = e.position(), "y" === o.opts.axis && (n.top < 0 || n.top > i.height() - e.outerHeight()) ? i.stop().animate({ scrollTop: i.scrollTop() + n.top }, t) : "x" === o.opts.axis && (n.left < a.scrollLeft() || n.left > a.scrollLeft() + (a.width() - e.outerWidth())) && i.parent().stop().animate({ scrollLeft: n.left }, t));
+    }, update: function update() {
+      var t = this;t.instance.$refs.container.toggleClass("fancybox-show-thumbs", this.isVisible), t.isVisible ? (t.$grid || t.create(), t.instance.trigger("onThumbsShow"), t.focus(0)) : t.$grid && t.instance.trigger("onThumbsHide"), t.instance.update();
+    }, hide: function hide() {
+      this.isVisible = !1, this.update();
+    }, show: function show() {
+      this.isVisible = !0, this.update();
+    }, toggle: function toggle() {
+      this.isVisible = !this.isVisible, this.update();
+    } }), e(t).on({ "onInit.fb": function onInitFb(t, e) {
+      var n;e && !e.Thumbs && (n = new o(e), n.isActive && !0 === n.opts.autoStart && n.show());
+    }, "beforeShow.fb": function beforeShowFb(t, e, n, o) {
+      var i = e && e.Thumbs;i && i.isVisible && i.focus(o ? 0 : 250);
+    }, "afterKeydown.fb": function afterKeydownFb(t, e, n, o, i) {
+      var a = e && e.Thumbs;a && a.isActive && 71 === i && (o.preventDefault(), a.toggle());
+    }, "beforeClose.fb": function beforeCloseFb(t, e) {
+      var n = e && e.Thumbs;n && n.isVisible && !1 !== n.opts.hideOnClose && n.$grid.hide();
+    } });
+}(document, jQuery), function (t, e) {
+  "use strict";
+  function n(t) {
+    var e = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "/": "&#x2F;", "`": "&#x60;", "=": "&#x3D;" };return String(t).replace(/[&<>"'`=\/]/g, function (t) {
+      return e[t];
+    });
+  }e.extend(!0, e.fancybox.defaults, { btnTpl: { share: '<button data-fancybox-share class="fancybox-button fancybox-button--share" title="{{SHARE}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.55 19c1.4-8.4 9.1-9.8 11.9-9.8V5l7 7-7 6.3v-3.5c-2.8 0-10.5 2.1-11.9 4.2z"/></svg></button>' }, share: { url: function url(t, e) {
+        return !t.currentHash && "inline" !== e.type && "html" !== e.type && (e.origSrc || e.src) || window.location;
+      },
+      tpl: '<div class="fancybox-share"><h1>{{SHARE}}</h1><p><a class="fancybox-share__button fancybox-share__button--fb" href="https://www.facebook.com/sharer/sharer.php?u={{url}}"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m287 456v-299c0-21 6-35 35-35h38v-63c-7-1-29-3-55-3-54 0-91 33-91 94v306m143-254h-205v72h196" /></svg><span>Facebook</span></a><a class="fancybox-share__button fancybox-share__button--tw" href="https://twitter.com/intent/tweet?url={{url}}&text={{descr}}"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m456 133c-14 7-31 11-47 13 17-10 30-27 37-46-15 10-34 16-52 20-61-62-157-7-141 75-68-3-129-35-169-85-22 37-11 86 26 109-13 0-26-4-37-9 0 39 28 72 65 80-12 3-25 4-37 2 10 33 41 57 77 57-42 30-77 38-122 34 170 111 378-32 359-208 16-11 30-25 41-42z" /></svg><span>Twitter</span></a><a class="fancybox-share__button fancybox-share__button--pt" href="https://www.pinterest.com/pin/create/button/?url={{url}}&description={{descr}}&media={{media}}"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m265 56c-109 0-164 78-164 144 0 39 15 74 47 87 5 2 10 0 12-5l4-19c2-6 1-8-3-13-9-11-15-25-15-45 0-58 43-110 113-110 62 0 96 38 96 88 0 67-30 122-73 122-24 0-42-19-36-44 6-29 20-60 20-81 0-19-10-35-31-35-25 0-44 26-44 60 0 21 7 36 7 36l-30 125c-8 37-1 83 0 87 0 3 4 4 5 2 2-3 32-39 42-75l16-64c8 16 31 29 56 29 74 0 124-67 124-157 0-69-58-132-146-132z" fill="#fff"/></svg><span>Pinterest</span></a></p><p><input class="fancybox-share__input" type="text" value="{{url_raw}}" onclick="select()" /></p></div>' } }), e(t).on("click", "[data-fancybox-share]", function () {
+    var t,
+        o,
+        i = e.fancybox.getInstance(),
+        a = i.current || null;a && ("function" === e.type(a.opts.share.url) && (t = a.opts.share.url.apply(a, [i, a])), o = a.opts.share.tpl.replace(/\{\{media\}\}/g, "image" === a.type ? encodeURIComponent(a.src) : "").replace(/\{\{url\}\}/g, encodeURIComponent(t)).replace(/\{\{url_raw\}\}/g, n(t)).replace(/\{\{descr\}\}/g, i.$caption ? encodeURIComponent(i.$caption.text()) : ""), e.fancybox.open({ src: i.translate(i, o), type: "html", opts: { touch: !1, animationEffect: !1, afterLoad: function afterLoad(t, e) {
+          i.$refs.container.one("beforeClose.fb", function () {
+            t.close(null, 0);
+          }), e.$content.find(".fancybox-share__button").click(function () {
+            return window.open(this.href, "Share", "width=550, height=450"), !1;
+          });
+        }, mobile: { autoFocus: !1 } } }));
+  });
+}(document, jQuery), function (t, e, n) {
+  "use strict";
+  function o() {
+    var e = t.location.hash.substr(1),
+        n = e.split("-"),
+        o = n.length > 1 && /^\+?\d+$/.test(n[n.length - 1]) ? parseInt(n.pop(-1), 10) || 1 : 1,
+        i = n.join("-");return { hash: e, index: o < 1 ? 1 : o, gallery: i };
+  }function i(t) {
+    "" !== t.gallery && n("[data-fancybox='" + n.escapeSelector(t.gallery) + "']").eq(t.index - 1).focus().trigger("click.fb-start");
+  }function a(t) {
+    var e, n;return !!t && (e = t.current ? t.current.opts : t.opts, "" !== (n = e.hash || (e.$orig ? e.$orig.data("fancybox") || e.$orig.data("fancybox-trigger") : "")) && n);
+  }n.escapeSelector || (n.escapeSelector = function (t) {
+    return (t + "").replace(/([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g, function (t, e) {
+      return e ? "\0" === t ? "�" : t.slice(0, -1) + "\\" + t.charCodeAt(t.length - 1).toString(16) + " " : "\\" + t;
+    });
+  }), n(function () {
+    !1 !== n.fancybox.defaults.hash && (n(e).on({ "onInit.fb": function onInitFb(t, e) {
+        var n, i;!1 !== e.group[e.currIndex].opts.hash && (n = o(), (i = a(e)) && n.gallery && i == n.gallery && (e.currIndex = n.index - 1));
+      }, "beforeShow.fb": function beforeShowFb(n, o, i, s) {
+        var r;i && !1 !== i.opts.hash && (r = a(o)) && (o.currentHash = r + (o.group.length > 1 ? "-" + (i.index + 1) : ""), t.location.hash !== "#" + o.currentHash && (s && !o.origHash && (o.origHash = t.location.hash), o.hashTimer && clearTimeout(o.hashTimer), o.hashTimer = setTimeout(function () {
+          "replaceState" in t.history ? (t.history[s ? "pushState" : "replaceState"]({}, e.title, t.location.pathname + t.location.search + "#" + o.currentHash), s && (o.hasCreatedHistory = !0)) : t.location.hash = o.currentHash, o.hashTimer = null;
+        }, 300)));
+      }, "beforeClose.fb": function beforeCloseFb(n, o, i) {
+        i && !1 !== i.opts.hash && (clearTimeout(o.hashTimer), o.currentHash && o.hasCreatedHistory ? t.history.back() : o.currentHash && ("replaceState" in t.history ? t.history.replaceState({}, e.title, t.location.pathname + t.location.search + (o.origHash || "")) : t.location.hash = o.origHash), o.currentHash = null);
+      } }), n(t).on("hashchange.fb", function () {
+      var t = o(),
+          e = null;n.each(n(".fancybox-container").get().reverse(), function (t, o) {
+        var i = n(o).data("FancyBox");if (i && i.currentHash) return e = i, !1;
+      }), e ? e.currentHash === t.gallery + "-" + t.index || 1 === t.index && e.currentHash == t.gallery || (e.currentHash = null, e.close()) : "" !== t.gallery && i(t);
+    }), setTimeout(function () {
+      n.fancybox.getInstance() || i(o());
+    }, 50));
+  });
+}(window, document, jQuery), function (t, e) {
+  "use strict";
+  var n = new Date().getTime();e(t).on({ "onInit.fb": function onInitFb(t, e, o) {
+      e.$refs.stage.on("mousewheel DOMMouseScroll wheel MozMousePixelScroll", function (t) {
+        var o = e.current,
+            i = new Date().getTime();e.group.length < 2 || !1 === o.opts.wheel || "auto" === o.opts.wheel && "image" !== o.type || (t.preventDefault(), t.stopPropagation(), o.$slide.hasClass("fancybox-animated") || (t = t.originalEvent || t, i - n < 250 || (n = i, e[(-t.deltaY || -t.deltaX || t.wheelDelta || -t.detail) < 0 ? "next" : "previous"]())));
+      });
+    } });
+}(document, jQuery);
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports) {
 
 (function ($) {
@@ -36284,7 +40718,7 @@ $(window).on('load', function () {
 })(jQuery); // End of use strict
 
 /***/ }),
-/* 40 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -36757,11 +41191,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
         })();
     }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-}(__webpack_require__(41)));
+}(__webpack_require__(46)));
 
 
 /***/ }),
-/* 41 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -36770,1994 +41204,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 42 */
-/***/ (function(module, exports) {
-
-/*!
- * Font Awesome Free 5.4.2 by @fontawesome - https://fontawesome.com
- * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- */
-(function () {
-'use strict';
-
-var noop = function noop() {};
-
-var _WINDOW = {};
-var _DOCUMENT = {};
-var _MUTATION_OBSERVER$1 = null;
-var _PERFORMANCE = { mark: noop, measure: noop };
-
-try {
-  if (typeof window !== 'undefined') _WINDOW = window;
-  if (typeof document !== 'undefined') _DOCUMENT = document;
-  if (typeof MutationObserver !== 'undefined') _MUTATION_OBSERVER$1 = MutationObserver;
-  if (typeof performance !== 'undefined') _PERFORMANCE = performance;
-} catch (e) {}
-
-var _ref = _WINDOW.navigator || {};
-var _ref$userAgent = _ref.userAgent;
-var userAgent = _ref$userAgent === undefined ? '' : _ref$userAgent;
-
-var WINDOW = _WINDOW;
-var DOCUMENT = _DOCUMENT;
-var MUTATION_OBSERVER = _MUTATION_OBSERVER$1;
-var PERFORMANCE = _PERFORMANCE;
-var IS_BROWSER = !!WINDOW.document;
-var IS_DOM = !!DOCUMENT.documentElement && !!DOCUMENT.head && typeof DOCUMENT.addEventListener === 'function' && typeof DOCUMENT.createElement === 'function';
-var IS_IE = ~userAgent.indexOf('MSIE') || ~userAgent.indexOf('Trident/');
-
-var NAMESPACE_IDENTIFIER = '___FONT_AWESOME___';
-var UNITS_IN_GRID = 16;
-var DEFAULT_FAMILY_PREFIX = 'fa';
-var DEFAULT_REPLACEMENT_CLASS = 'svg-inline--fa';
-var DATA_FA_I2SVG = 'data-fa-i2svg';
-var DATA_FA_PSEUDO_ELEMENT = 'data-fa-pseudo-element';
-var DATA_PREFIX = 'data-prefix';
-var DATA_ICON = 'data-icon';
-var HTML_CLASS_I2SVG_BASE_CLASS = 'fontawesome-i2svg';
-var TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS = ['HTML', 'HEAD', 'STYLE', 'SCRIPT'];
-var PRODUCTION = function () {
-  try {
-    return "production" === 'production';
-  } catch (e) {
-    return false;
-  }
-}();
-
-var oneToTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-var oneToTwenty = oneToTen.concat([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
-
-var ATTRIBUTES_WATCHED_FOR_MUTATION = ['class', 'data-prefix', 'data-icon', 'data-fa-transform', 'data-fa-mask'];
-
-var RESERVED_CLASSES = ['xs', 'sm', 'lg', 'fw', 'ul', 'li', 'border', 'pull-left', 'pull-right', 'spin', 'pulse', 'rotate-90', 'rotate-180', 'rotate-270', 'flip-horizontal', 'flip-vertical', 'stack', 'stack-1x', 'stack-2x', 'inverse', 'layers', 'layers-text', 'layers-counter'].concat(oneToTen.map(function (n) {
-  return n + 'x';
-})).concat(oneToTwenty.map(function (n) {
-  return 'w-' + n;
-}));
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-
-
-var slicedToArray = function () {
-  function sliceIterator(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"]) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  return function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      return sliceIterator(arr, i);
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-}();
-
-var toConsumableArray = function (arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  } else {
-    return Array.from(arr);
-  }
-};
-
-var initial = WINDOW.FontAwesomeConfig || {};
-
-function getAttrConfig(attr) {
-  var element = DOCUMENT.querySelector('script[' + attr + ']');
-
-  if (element) {
-    return element.getAttribute(attr);
-  }
-}
-
-function coerce(val) {
-  // Getting an empty string will occur if the attribute is set on the HTML tag but without a value
-  // We'll assume that this is an indication that it should be toggled to true
-  // For example <script data-search-pseudo-elements src="..."></script>
-  if (val === '') return true;
-  if (val === 'false') return false;
-  if (val === 'true') return true;
-  return val;
-}
-
-if (DOCUMENT && typeof DOCUMENT.querySelector === 'function') {
-  var attrs = [['data-family-prefix', 'familyPrefix'], ['data-replacement-class', 'replacementClass'], ['data-auto-replace-svg', 'autoReplaceSvg'], ['data-auto-add-css', 'autoAddCss'], ['data-auto-a11y', 'autoA11y'], ['data-search-pseudo-elements', 'searchPseudoElements'], ['data-observe-mutations', 'observeMutations'], ['data-keep-original-source', 'keepOriginalSource'], ['data-measure-performance', 'measurePerformance'], ['data-show-missing-icons', 'showMissingIcons']];
-
-  attrs.forEach(function (_ref) {
-    var _ref2 = slicedToArray(_ref, 2),
-        attr = _ref2[0],
-        key = _ref2[1];
-
-    var val = coerce(getAttrConfig(attr));
-
-    if (val !== undefined && val !== null) {
-      initial[key] = val;
-    }
-  });
-}
-
-var _default = _extends({
-  familyPrefix: DEFAULT_FAMILY_PREFIX,
-  replacementClass: DEFAULT_REPLACEMENT_CLASS,
-  autoReplaceSvg: true,
-  autoAddCss: true,
-  autoA11y: true,
-  searchPseudoElements: false,
-  observeMutations: true,
-  keepOriginalSource: true,
-  measurePerformance: false,
-  showMissingIcons: true
-}, initial);
-
-if (!_default.autoReplaceSvg) _default.observeMutations = false;
-
-var config = _extends({}, _default);
-
-WINDOW.FontAwesomeConfig = config;
-
-var w = WINDOW || {};
-
-if (!w[NAMESPACE_IDENTIFIER]) w[NAMESPACE_IDENTIFIER] = {};
-if (!w[NAMESPACE_IDENTIFIER].styles) w[NAMESPACE_IDENTIFIER].styles = {};
-if (!w[NAMESPACE_IDENTIFIER].hooks) w[NAMESPACE_IDENTIFIER].hooks = {};
-if (!w[NAMESPACE_IDENTIFIER].shims) w[NAMESPACE_IDENTIFIER].shims = [];
-
-var namespace = w[NAMESPACE_IDENTIFIER];
-
-var functions = [];
-var listener = function listener() {
-  DOCUMENT.removeEventListener('DOMContentLoaded', listener);
-  loaded = 1;
-  functions.map(function (fn) {
-    return fn();
-  });
-};
-
-var loaded = false;
-
-if (IS_DOM) {
-  loaded = (DOCUMENT.documentElement.doScroll ? /^loaded|^c/ : /^loaded|^i|^c/).test(DOCUMENT.readyState);
-
-  if (!loaded) DOCUMENT.addEventListener('DOMContentLoaded', listener);
-}
-
-var domready = function (fn) {
-  if (!IS_DOM) return;
-  loaded ? setTimeout(fn, 0) : functions.push(fn);
-};
-
-var d = UNITS_IN_GRID;
-
-var meaninglessTransform = {
-  size: 16,
-  x: 0,
-  y: 0,
-  rotate: 0,
-  flipX: false,
-  flipY: false
-};
-
-function isReserved(name) {
-  return ~RESERVED_CLASSES.indexOf(name);
-}
-
-function bunker(fn) {
-  try {
-    fn();
-  } catch (e) {
-    if (!PRODUCTION) {
-      throw e;
-    }
-  }
-}
-
-function insertCss(css) {
-  if (!css || !IS_DOM) {
-    return;
-  }
-
-  var style = DOCUMENT.createElement('style');
-  style.setAttribute('type', 'text/css');
-  style.innerHTML = css;
-
-  var headChildren = DOCUMENT.head.childNodes;
-  var beforeChild = null;
-
-  for (var i = headChildren.length - 1; i > -1; i--) {
-    var child = headChildren[i];
-    var tagName = (child.tagName || '').toUpperCase();
-    if (['STYLE', 'LINK'].indexOf(tagName) > -1) {
-      beforeChild = child;
-    }
-  }
-
-  DOCUMENT.head.insertBefore(style, beforeChild);
-
-  return css;
-}
-
-var idPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-function nextUniqueId() {
-  var size = 12;
-  var id = '';
-  while (size-- > 0) {
-    id += idPool[Math.random() * 62 | 0];
-  }
-  return id;
-}
-
-function toArray(obj) {
-  var array = [];
-
-  for (var i = (obj || []).length >>> 0; i--;) {
-    array[i] = obj[i];
-  }
-
-  return array;
-}
-
-function classArray(node) {
-  if (node.classList) {
-    return toArray(node.classList);
-  } else {
-    return (node.getAttribute('class') || '').split(' ').filter(function (i) {
-      return i;
-    });
-  }
-}
-
-function getIconName(familyPrefix, cls) {
-  var parts = cls.split('-');
-  var prefix = parts[0];
-  var iconName = parts.slice(1).join('-');
-
-  if (prefix === familyPrefix && iconName !== '' && !isReserved(iconName)) {
-    return iconName;
-  } else {
-    return null;
-  }
-}
-
-function htmlEscape(str) {
-  return ('' + str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function joinAttributes(attributes) {
-  return Object.keys(attributes || {}).reduce(function (acc, attributeName) {
-    return acc + (attributeName + '="' + htmlEscape(attributes[attributeName]) + '" ');
-  }, '').trim();
-}
-
-function joinStyles(styles) {
-  return Object.keys(styles || {}).reduce(function (acc, styleName) {
-    return acc + (styleName + ': ' + styles[styleName] + ';');
-  }, '');
-}
-
-function transformIsMeaningful(transform) {
-  return transform.size !== meaninglessTransform.size || transform.x !== meaninglessTransform.x || transform.y !== meaninglessTransform.y || transform.rotate !== meaninglessTransform.rotate || transform.flipX || transform.flipY;
-}
-
-function transformForSvg(_ref) {
-  var transform = _ref.transform,
-      containerWidth = _ref.containerWidth,
-      iconWidth = _ref.iconWidth;
-
-  var outer = {
-    transform: 'translate(' + containerWidth / 2 + ' 256)'
-  };
-  var innerTranslate = 'translate(' + transform.x * 32 + ', ' + transform.y * 32 + ') ';
-  var innerScale = 'scale(' + transform.size / 16 * (transform.flipX ? -1 : 1) + ', ' + transform.size / 16 * (transform.flipY ? -1 : 1) + ') ';
-  var innerRotate = 'rotate(' + transform.rotate + ' 0 0)';
-  var inner = {
-    transform: innerTranslate + ' ' + innerScale + ' ' + innerRotate
-  };
-  var path = {
-    transform: 'translate(' + iconWidth / 2 * -1 + ' -256)'
-  };
-  return {
-    outer: outer,
-    inner: inner,
-    path: path
-  };
-}
-
-function transformForCss(_ref2) {
-  var transform = _ref2.transform,
-      _ref2$width = _ref2.width,
-      width = _ref2$width === undefined ? UNITS_IN_GRID : _ref2$width,
-      _ref2$height = _ref2.height,
-      height = _ref2$height === undefined ? UNITS_IN_GRID : _ref2$height,
-      _ref2$startCentered = _ref2.startCentered,
-      startCentered = _ref2$startCentered === undefined ? false : _ref2$startCentered;
-
-  var val = '';
-
-  if (startCentered && IS_IE) {
-    val += 'translate(' + (transform.x / d - width / 2) + 'em, ' + (transform.y / d - height / 2) + 'em) ';
-  } else if (startCentered) {
-    val += 'translate(calc(-50% + ' + transform.x / d + 'em), calc(-50% + ' + transform.y / d + 'em)) ';
-  } else {
-    val += 'translate(' + transform.x / d + 'em, ' + transform.y / d + 'em) ';
-  }
-
-  val += 'scale(' + transform.size / d * (transform.flipX ? -1 : 1) + ', ' + transform.size / d * (transform.flipY ? -1 : 1) + ') ';
-  val += 'rotate(' + transform.rotate + 'deg) ';
-
-  return val;
-}
-
-var ALL_SPACE = {
-  x: 0,
-  y: 0,
-  width: '100%',
-  height: '100%'
-};
-
-var makeIconMasking = function (_ref) {
-  var children = _ref.children,
-      attributes = _ref.attributes,
-      main = _ref.main,
-      mask = _ref.mask,
-      transform = _ref.transform;
-  var mainWidth = main.width,
-      mainPath = main.icon;
-  var maskWidth = mask.width,
-      maskPath = mask.icon;
-
-
-  var trans = transformForSvg({ transform: transform, containerWidth: maskWidth, iconWidth: mainWidth });
-
-  var maskRect = {
-    tag: 'rect',
-    attributes: _extends({}, ALL_SPACE, {
-      fill: 'white'
-    })
-  };
-  var maskInnerGroup = {
-    tag: 'g',
-    attributes: _extends({}, trans.inner),
-    children: [{ tag: 'path', attributes: _extends({}, mainPath.attributes, trans.path, { fill: 'black' }) }]
-  };
-  var maskOuterGroup = {
-    tag: 'g',
-    attributes: _extends({}, trans.outer),
-    children: [maskInnerGroup]
-  };
-  var maskId = 'mask-' + nextUniqueId();
-  var clipId = 'clip-' + nextUniqueId();
-  var maskTag = {
-    tag: 'mask',
-    attributes: _extends({}, ALL_SPACE, {
-      id: maskId,
-      maskUnits: 'userSpaceOnUse',
-      maskContentUnits: 'userSpaceOnUse'
-    }),
-    children: [maskRect, maskOuterGroup]
-  };
-  var defs = {
-    tag: 'defs',
-    children: [{ tag: 'clipPath', attributes: { id: clipId }, children: [maskPath] }, maskTag]
-  };
-
-  children.push(defs, { tag: 'rect', attributes: _extends({ fill: 'currentColor', 'clip-path': 'url(#' + clipId + ')', mask: 'url(#' + maskId + ')' }, ALL_SPACE) });
-
-  return {
-    children: children,
-    attributes: attributes
-  };
-};
-
-var makeIconStandard = function (_ref) {
-  var children = _ref.children,
-      attributes = _ref.attributes,
-      main = _ref.main,
-      transform = _ref.transform,
-      styles = _ref.styles;
-
-  var styleString = joinStyles(styles);
-
-  if (styleString.length > 0) {
-    attributes['style'] = styleString;
-  }
-
-  if (transformIsMeaningful(transform)) {
-    var trans = transformForSvg({ transform: transform, containerWidth: main.width, iconWidth: main.width });
-    children.push({
-      tag: 'g',
-      attributes: _extends({}, trans.outer),
-      children: [{
-        tag: 'g',
-        attributes: _extends({}, trans.inner),
-        children: [{
-          tag: main.icon.tag,
-          children: main.icon.children,
-          attributes: _extends({}, main.icon.attributes, trans.path)
-        }]
-      }]
-    });
-  } else {
-    children.push(main.icon);
-  }
-
-  return {
-    children: children,
-    attributes: attributes
-  };
-};
-
-var asIcon = function (_ref) {
-  var children = _ref.children,
-      main = _ref.main,
-      mask = _ref.mask,
-      attributes = _ref.attributes,
-      styles = _ref.styles,
-      transform = _ref.transform;
-
-  if (transformIsMeaningful(transform) && main.found && !mask.found) {
-    var width = main.width,
-        height = main.height;
-
-    var offset = {
-      x: width / height / 2,
-      y: 0.5
-    };
-    attributes['style'] = joinStyles(_extends({}, styles, {
-      'transform-origin': offset.x + transform.x / 16 + 'em ' + (offset.y + transform.y / 16) + 'em'
-    }));
-  }
-
-  return [{
-    tag: 'svg',
-    attributes: attributes,
-    children: children
-  }];
-};
-
-var asSymbol = function (_ref) {
-  var prefix = _ref.prefix,
-      iconName = _ref.iconName,
-      children = _ref.children,
-      attributes = _ref.attributes,
-      symbol = _ref.symbol;
-
-  var id = symbol === true ? prefix + '-' + config.familyPrefix + '-' + iconName : symbol;
-
-  return [{
-    tag: 'svg',
-    attributes: {
-      style: 'display: none;'
-    },
-    children: [{
-      tag: 'symbol',
-      attributes: _extends({}, attributes, { id: id }),
-      children: children
-    }]
-  }];
-};
-
-function makeInlineSvgAbstract(params) {
-  var _params$icons = params.icons,
-      main = _params$icons.main,
-      mask = _params$icons.mask,
-      prefix = params.prefix,
-      iconName = params.iconName,
-      transform = params.transform,
-      symbol = params.symbol,
-      title = params.title,
-      extra = params.extra,
-      _params$watchable = params.watchable,
-      watchable = _params$watchable === undefined ? false : _params$watchable;
-
-  var _ref = mask.found ? mask : main,
-      width = _ref.width,
-      height = _ref.height;
-
-  var widthClass = 'fa-w-' + Math.ceil(width / height * 16);
-  var attrClass = [config.replacementClass, iconName ? config.familyPrefix + '-' + iconName : '', widthClass].filter(function (c) {
-    return extra.classes.indexOf(c) === -1;
-  }).concat(extra.classes).join(' ');
-
-  var content = {
-    children: [],
-    attributes: _extends({}, extra.attributes, {
-      'data-prefix': prefix,
-      'data-icon': iconName,
-      'class': attrClass,
-      'role': 'img',
-      'xmlns': 'http://www.w3.org/2000/svg',
-      'viewBox': '0 0 ' + width + ' ' + height
-    })
-  };
-
-  if (watchable) {
-    content.attributes[DATA_FA_I2SVG] = '';
-  }
-
-  if (title) content.children.push({ tag: 'title', attributes: { id: content.attributes['aria-labelledby'] || 'title-' + nextUniqueId() }, children: [title] });
-
-  var args = _extends({}, content, {
-    prefix: prefix,
-    iconName: iconName,
-    main: main,
-    mask: mask,
-    transform: transform,
-    symbol: symbol,
-    styles: extra.styles
-  });
-
-  var _ref2 = mask.found && main.found ? makeIconMasking(args) : makeIconStandard(args),
-      children = _ref2.children,
-      attributes = _ref2.attributes;
-
-  args.children = children;
-  args.attributes = attributes;
-
-  if (symbol) {
-    return asSymbol(args);
-  } else {
-    return asIcon(args);
-  }
-}
-
-function makeLayersTextAbstract(params) {
-  var content = params.content,
-      width = params.width,
-      height = params.height,
-      transform = params.transform,
-      title = params.title,
-      extra = params.extra,
-      _params$watchable2 = params.watchable,
-      watchable = _params$watchable2 === undefined ? false : _params$watchable2;
-
-
-  var attributes = _extends({}, extra.attributes, title ? { 'title': title } : {}, {
-    'class': extra.classes.join(' ')
-  });
-
-  if (watchable) {
-    attributes[DATA_FA_I2SVG] = '';
-  }
-
-  var styles = _extends({}, extra.styles);
-
-  if (transformIsMeaningful(transform)) {
-    styles['transform'] = transformForCss({ transform: transform, startCentered: true, width: width, height: height });
-    styles['-webkit-transform'] = styles['transform'];
-  }
-
-  var styleString = joinStyles(styles);
-
-  if (styleString.length > 0) {
-    attributes['style'] = styleString;
-  }
-
-  var val = [];
-
-  val.push({
-    tag: 'span',
-    attributes: attributes,
-    children: [content]
-  });
-
-  if (title) {
-    val.push({ tag: 'span', attributes: { class: 'sr-only' }, children: [title] });
-  }
-
-  return val;
-}
-
-function makeLayersCounterAbstract(params) {
-  var content = params.content,
-      title = params.title,
-      extra = params.extra;
-
-
-  var attributes = _extends({}, extra.attributes, title ? { 'title': title } : {}, {
-    'class': extra.classes.join(' ')
-  });
-
-  var styleString = joinStyles(extra.styles);
-
-  if (styleString.length > 0) {
-    attributes['style'] = styleString;
-  }
-
-  var val = [];
-
-  val.push({
-    tag: 'span',
-    attributes: attributes,
-    children: [content]
-  });
-
-  if (title) {
-    val.push({ tag: 'span', attributes: { class: 'sr-only' }, children: [title] });
-  }
-
-  return val;
-}
-
-var noop$2 = function noop() {};
-var p = config.measurePerformance && PERFORMANCE && PERFORMANCE.mark && PERFORMANCE.measure ? PERFORMANCE : { mark: noop$2, measure: noop$2 };
-var preamble = 'FA "5.4.2"';
-
-var begin = function begin(name) {
-  p.mark(preamble + ' ' + name + ' begins');
-  return function () {
-    return end(name);
-  };
-};
-
-var end = function end(name) {
-  p.mark(preamble + ' ' + name + ' ends');
-  p.measure(preamble + ' ' + name, preamble + ' ' + name + ' begins', preamble + ' ' + name + ' ends');
-};
-
-var perf = { begin: begin, end: end };
-
-'use strict';
-
-/**
- * Internal helper to bind a function known to have 4 arguments
- * to a given context.
- */
-var bindInternal4 = function bindInternal4 (func, thisContext) {
-  return function (a, b, c, d) {
-    return func.call(thisContext, a, b, c, d);
-  };
-};
-
-'use strict';
-
-
-
-/**
- * # Reduce
- *
- * A fast object `.reduce()` implementation.
- *
- * @param  {Object}   subject      The object to reduce over.
- * @param  {Function} fn           The reducer function.
- * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
- * @param  {Object}   thisContext  The context for the reducer.
- * @return {mixed}                 The final result.
- */
-var reduce = function fastReduceObject (subject, fn, initialValue, thisContext) {
-  var keys = Object.keys(subject),
-      length = keys.length,
-      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
-      i, key, result;
-
-  if (initialValue === undefined) {
-    i = 1;
-    result = subject[keys[0]];
-  }
-  else {
-    i = 0;
-    result = initialValue;
-  }
-
-  for (; i < length; i++) {
-    key = keys[i];
-    result = iterator(result, subject[key], key, subject);
-  }
-
-  return result;
-};
-
-var styles$2 = namespace.styles;
-var shims = namespace.shims;
-
-
-var _byUnicode = {};
-var _byLigature = {};
-var _byOldName = {};
-
-var build = function build() {
-  var lookup = function lookup(reducer) {
-    return reduce(styles$2, function (o, style, prefix) {
-      o[prefix] = reduce(style, reducer, {});
-      return o;
-    }, {});
-  };
-
-  _byUnicode = lookup(function (acc, icon, iconName) {
-    acc[icon[3]] = iconName;
-
-    return acc;
-  });
-
-  _byLigature = lookup(function (acc, icon, iconName) {
-    var ligatures = icon[2];
-
-    acc[iconName] = iconName;
-
-    ligatures.forEach(function (ligature) {
-      acc[ligature] = iconName;
-    });
-
-    return acc;
-  });
-
-  var hasRegular = 'far' in styles$2;
-
-  _byOldName = reduce(shims, function (acc, shim) {
-    var oldName = shim[0];
-    var prefix = shim[1];
-    var iconName = shim[2];
-
-    if (prefix === 'far' && !hasRegular) {
-      prefix = 'fas';
-    }
-
-    acc[oldName] = { prefix: prefix, iconName: iconName };
-
-    return acc;
-  }, {});
-};
-
-build();
-
-function byUnicode(prefix, unicode) {
-  return _byUnicode[prefix][unicode];
-}
-
-function byLigature(prefix, ligature) {
-  return _byLigature[prefix][ligature];
-}
-
-function byOldName(name) {
-  return _byOldName[name] || { prefix: null, iconName: null };
-}
-
-var styles$1 = namespace.styles;
-
-
-var emptyCanonicalIcon = function emptyCanonicalIcon() {
-  return { prefix: null, iconName: null, rest: [] };
-};
-
-function getCanonicalIcon(values) {
-  return values.reduce(function (acc, cls) {
-    var iconName = getIconName(config.familyPrefix, cls);
-
-    if (styles$1[cls]) {
-      acc.prefix = cls;
-    } else if (iconName) {
-      var shim = acc.prefix === 'fa' ? byOldName(iconName) : {};
-
-      acc.iconName = shim.iconName || iconName;
-      acc.prefix = shim.prefix || acc.prefix;
-    } else if (cls !== config.replacementClass && cls.indexOf('fa-w-') !== 0) {
-      acc.rest.push(cls);
-    }
-
-    return acc;
-  }, emptyCanonicalIcon());
-}
-
-function iconFromMapping(mapping, prefix, iconName) {
-  if (mapping && mapping[prefix] && mapping[prefix][iconName]) {
-    return {
-      prefix: prefix,
-      iconName: iconName,
-      icon: mapping[prefix][iconName]
-    };
-  }
-}
-
-function toHtml(abstractNodes) {
-  var tag = abstractNodes.tag,
-      _abstractNodes$attrib = abstractNodes.attributes,
-      attributes = _abstractNodes$attrib === undefined ? {} : _abstractNodes$attrib,
-      _abstractNodes$childr = abstractNodes.children,
-      children = _abstractNodes$childr === undefined ? [] : _abstractNodes$childr;
-
-
-  if (typeof abstractNodes === 'string') {
-    return htmlEscape(abstractNodes);
-  } else {
-    return '<' + tag + ' ' + joinAttributes(attributes) + '>' + children.map(toHtml).join('') + '</' + tag + '>';
-  }
-}
-
-var noop$1 = function noop() {};
-
-function isWatched(node) {
-  var i2svg = node.getAttribute ? node.getAttribute(DATA_FA_I2SVG) : null;
-
-  return typeof i2svg === 'string';
-}
-
-function getMutator() {
-  if (config.autoReplaceSvg === true) {
-    return mutators.replace;
-  }
-
-  var mutator = mutators[config.autoReplaceSvg];
-
-  return mutator || mutators.replace;
-}
-
-var mutators = {
-  replace: function replace(mutation) {
-    var node = mutation[0];
-    var abstract = mutation[1];
-    var newOuterHTML = abstract.map(function (a) {
-      return toHtml(a);
-    }).join('\n');
-
-    if (node.parentNode && node.outerHTML) {
-      node.outerHTML = newOuterHTML + (config.keepOriginalSource && node.tagName.toLowerCase() !== 'svg' ? '<!-- ' + node.outerHTML + ' -->' : '');
-    } else if (node.parentNode) {
-      var newNode = document.createElement('span');
-      node.parentNode.replaceChild(newNode, node);
-      newNode.outerHTML = newOuterHTML;
-    }
-  },
-  nest: function nest(mutation) {
-    var node = mutation[0];
-    var abstract = mutation[1];
-
-    // If we already have a replaced node we do not want to continue nesting within it.
-    // Short-circuit to the standard replacement
-    if (~classArray(node).indexOf(config.replacementClass)) {
-      return mutators.replace(mutation);
-    }
-
-    var forSvg = new RegExp(config.familyPrefix + '-.*');
-
-    delete abstract[0].attributes.style;
-
-    var splitClasses = abstract[0].attributes.class.split(' ').reduce(function (acc, cls) {
-      if (cls === config.replacementClass || cls.match(forSvg)) {
-        acc.toSvg.push(cls);
-      } else {
-        acc.toNode.push(cls);
-      }
-
-      return acc;
-    }, { toNode: [], toSvg: [] });
-
-    abstract[0].attributes.class = splitClasses.toSvg.join(' ');
-
-    var newInnerHTML = abstract.map(function (a) {
-      return toHtml(a);
-    }).join('\n');
-    node.setAttribute('class', splitClasses.toNode.join(' '));
-    node.setAttribute(DATA_FA_I2SVG, '');
-    node.innerHTML = newInnerHTML;
-  }
-};
-
-function perform(mutations, callback) {
-  var callbackFunction = typeof callback === 'function' ? callback : noop$1;
-
-  if (mutations.length === 0) {
-    callbackFunction();
-  } else {
-    var frame = WINDOW.requestAnimationFrame || function (op) {
-      return op();
-    };
-
-    frame(function () {
-      var mutator = getMutator();
-      var mark = perf.begin('mutate');
-
-      mutations.map(mutator);
-
-      mark();
-
-      callbackFunction();
-    });
-  }
-}
-
-var disabled = false;
-
-function disableObservation(operation) {
-  disabled = true;
-  operation();
-  disabled = false;
-}
-
-var mo = null;
-
-function observe(options) {
-  if (!MUTATION_OBSERVER) {
-    return;
-  }
-
-  if (!config.observeMutations) {
-    return;
-  }
-
-  var treeCallback = options.treeCallback,
-      nodeCallback = options.nodeCallback,
-      pseudoElementsCallback = options.pseudoElementsCallback,
-      _options$observeMutat = options.observeMutationsRoot,
-      observeMutationsRoot = _options$observeMutat === undefined ? DOCUMENT.body : _options$observeMutat;
-
-
-  mo = new MUTATION_OBSERVER(function (objects) {
-    if (disabled) return;
-
-    toArray(objects).forEach(function (mutationRecord) {
-      if (mutationRecord.type === 'childList' && mutationRecord.addedNodes.length > 0 && !isWatched(mutationRecord.addedNodes[0])) {
-        if (config.searchPseudoElements) {
-          pseudoElementsCallback(mutationRecord.target);
-        }
-
-        treeCallback(mutationRecord.target);
-      }
-
-      if (mutationRecord.type === 'attributes' && mutationRecord.target.parentNode && config.searchPseudoElements) {
-        pseudoElementsCallback(mutationRecord.target.parentNode);
-      }
-
-      if (mutationRecord.type === 'attributes' && isWatched(mutationRecord.target) && ~ATTRIBUTES_WATCHED_FOR_MUTATION.indexOf(mutationRecord.attributeName)) {
-        if (mutationRecord.attributeName === 'class') {
-          var _getCanonicalIcon = getCanonicalIcon(classArray(mutationRecord.target)),
-              prefix = _getCanonicalIcon.prefix,
-              iconName = _getCanonicalIcon.iconName;
-
-          if (prefix) mutationRecord.target.setAttribute('data-prefix', prefix);
-          if (iconName) mutationRecord.target.setAttribute('data-icon', iconName);
-        } else {
-          nodeCallback(mutationRecord.target);
-        }
-      }
-    });
-  });
-
-  if (!IS_DOM) return;
-
-  mo.observe(observeMutationsRoot, {
-    childList: true, attributes: true, characterData: true, subtree: true
-  });
-}
-
-function disconnect() {
-  if (!mo) return;
-
-  mo.disconnect();
-}
-
-var styleParser = function (node) {
-  var style = node.getAttribute('style');
-
-  var val = [];
-
-  if (style) {
-    val = style.split(';').reduce(function (acc, style) {
-      var styles = style.split(':');
-      var prop = styles[0];
-      var value = styles.slice(1);
-
-      if (prop && value.length > 0) {
-        acc[prop] = value.join(':').trim();
-      }
-
-      return acc;
-    }, {});
-  }
-
-  return val;
-};
-
-function toHex(unicode) {
-  var result = '';
-
-  for (var i = 0; i < unicode.length; i++) {
-    var hex = unicode.charCodeAt(i).toString(16);
-    result += ('000' + hex).slice(-4);
-  }
-
-  return result;
-}
-
-var classParser = function (node) {
-  var existingPrefix = node.getAttribute('data-prefix');
-  var existingIconName = node.getAttribute('data-icon');
-  var innerText = node.innerText !== undefined ? node.innerText.trim() : '';
-
-  var val = getCanonicalIcon(classArray(node));
-
-  if (existingPrefix && existingIconName) {
-    val.prefix = existingPrefix;
-    val.iconName = existingIconName;
-  }
-
-  if (val.prefix && innerText.length > 1) {
-    val.iconName = byLigature(val.prefix, node.innerText);
-  } else if (val.prefix && innerText.length === 1) {
-    val.iconName = byUnicode(val.prefix, toHex(node.innerText));
-  }
-
-  return val;
-};
-
-var parseTransformString = function parseTransformString(transformString) {
-  var transform = {
-    size: 16,
-    x: 0,
-    y: 0,
-    flipX: false,
-    flipY: false,
-    rotate: 0
-  };
-
-  if (!transformString) {
-    return transform;
-  } else {
-    return transformString.toLowerCase().split(' ').reduce(function (acc, n) {
-      var parts = n.toLowerCase().split('-');
-      var first = parts[0];
-      var rest = parts.slice(1).join('-');
-
-      if (first && rest === 'h') {
-        acc.flipX = true;
-        return acc;
-      }
-
-      if (first && rest === 'v') {
-        acc.flipY = true;
-        return acc;
-      }
-
-      rest = parseFloat(rest);
-
-      if (isNaN(rest)) {
-        return acc;
-      }
-
-      switch (first) {
-        case 'grow':
-          acc.size = acc.size + rest;
-          break;
-        case 'shrink':
-          acc.size = acc.size - rest;
-          break;
-        case 'left':
-          acc.x = acc.x - rest;
-          break;
-        case 'right':
-          acc.x = acc.x + rest;
-          break;
-        case 'up':
-          acc.y = acc.y - rest;
-          break;
-        case 'down':
-          acc.y = acc.y + rest;
-          break;
-        case 'rotate':
-          acc.rotate = acc.rotate + rest;
-          break;
-      }
-
-      return acc;
-    }, transform);
-  }
-};
-
-var transformParser = function (node) {
-  return parseTransformString(node.getAttribute('data-fa-transform'));
-};
-
-var symbolParser = function (node) {
-  var symbol = node.getAttribute('data-fa-symbol');
-
-  return symbol === null ? false : symbol === '' ? true : symbol;
-};
-
-var attributesParser = function (node) {
-  var extraAttributes = toArray(node.attributes).reduce(function (acc, attr) {
-    if (acc.name !== 'class' && acc.name !== 'style') {
-      acc[attr.name] = attr.value;
-    }
-    return acc;
-  }, {});
-
-  var title = node.getAttribute('title');
-
-  if (config.autoA11y) {
-    if (title) {
-      extraAttributes['aria-labelledby'] = config.replacementClass + '-title-' + nextUniqueId();
-    } else {
-      extraAttributes['aria-hidden'] = 'true';
-    }
-  }
-
-  return extraAttributes;
-};
-
-var maskParser = function (node) {
-  var mask = node.getAttribute('data-fa-mask');
-
-  if (!mask) {
-    return emptyCanonicalIcon();
-  } else {
-    return getCanonicalIcon(mask.split(' ').map(function (i) {
-      return i.trim();
-    }));
-  }
-};
-
-var blankMeta = {
-  iconName: null,
-  title: null,
-  prefix: null,
-  transform: meaninglessTransform,
-  symbol: false,
-  mask: null,
-  extra: { classes: [], styles: {}, attributes: {} }
-};
-
-function parseMeta(node) {
-  var _classParser = classParser(node),
-      iconName = _classParser.iconName,
-      prefix = _classParser.prefix,
-      extraClasses = _classParser.rest;
-
-  var extraStyles = styleParser(node);
-  var transform = transformParser(node);
-  var symbol = symbolParser(node);
-  var extraAttributes = attributesParser(node);
-  var mask = maskParser(node);
-
-  return {
-    iconName: iconName,
-    title: node.getAttribute('title'),
-    prefix: prefix,
-    transform: transform,
-    symbol: symbol,
-    mask: mask,
-    extra: {
-      classes: extraClasses,
-      styles: extraStyles,
-      attributes: extraAttributes
-    }
-  };
-}
-
-function MissingIcon(error) {
-  this.name = 'MissingIcon';
-  this.message = error || 'Icon unavailable';
-  this.stack = new Error().stack;
-}
-
-MissingIcon.prototype = Object.create(Error.prototype);
-MissingIcon.prototype.constructor = MissingIcon;
-
-var FILL = { fill: 'currentColor' };
-var ANIMATION_BASE = {
-  attributeType: 'XML',
-  repeatCount: 'indefinite',
-  dur: '2s'
-};
-var RING = {
-  tag: 'path',
-  attributes: _extends({}, FILL, {
-    d: 'M156.5,447.7l-12.6,29.5c-18.7-9.5-35.9-21.2-51.5-34.9l22.7-22.7C127.6,430.5,141.5,440,156.5,447.7z M40.6,272H8.5 c1.4,21.2,5.4,41.7,11.7,61.1L50,321.2C45.1,305.5,41.8,289,40.6,272z M40.6,240c1.4-18.8,5.2-37,11.1-54.1l-29.5-12.6 C14.7,194.3,10,216.7,8.5,240H40.6z M64.3,156.5c7.8-14.9,17.2-28.8,28.1-41.5L69.7,92.3c-13.7,15.6-25.5,32.8-34.9,51.5 L64.3,156.5z M397,419.6c-13.9,12-29.4,22.3-46.1,30.4l11.9,29.8c20.7-9.9,39.8-22.6,56.9-37.6L397,419.6z M115,92.4 c13.9-12,29.4-22.3,46.1-30.4l-11.9-29.8c-20.7,9.9-39.8,22.6-56.8,37.6L115,92.4z M447.7,355.5c-7.8,14.9-17.2,28.8-28.1,41.5 l22.7,22.7c13.7-15.6,25.5-32.9,34.9-51.5L447.7,355.5z M471.4,272c-1.4,18.8-5.2,37-11.1,54.1l29.5,12.6 c7.5-21.1,12.2-43.5,13.6-66.8H471.4z M321.2,462c-15.7,5-32.2,8.2-49.2,9.4v32.1c21.2-1.4,41.7-5.4,61.1-11.7L321.2,462z M240,471.4c-18.8-1.4-37-5.2-54.1-11.1l-12.6,29.5c21.1,7.5,43.5,12.2,66.8,13.6V471.4z M462,190.8c5,15.7,8.2,32.2,9.4,49.2h32.1 c-1.4-21.2-5.4-41.7-11.7-61.1L462,190.8z M92.4,397c-12-13.9-22.3-29.4-30.4-46.1l-29.8,11.9c9.9,20.7,22.6,39.8,37.6,56.9 L92.4,397z M272,40.6c18.8,1.4,36.9,5.2,54.1,11.1l12.6-29.5C317.7,14.7,295.3,10,272,8.5V40.6z M190.8,50 c15.7-5,32.2-8.2,49.2-9.4V8.5c-21.2,1.4-41.7,5.4-61.1,11.7L190.8,50z M442.3,92.3L419.6,115c12,13.9,22.3,29.4,30.5,46.1 l29.8-11.9C470,128.5,457.3,109.4,442.3,92.3z M397,92.4l22.7-22.7c-15.6-13.7-32.8-25.5-51.5-34.9l-12.6,29.5 C370.4,72.1,384.4,81.5,397,92.4z'
-  })
-};
-var OPACITY_ANIMATE = _extends({}, ANIMATION_BASE, {
-  attributeName: 'opacity'
-});
-var DOT = {
-  tag: 'circle',
-  attributes: _extends({}, FILL, {
-    cx: '256',
-    cy: '364',
-    r: '28'
-  }),
-  children: [{ tag: 'animate', attributes: _extends({}, ANIMATION_BASE, { attributeName: 'r', values: '28;14;28;28;14;28;' }) }, { tag: 'animate', attributes: _extends({}, OPACITY_ANIMATE, { values: '1;0;1;1;0;1;' }) }]
-};
-var QUESTION = {
-  tag: 'path',
-  attributes: _extends({}, FILL, {
-    opacity: '1',
-    d: 'M263.7,312h-16c-6.6,0-12-5.4-12-12c0-71,77.4-63.9,77.4-107.8c0-20-17.8-40.2-57.4-40.2c-29.1,0-44.3,9.6-59.2,28.7 c-3.9,5-11.1,6-16.2,2.4l-13.1-9.2c-5.6-3.9-6.9-11.8-2.6-17.2c21.2-27.2,46.4-44.7,91.2-44.7c52.3,0,97.4,29.8,97.4,80.2 c0,67.6-77.4,63.5-77.4,107.8C275.7,306.6,270.3,312,263.7,312z'
-  }),
-  children: [{ tag: 'animate', attributes: _extends({}, OPACITY_ANIMATE, { values: '1;0;0;0;0;1;' }) }]
-};
-var EXCLAMATION = {
-  tag: 'path',
-  attributes: _extends({}, FILL, {
-    opacity: '0',
-    d: 'M232.5,134.5l7,168c0.3,6.4,5.6,11.5,12,11.5h9c6.4,0,11.7-5.1,12-11.5l7-168c0.3-6.8-5.2-12.5-12-12.5h-23 C237.7,122,232.2,127.7,232.5,134.5z'
-  }),
-  children: [{ tag: 'animate', attributes: _extends({}, OPACITY_ANIMATE, { values: '0;0;1;1;0;0;' }) }]
-};
-
-var missing = { tag: 'g', children: [RING, DOT, QUESTION, EXCLAMATION] };
-
-var styles = namespace.styles;
-
-var LAYERS_TEXT_CLASSNAME = 'fa-layers-text';
-var FONT_FAMILY_PATTERN = /Font Awesome 5 (Solid|Regular|Light|Brands|Free|Pro)/;
-var STYLE_TO_PREFIX = {
-  'Solid': 'fas',
-  'Regular': 'far',
-  'Light': 'fal',
-  'Brands': 'fab'
-};
-var FONT_WEIGHT_TO_PREFIX = {
-  '900': 'fas',
-  '400': 'far',
-  '300': 'fal'
-};
-
-function findIcon(iconName, prefix) {
-  var val = {
-    found: false,
-    width: 512,
-    height: 512,
-    icon: missing
-  };
-
-  if (iconName && prefix && styles[prefix] && styles[prefix][iconName]) {
-    var icon = styles[prefix][iconName];
-    var width = icon[0];
-    var height = icon[1];
-    var vectorData = icon.slice(4);
-
-    val = {
-      found: true,
-      width: width,
-      height: height,
-      icon: { tag: 'path', attributes: { fill: 'currentColor', d: vectorData[0] } }
-    };
-  } else if (iconName && prefix && !config.showMissingIcons) {
-    throw new MissingIcon('Icon is missing for prefix ' + prefix + ' with icon name ' + iconName);
-  }
-
-  return val;
-}
-
-function generateSvgReplacementMutation(node, nodeMeta) {
-  var iconName = nodeMeta.iconName,
-      title = nodeMeta.title,
-      prefix = nodeMeta.prefix,
-      transform = nodeMeta.transform,
-      symbol = nodeMeta.symbol,
-      mask = nodeMeta.mask,
-      extra = nodeMeta.extra;
-
-
-  return [node, makeInlineSvgAbstract({
-    icons: {
-      main: findIcon(iconName, prefix),
-      mask: findIcon(mask.iconName, mask.prefix)
-    },
-    prefix: prefix,
-    iconName: iconName,
-    transform: transform,
-    symbol: symbol,
-    mask: mask,
-    title: title,
-    extra: extra,
-    watchable: true
-  })];
-}
-
-function generateLayersText(node, nodeMeta) {
-  var title = nodeMeta.title,
-      transform = nodeMeta.transform,
-      extra = nodeMeta.extra;
-
-
-  var width = null;
-  var height = null;
-
-  if (IS_IE) {
-    var computedFontSize = parseInt(getComputedStyle(node).fontSize, 10);
-    var boundingClientRect = node.getBoundingClientRect();
-    width = boundingClientRect.width / computedFontSize;
-    height = boundingClientRect.height / computedFontSize;
-  }
-
-  if (config.autoA11y && !title) {
-    extra.attributes['aria-hidden'] = 'true';
-  }
-
-  return [node, makeLayersTextAbstract({
-    content: node.innerHTML,
-    width: width,
-    height: height,
-    transform: transform,
-    title: title,
-    extra: extra,
-    watchable: true
-  })];
-}
-
-function generateMutation(node) {
-  var nodeMeta = parseMeta(node);
-
-  if (~nodeMeta.extra.classes.indexOf(LAYERS_TEXT_CLASSNAME)) {
-    return generateLayersText(node, nodeMeta);
-  } else {
-    return generateSvgReplacementMutation(node, nodeMeta);
-  }
-}
-
-function searchPseudoElements(root) {
-  if (!IS_DOM) return;
-
-  var end = perf.begin('searchPseudoElements');
-
-  disableObservation(function () {
-    toArray(root.querySelectorAll('*')).filter(function (n) {
-      return n.parentNode !== document.head && !~TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS.indexOf(n.tagName.toUpperCase()) && !n.getAttribute(DATA_FA_PSEUDO_ELEMENT) && (!n.parentNode || n.parentNode.tagName !== 'svg');
-    }).forEach(function (node) {
-      [':before', ':after'].forEach(function (pos) {
-        var children = toArray(node.children);
-        var alreadyProcessedPseudoElement = children.filter(function (c) {
-          return c.getAttribute(DATA_FA_PSEUDO_ELEMENT) === pos;
-        })[0];
-
-        var styles = WINDOW.getComputedStyle(node, pos);
-        var fontFamily = styles.getPropertyValue('font-family').match(FONT_FAMILY_PATTERN);
-        var fontWeight = styles.getPropertyValue('font-weight');
-
-        if (alreadyProcessedPseudoElement && !fontFamily) {
-          // If we've already processed it but the current computed style does not result in a font-family,
-          // that probably means that a class name that was previously present to make the icon has been
-          // removed. So we now should delete the icon.
-          node.removeChild(alreadyProcessedPseudoElement);
-        } else if (fontFamily) {
-          var content = styles.getPropertyValue('content');
-          var prefix = ~['Light', 'Regular', 'Solid', 'Brands'].indexOf(fontFamily[1]) ? STYLE_TO_PREFIX[fontFamily[1]] : FONT_WEIGHT_TO_PREFIX[fontWeight];
-          var iconName = byUnicode(prefix, toHex(content.length === 3 ? content.substr(1, 1) : content));
-          // Only convert the pseudo element in this :before/:after position into an icon if we haven't
-          // already done so with the same prefix and iconName
-          if (!alreadyProcessedPseudoElement || alreadyProcessedPseudoElement.getAttribute(DATA_PREFIX) !== prefix || alreadyProcessedPseudoElement.getAttribute(DATA_ICON) !== iconName) {
-            if (alreadyProcessedPseudoElement) {
-              // Delete the old one, since we're replacing it with a new one
-              node.removeChild(alreadyProcessedPseudoElement);
-            }
-
-            var extra = blankMeta.extra;
-
-            extra.attributes[DATA_FA_PSEUDO_ELEMENT] = pos;
-            var abstract = makeInlineSvgAbstract(_extends({}, blankMeta, {
-              icons: {
-                main: findIcon(iconName, prefix),
-                mask: emptyCanonicalIcon()
-              },
-              prefix: prefix,
-              iconName: iconName,
-              extra: extra,
-              watchable: true
-            }));
-
-            var element = DOCUMENT.createElement('svg');
-
-            if (pos === ':before') {
-              node.insertBefore(element, node.firstChild);
-            } else {
-              node.appendChild(element);
-            }
-
-            element.outerHTML = abstract.map(function (a) {
-              return toHtml(a);
-            }).join('\n');
-          }
-        }
-      });
-    });
-  });
-
-  end();
-}
-
-function onTree(root) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-  if (!IS_DOM) return;
-
-  var htmlClassList = DOCUMENT.documentElement.classList;
-  var hclAdd = function hclAdd(suffix) {
-    return htmlClassList.add(HTML_CLASS_I2SVG_BASE_CLASS + '-' + suffix);
-  };
-  var hclRemove = function hclRemove(suffix) {
-    return htmlClassList.remove(HTML_CLASS_I2SVG_BASE_CLASS + '-' + suffix);
-  };
-  var prefixes = Object.keys(styles);
-  var prefixesDomQuery = ['.' + LAYERS_TEXT_CLASSNAME + ':not([' + DATA_FA_I2SVG + '])'].concat(prefixes.map(function (p) {
-    return '.' + p + ':not([' + DATA_FA_I2SVG + '])';
-  })).join(', ');
-
-  if (prefixesDomQuery.length === 0) {
-    return;
-  }
-
-  var candidates = toArray(root.querySelectorAll(prefixesDomQuery));
-
-  if (candidates.length > 0) {
-    hclAdd('pending');
-    hclRemove('complete');
-  } else {
-    return;
-  }
-
-  var mark = perf.begin('onTree');
-
-  var mutations = candidates.reduce(function (acc, node) {
-    try {
-      var mutation = generateMutation(node);
-
-      if (mutation) {
-        acc.push(mutation);
-      }
-    } catch (e) {
-      if (!PRODUCTION) {
-        if (e instanceof MissingIcon) {
-          console.error(e);
-        }
-      }
-    }
-
-    return acc;
-  }, []);
-
-  mark();
-
-  perform(mutations, function () {
-    hclAdd('active');
-    hclAdd('complete');
-    hclRemove('pending');
-
-    if (typeof callback === 'function') callback();
-  });
-}
-
-function onNode(node) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-  var mutation = generateMutation(node);
-
-  if (mutation) {
-    perform([mutation], callback);
-  }
-}
-
-var baseStyles = "svg:not(:root).svg-inline--fa{overflow:visible}.svg-inline--fa{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-lg{vertical-align:-.225em}.svg-inline--fa.fa-w-1{width:.0625em}.svg-inline--fa.fa-w-2{width:.125em}.svg-inline--fa.fa-w-3{width:.1875em}.svg-inline--fa.fa-w-4{width:.25em}.svg-inline--fa.fa-w-5{width:.3125em}.svg-inline--fa.fa-w-6{width:.375em}.svg-inline--fa.fa-w-7{width:.4375em}.svg-inline--fa.fa-w-8{width:.5em}.svg-inline--fa.fa-w-9{width:.5625em}.svg-inline--fa.fa-w-10{width:.625em}.svg-inline--fa.fa-w-11{width:.6875em}.svg-inline--fa.fa-w-12{width:.75em}.svg-inline--fa.fa-w-13{width:.8125em}.svg-inline--fa.fa-w-14{width:.875em}.svg-inline--fa.fa-w-15{width:.9375em}.svg-inline--fa.fa-w-16{width:1em}.svg-inline--fa.fa-w-17{width:1.0625em}.svg-inline--fa.fa-w-18{width:1.125em}.svg-inline--fa.fa-w-19{width:1.1875em}.svg-inline--fa.fa-w-20{width:1.25em}.svg-inline--fa.fa-pull-left{margin-right:.3em;width:auto}.svg-inline--fa.fa-pull-right{margin-left:.3em;width:auto}.svg-inline--fa.fa-border{height:1.5em}.svg-inline--fa.fa-li{width:2em}.svg-inline--fa.fa-fw{width:1.25em}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:#ff253a;border-radius:1em;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;height:1.5em;line-height:1;max-width:5em;min-width:1.5em;overflow:hidden;padding:.25em;right:0;text-overflow:ellipsis;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:0;right:0;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:0;left:0;right:auto;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{right:0;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:0;right:auto;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top left;transform-origin:top left}.fa-lg{font-size:1.33333em;line-height:.75em;vertical-align:-.0667em}.fa-xs{font-size:.75em}.fa-sm{font-size:.875em}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:2.5em;padding-left:0}.fa-ul>li{position:relative}.fa-li{left:-2em;position:absolute;text-align:center;width:2em;line-height:inherit}.fa-border{border:solid .08em #eee;border-radius:.1em;padding:.2em .25em .15em}.fa-pull-left{float:left}.fa-pull-right{float:right}.fa.fa-pull-left,.fab.fa-pull-left,.fal.fa-pull-left,.far.fa-pull-left,.fas.fa-pull-left{margin-right:.3em}.fa.fa-pull-right,.fab.fa-pull-right,.fal.fa-pull-right,.far.fa-pull-right,.fas.fa-pull-right{margin-left:.3em}.fa-spin{-webkit-animation:fa-spin 2s infinite linear;animation:fa-spin 2s infinite linear}.fa-pulse{-webkit-animation:fa-spin 1s infinite steps(8);animation:fa-spin 1s infinite steps(8)}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}:root .fa-flip-horizontal,:root .fa-flip-vertical,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-rotate-90{-webkit-filter:none;filter:none}.fa-stack{display:inline-block;height:2em;position:relative;width:2em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.svg-inline--fa.fa-stack-1x{height:1em;width:1em}.svg-inline--fa.fa-stack-2x{height:2em;width:2em}.fa-inverse{color:#fff}.sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.sr-only-focusable:active,.sr-only-focusable:focus{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto}";
-
-var css = function () {
-  var dfp = DEFAULT_FAMILY_PREFIX;
-  var drc = DEFAULT_REPLACEMENT_CLASS;
-  var fp = config.familyPrefix;
-  var rc = config.replacementClass;
-  var s = baseStyles;
-
-  if (fp !== dfp || rc !== drc) {
-    var dPatt = new RegExp('\\.' + dfp + '\\-', 'g');
-    var rPatt = new RegExp('\\.' + drc, 'g');
-
-    s = s.replace(dPatt, '.' + fp + '-').replace(rPatt, '.' + rc);
-  }
-
-  return s;
-};
-
-function define(prefix, icons) {
-  var normalized = Object.keys(icons).reduce(function (acc, iconName) {
-    var icon = icons[iconName];
-    var expanded = !!icon.icon;
-
-    if (expanded) {
-      acc[icon.iconName] = icon.icon;
-    } else {
-      acc[iconName] = icon;
-    }
-    return acc;
-  }, {});
-
-  if (typeof namespace.hooks.addPack === 'function') {
-    namespace.hooks.addPack(prefix, normalized);
-  } else {
-    namespace.styles[prefix] = _extends({}, namespace.styles[prefix] || {}, normalized);
-  }
-
-  /**
-   * Font Awesome 4 used the prefix of `fa` for all icons. With the introduction
-   * of new styles we needed to differentiate between them. Prefix `fa` is now an alias
-   * for `fas` so we'll easy the upgrade process for our users by automatically defining
-   * this as well.
-   */
-  if (prefix === 'fas') {
-    define('fa', icons);
-  }
-}
-
-var Library = function () {
-  function Library() {
-    classCallCheck(this, Library);
-
-    this.definitions = {};
-  }
-
-  createClass(Library, [{
-    key: 'add',
-    value: function add() {
-      var _this = this;
-
-      for (var _len = arguments.length, definitions = Array(_len), _key = 0; _key < _len; _key++) {
-        definitions[_key] = arguments[_key];
-      }
-
-      var additions = definitions.reduce(this._pullDefinitions, {});
-
-      Object.keys(additions).forEach(function (key) {
-        _this.definitions[key] = _extends({}, _this.definitions[key] || {}, additions[key]);
-        define(key, additions[key]);
-        build();
-      });
-    }
-  }, {
-    key: 'reset',
-    value: function reset() {
-      this.definitions = {};
-    }
-  }, {
-    key: '_pullDefinitions',
-    value: function _pullDefinitions(additions, definition) {
-      var normalized = definition.prefix && definition.iconName && definition.icon ? { 0: definition } : definition;
-
-      Object.keys(normalized).map(function (key) {
-        var _normalized$key = normalized[key],
-            prefix = _normalized$key.prefix,
-            iconName = _normalized$key.iconName,
-            icon = _normalized$key.icon;
-
-
-        if (!additions[prefix]) additions[prefix] = {};
-
-        additions[prefix][iconName] = icon;
-      });
-
-      return additions;
-    }
-  }]);
-  return Library;
-}();
-
-function prepIcon(icon) {
-  var width = icon[0];
-  var height = icon[1];
-  var vectorData = icon.slice(4);
-
-  return {
-    found: true,
-    width: width,
-    height: height,
-    icon: { tag: 'path', attributes: { fill: 'currentColor', d: vectorData[0] } }
-  };
-}
-
-function ensureCss() {
-  if (config.autoAddCss && !_cssInserted) {
-    insertCss(css());
-    _cssInserted = true;
-  }
-}
-
-function apiObject(val, abstractCreator) {
-  Object.defineProperty(val, 'abstract', {
-    get: abstractCreator
-  });
-
-  Object.defineProperty(val, 'html', {
-    get: function get() {
-      return val.abstract.map(function (a) {
-        return toHtml(a);
-      });
-    }
-  });
-
-  Object.defineProperty(val, 'node', {
-    get: function get() {
-      if (!IS_DOM) return;
-
-      var container = DOCUMENT.createElement('div');
-      container.innerHTML = val.html;
-      return container.children;
-    }
-  });
-
-  return val;
-}
-
-function findIconDefinition(params) {
-  var _params$prefix = params.prefix,
-      prefix = _params$prefix === undefined ? 'fa' : _params$prefix,
-      iconName = params.iconName;
-
-
-  if (!iconName) return;
-
-  return iconFromMapping(library.definitions, prefix, iconName) || iconFromMapping(namespace.styles, prefix, iconName);
-}
-
-function resolveIcons(next) {
-  return function (maybeIconDefinition) {
-    var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    var iconDefinition = (maybeIconDefinition || {}).icon ? maybeIconDefinition : findIconDefinition(maybeIconDefinition || {});
-
-    var mask = params.mask;
-
-
-    if (mask) {
-      mask = (mask || {}).icon ? mask : findIconDefinition(mask || {});
-    }
-
-    return next(iconDefinition, _extends({}, params, { mask: mask }));
-  };
-}
-
-var library = new Library();
-
-var noAuto = function noAuto() {
-  config.autoReplaceSvg = false;
-  config.observeMutations = false;
-
-  disconnect();
-};
-
-var _cssInserted = false;
-
-var dom = {
-  i2svg: function i2svg() {
-    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    if (IS_DOM) {
-      ensureCss();
-
-      var _params$node = params.node,
-          node = _params$node === undefined ? DOCUMENT : _params$node,
-          _params$callback = params.callback,
-          callback = _params$callback === undefined ? function () {} : _params$callback;
-
-
-      if (config.searchPseudoElements) {
-        searchPseudoElements(node);
-      }
-
-      onTree(node, callback);
-    }
-  },
-
-  css: css,
-
-  insertCss: function insertCss$$1() {
-    if (!_cssInserted) {
-      insertCss(css());
-      _cssInserted = true;
-    }
-  },
-
-  watch: function watch() {
-    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var autoReplaceSvgRoot = params.autoReplaceSvgRoot,
-        observeMutationsRoot = params.observeMutationsRoot;
-
-
-    if (config.autoReplaceSvg === false) {
-      config.autoReplaceSvg = true;
-    }
-
-    config.observeMutations = true;
-
-    domready(function () {
-      autoReplace({
-        autoReplaceSvgRoot: autoReplaceSvgRoot
-      });
-
-      observe({
-        treeCallback: onTree,
-        nodeCallback: onNode,
-        pseudoElementsCallback: searchPseudoElements,
-        observeMutationsRoot: observeMutationsRoot
-      });
-    });
-  }
-};
-
-var parse = {
-  transform: function transform(transformString) {
-    return parseTransformString(transformString);
-  }
-};
-
-var icon = resolveIcons(function (iconDefinition) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _params$transform = params.transform,
-      transform = _params$transform === undefined ? meaninglessTransform : _params$transform,
-      _params$symbol = params.symbol,
-      symbol = _params$symbol === undefined ? false : _params$symbol,
-      _params$mask = params.mask,
-      mask = _params$mask === undefined ? null : _params$mask,
-      _params$title = params.title,
-      title = _params$title === undefined ? null : _params$title,
-      _params$classes = params.classes,
-      classes = _params$classes === undefined ? [] : _params$classes,
-      _params$attributes = params.attributes,
-      attributes = _params$attributes === undefined ? {} : _params$attributes,
-      _params$styles = params.styles,
-      styles = _params$styles === undefined ? {} : _params$styles;
-
-
-  if (!iconDefinition) return;
-
-  var prefix = iconDefinition.prefix,
-      iconName = iconDefinition.iconName,
-      icon = iconDefinition.icon;
-
-
-  return apiObject(_extends({ type: 'icon' }, iconDefinition), function () {
-    ensureCss();
-
-    if (config.autoA11y) {
-      if (title) {
-        attributes['aria-labelledby'] = config.replacementClass + '-title-' + nextUniqueId();
-      } else {
-        attributes['aria-hidden'] = 'true';
-      }
-    }
-
-    return makeInlineSvgAbstract({
-      icons: {
-        main: prepIcon(icon),
-        mask: mask ? prepIcon(mask.icon) : { found: false, width: null, height: null, icon: {} }
-      },
-      prefix: prefix,
-      iconName: iconName,
-      transform: _extends({}, meaninglessTransform, transform),
-      symbol: symbol,
-      title: title,
-      extra: {
-        attributes: attributes,
-        styles: styles,
-        classes: classes
-      }
-    });
-  });
-});
-
-var text = function text(content) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _params$transform2 = params.transform,
-      transform = _params$transform2 === undefined ? meaninglessTransform : _params$transform2,
-      _params$title2 = params.title,
-      title = _params$title2 === undefined ? null : _params$title2,
-      _params$classes2 = params.classes,
-      classes = _params$classes2 === undefined ? [] : _params$classes2,
-      _params$attributes2 = params.attributes,
-      attributes = _params$attributes2 === undefined ? {} : _params$attributes2,
-      _params$styles2 = params.styles,
-      styles = _params$styles2 === undefined ? {} : _params$styles2;
-
-
-  return apiObject({ type: 'text', content: content }, function () {
-    ensureCss();
-
-    return makeLayersTextAbstract({
-      content: content,
-      transform: _extends({}, meaninglessTransform, transform),
-      title: title,
-      extra: {
-        attributes: attributes,
-        styles: styles,
-        classes: [config.familyPrefix + '-layers-text'].concat(toConsumableArray(classes))
-      }
-    });
-  });
-};
-
-var counter = function counter(content) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _params$title3 = params.title,
-      title = _params$title3 === undefined ? null : _params$title3,
-      _params$classes3 = params.classes,
-      classes = _params$classes3 === undefined ? [] : _params$classes3,
-      _params$attributes3 = params.attributes,
-      attributes = _params$attributes3 === undefined ? {} : _params$attributes3,
-      _params$styles3 = params.styles,
-      styles = _params$styles3 === undefined ? {} : _params$styles3;
-
-
-  return apiObject({ type: 'counter', content: content }, function () {
-    ensureCss();
-
-    return makeLayersCounterAbstract({
-      content: content.toString(),
-      title: title,
-      extra: {
-        attributes: attributes,
-        styles: styles,
-        classes: [config.familyPrefix + '-layers-counter'].concat(toConsumableArray(classes))
-      }
-    });
-  });
-};
-
-var layer = function layer(assembler) {
-  return apiObject({ type: 'layer' }, function () {
-    ensureCss();
-
-    var children = [];
-
-    assembler(function (args) {
-      Array.isArray(args) ? args.map(function (a) {
-        children = children.concat(a.abstract);
-      }) : children = children.concat(args.abstract);
-    });
-
-    return [{
-      tag: 'span',
-      attributes: { class: config.familyPrefix + '-layers' },
-      children: children
-    }];
-  });
-};
-
-var api = {
-  noAuto: noAuto,
-  config: config,
-  dom: dom,
-  library: library,
-  parse: parse,
-  findIconDefinition: findIconDefinition,
-  icon: icon,
-  text: text,
-  counter: counter,
-  layer: layer,
-  toHtml: toHtml
-};
-
-var autoReplace = function autoReplace() {
-  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var _params$autoReplaceSv = params.autoReplaceSvgRoot,
-      autoReplaceSvgRoot = _params$autoReplaceSv === undefined ? DOCUMENT : _params$autoReplaceSv;
-
-
-  if (Object.keys(namespace.styles).length > 0 && IS_DOM && config.autoReplaceSvg) api.dom.i2svg({ node: autoReplaceSvgRoot });
-};
-
-function bootstrap() {
-  if (IS_BROWSER) {
-    if (!WINDOW.FontAwesome) {
-      WINDOW.FontAwesome = api;
-    }
-
-    domready(function () {
-      autoReplace();
-
-      observe({
-        treeCallback: onTree,
-        nodeCallback: onNode,
-        pseudoElementsCallback: searchPseudoElements
-      });
-    });
-  }
-
-  namespace.hooks = _extends({}, namespace.hooks, {
-
-    addPack: function addPack(prefix, icons) {
-      namespace.styles[prefix] = _extends({}, namespace.styles[prefix] || {}, icons);
-
-      build();
-      autoReplace();
-    },
-
-    addShims: function addShims(shims) {
-      var _namespace$shims;
-
-      (_namespace$shims = namespace.shims).push.apply(_namespace$shims, toConsumableArray(shims));
-
-      build();
-      autoReplace();
-    }
-  });
-}
-
-bunker(bootstrap);
-
-}());
-
-
-/***/ }),
-/* 43 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -49720,10 +52167,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(44).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(48).setImmediate))
 
 /***/ }),
-/* 44 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -49779,7 +52226,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(45);
+__webpack_require__(49);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -49793,7 +52240,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 45 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -49983,18 +52430,18 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(7)))
 
 /***/ }),
-/* 46 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(47)
+var __vue_script__ = __webpack_require__(51)
 /* template */
-var __vue_template__ = __webpack_require__(48)
+var __vue_template__ = __webpack_require__(52)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -50033,7 +52480,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 47 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -50078,7 +52525,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 48 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -50100,19 +52547,19 @@ if (false) {
 }
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(50)
+  __webpack_require__(54)
 }
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(55)
+var __vue_script__ = __webpack_require__(57)
 /* template */
-var __vue_template__ = __webpack_require__(56)
+var __vue_template__ = __webpack_require__(58)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -50151,17 +52598,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(51);
+var content = __webpack_require__(55);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(53)("2042bd43", content, false, {});
+var update = __webpack_require__(13)("2042bd43", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -50177,10 +52624,10 @@ if(false) {
 }
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(52)(true);
+exports = module.exports = __webpack_require__(12)(true);
 // imports
 
 
@@ -50191,317 +52638,7 @@ exports.push([module.i, "\nform.top-search-form[data-v-89b0c3cc] {\n  margin-lef
 
 
 /***/ }),
-/* 52 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-var listToStyles = __webpack_require__(54)
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-module.exports = function (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports) {
 
 /**
@@ -50534,7 +52671,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -50681,7 +52818,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -50818,7 +52955,624 @@ if (false) {
 }
 
 /***/ }),
-/* 57 */
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(60)
+}
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(62)
+/* template */
+var __vue_template__ = __webpack_require__(63)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/GalleryComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a13cd294", Component.options)
+  } else {
+    hotAPI.reload("data-v-a13cd294", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(61);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(13)("11c49c4e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a13cd294\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GalleryComponent.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a13cd294\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GalleryComponent.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(12)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.toast-title {\n  font-weight: bold;\n}\n.toast-message {\n  -ms-word-wrap: break-word;\n  word-wrap: break-word;\n}\n.toast-message a,\n  .toast-message label {\n    color: #FFFFFF;\n}\n.toast-message a:hover {\n    color: #CCCCCC;\n    text-decoration: none;\n}\n.toast-close-button {\n  position: relative;\n  right: -0.3em;\n  top: -0.3em;\n  float: right;\n  font-size: 20px;\n  font-weight: bold;\n  color: #FFFFFF;\n  -webkit-text-shadow: 0 1px 0 white;\n  text-shadow: 0 1px 0 white;\n  opacity: 0.8;\n}\n.toast-close-button:hover, .toast-close-button:focus {\n    color: #000000;\n    text-decoration: none;\n    cursor: pointer;\n    opacity: 0.4;\n}\n\n/*Additional properties for button version\n iOS requires the button element instead of an anchor tag.\n If you want the anchor version, it requires `href=\"#\"`.*/\nbutton.toast-close-button {\n  padding: 0;\n  cursor: pointer;\n  background: transparent;\n  border: 0;\n  -webkit-appearance: none;\n}\n.toast-top-center {\n  top: 0;\n  right: 0;\n  width: 100%;\n}\n.toast-bottom-center {\n  bottom: 0;\n  right: 0;\n  width: 100%;\n}\n.toast-top-full-width {\n  top: 0;\n  right: 0;\n  width: 100%;\n}\n.toast-bottom-full-width {\n  bottom: 0;\n  right: 0;\n  width: 100%;\n}\n.toast-top-left {\n  top: 12px;\n  left: 12px;\n}\n.toast-top-right {\n  top: 12px;\n  right: 12px;\n}\n.toast-bottom-right {\n  right: 12px;\n  bottom: 12px;\n}\n.toast-bottom-left {\n  bottom: 12px;\n  left: 12px;\n}\n.toast-container {\n  position: fixed;\n  z-index: 999999;\n  pointer-events: none;\n  /*overrides*/\n}\n.toast-container * {\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box;\n}\n.toast-container > div {\n    position: relative;\n    pointer-events: auto;\n    overflow: hidden;\n    margin: 0 0 6px;\n    padding: 15px 15px 15px 50px;\n    width: 300px;\n    border-radius: 3px 3px 3px 3px;\n    background-position: 15px center;\n    background-repeat: no-repeat;\n    -webkit-box-shadow: 0 0 12px #999999;\n    box-shadow: 0 0 12px #999999;\n    color: #FFFFFF;\n    opacity: 0.8;\n}\n.toast-container > :hover {\n    -webkit-box-shadow: 0 0 12px #000000;\n    box-shadow: 0 0 12px #000000;\n    opacity: 1;\n    cursor: pointer;\n}\n.toast-container > .toast-info {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=\") !important;\n}\n.toast-container > .toast-error {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=\") !important;\n}\n.toast-container > .toast-success {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==\") !important;\n}\n.toast-container > .toast-warning {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=\") !important;\n}\n.toast-container.toast-top-center > div,\n  .toast-container.toast-bottom-center > div {\n    width: 300px;\n    margin-left: auto;\n    margin-right: auto;\n}\n.toast-container.toast-top-full-width > div,\n  .toast-container.toast-bottom-full-width > div {\n    width: 96%;\n    margin-left: auto;\n    margin-right: auto;\n}\n.toast {\n  background-color: #030303;\n}\n.toast-success {\n  background-color: #51A351;\n}\n.toast-error {\n  background-color: #BD362F;\n}\n.toast-info {\n  background-color: #2F96B4;\n}\n.toast-warning {\n  background-color: #F89406;\n}\n.toast-progress {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  height: 4px;\n  background-color: #000000;\n  opacity: 0.4;\n}\n\n/*Responsive Design*/\n@media all and (max-width: 240px) {\n.toast-container > div {\n    padding: 8px 8px 8px 50px;\n    width: 11em;\n}\n.toast-container .toast-close-button {\n    right: -0.2em;\n    top: -0.2em;\n}\n}\n@media all and (min-width: 241px) and (max-width: 480px) {\n.toast-container > div {\n    padding: 8px 8px 8px 50px;\n    width: 18em;\n}\n.toast-container .toast-close-button {\n    right: -0.2em;\n    top: -0.2em;\n}\n}\n@media all and (min-width: 481px) and (max-width: 768px) {\n.toast-container > div {\n    padding: 15px 15px 15px 50px;\n    width: 25em;\n}\n}\n.uploader {\n  width: 100%;\n  background-color: #2C3E50;\n  padding: 10px;\n  text-align: center;\n  border-radius: 10px;\n  border: 3px dashed #fff;\n  color: #fff;\n  font-size: 20px;\n  position: relative;\n  -webkit-transition: all .3s linear;\n  transition: all .3s linear;\n}\n.uploader.dragging {\n    background-color: #fff;\n    color: #2C3E50;\n    border: 3px dashed #2C3E50;\n}\n.uploader.dragging .file-input label {\n      background-color: #2C3E50;\n      color: #fff;\n}\n.uploader i {\n    font-size: 55px;\n}\n.uploader .file-input {\n    width: 200px;\n    margin: auto;\n    height: 70px;\n    position: relative;\n}\n.uploader .file-input label,\n    .uploader .file-input input {\n      background-color: #fff;\n      color: #2C3E50;\n      width: 100%;\n      position: absolute;\n      left: 0;\n      top: 0;\n      padding: 4px;\n      border-radius: 4px;\n      margin-top: 7px;\n      cursor: pointer;\n      -webkit-transition: all .3s linear;\n      transition: all .3s linear;\n}\n.uploader .file-input label:hover,\n      .uploader .file-input input:hover {\n        background-color: #2C3E50;\n        color: #fff;\n}\n.uploader .file-input input {\n      opacity: 0;\n      z-index: -10;\n}\n.images-preview {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  margin-top: 70px;\n  -ms-flex-pack: distribute;\n      justify-content: space-around;\n}\n.images-preview .img-wrapper {\n    width: 100%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    margin: 10px;\n    min-height: 100px;\n    -webkit-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    padding-top: 10px;\n    background-color: #fff;\n    -webkit-box-shadow: 5px 5px 20px #3e3737;\n            box-shadow: 5px 5px 20px #3e3737;\n    position: relative;\n    opacity: 1;\n    -webkit-transition: all 300ms linear;\n    transition: all 300ms linear;\n}\n.images-preview .img-wrapper img {\n      max-height: 150px;\n      -o-object-fit: contain;\n         object-fit: contain;\n}\n.images-preview .img-wrapper .details {\n      display: -webkit-box;\n      display: -ms-flexbox;\n      display: flex;\n      -webkit-box-orient: vertical;\n      -webkit-box-direction: normal;\n          -ms-flex-direction: column;\n              flex-direction: column;\n      -webkit-box-align: center;\n          -ms-flex-align: center;\n              align-items: center;\n      padding: 3px 6px;\n      font-size: 12px;\n      background-color: #fff;\n      color: #2C3E50;\n}\n.images-preview .img-wrapper .details .name {\n        overflow: hidden;\n        height: 18px;\n}\n.images-preview .img-wrapper .delete-from-preview {\n      position: absolute;\n      top: 0;\n      right: 0;\n      color: #d00;\n      cursor: pointer;\n      -webkit-transition: -webkit-transform .2s linear;\n      transition: -webkit-transform .2s linear;\n      transition: transform .2s linear;\n      transition: transform .2s linear, -webkit-transform .2s linear;\n      padding: 0 10px;\n      height: 40px;\n      font-weight: bold;\n      font-size: 25px;\n}\n.images-preview .img-wrapper .delete-from-preview:hover {\n        -webkit-transform: rotate(180deg);\n                transform: rotate(180deg);\n}\n.upload-control {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  background-color: #fff;\n  border-top-left-radius: 7px;\n  border-top-right-radius: 7px;\n  padding: 10px;\n  padding-bottom: 4px;\n  text-align: right;\n  margin-bottom: 10px;\n}\n.upload-control button, .upload-control label {\n    background-color: #2C3E50;\n    border: 2px solid #2C3E50;\n    border-radius: 3px;\n    color: #fff;\n    font-size: 15px;\n    padding: 5px;\n    cursor: pointer;\n    -webkit-transition: all .3s linear;\n    transition: all .3s linear;\n}\n.upload-control button:hover, .upload-control label:hover {\n      background-color: #fff;\n      border: 2px solid #fff;\n      border-radius: 3px;\n      color: #2C3E50;\n}\n@media only screen and (min-width: 768px) {\n.img-wrapper {\n    width: 30% !important;\n}\n}\n@media only screen and (min-width: 450px) and (max-width: 768px) {\n.img-wrapper {\n    width: 45% !important;\n}\n}\n", "", {"version":3,"sources":["C:/web/soc-net.loc/site/resources/js/components/GalleryComponent.vue"],"names":[],"mappings":";AAAA;EACE,kBAAkB;CAAE;AAEtB;EACE,0BAA0B;EAC1B,sBAAsB;CAAE;AACxB;;IAEE,eAAe;CAAE;AACnB;IACE,eAAe;IACf,sBAAsB;CAAE;AAE5B;EACE,mBAAmB;EACnB,cAAc;EACd,YAAY;EACZ,aAAa;EACb,gBAAgB;EAChB,kBAAkB;EAClB,eAAe;EACf,mCAAmC;EACnC,2BAA2B;EAC3B,aAAa;CAAE;AACf;IACE,eAAe;IACf,sBAAsB;IACtB,gBAAgB;IAChB,aAAa;CAAE;;AAEnB;;0DAE0D;AAC1D;EACE,WAAW;EACX,gBAAgB;EAChB,wBAAwB;EACxB,UAAU;EACV,yBAAyB;CAAE;AAE7B;EACE,OAAO;EACP,SAAS;EACT,YAAY;CAAE;AAEhB;EACE,UAAU;EACV,SAAS;EACT,YAAY;CAAE;AAEhB;EACE,OAAO;EACP,SAAS;EACT,YAAY;CAAE;AAEhB;EACE,UAAU;EACV,SAAS;EACT,YAAY;CAAE;AAEhB;EACE,UAAU;EACV,WAAW;CAAE;AAEf;EACE,UAAU;EACV,YAAY;CAAE;AAEhB;EACE,YAAY;EACZ,aAAa;CAAE;AAEjB;EACE,aAAa;EACb,WAAW;CAAE;AAEf;EACE,gBAAgB;EAChB,gBAAgB;EAChB,qBAAqB;EACrB,aAAa;CAAE;AACf;IAEE,+BAA+B;IAC/B,uBAAuB;CAAE;AAC3B;IACE,mBAAmB;IACnB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;IAChB,6BAA6B;IAC7B,aAAa;IAGb,+BAA+B;IAC/B,iCAAiC;IACjC,6BAA6B;IAE7B,qCAAqC;IACrC,6BAA6B;IAC7B,eAAe;IACf,aAAa;CAAE;AACjB;IAEE,qCAAqC;IACrC,6BAA6B;IAC7B,WAAW;IACX,gBAAgB;CAAE;AACpB;IACE,2wBAA2wB;CAAE;AAC/wB;IACE,mzBAAmzB;CAAE;AACvzB;IACE,ugBAAugB;CAAE;AAC3gB;IACE,2uBAA2uB;CAAE;AAC/uB;;IAEE,aAAa;IACb,kBAAkB;IAClB,mBAAmB;CAAE;AACvB;;IAEE,WAAW;IACX,kBAAkB;IAClB,mBAAmB;CAAE;AAEzB;EACE,0BAA0B;CAAE;AAE9B;EACE,0BAA0B;CAAE;AAE9B;EACE,0BAA0B;CAAE;AAE9B;EACE,0BAA0B;CAAE;AAE9B;EACE,0BAA0B;CAAE;AAE9B;EACE,mBAAmB;EACnB,QAAQ;EACR,UAAU;EACV,YAAY;EACZ,0BAA0B;EAC1B,aAAa;CAAE;;AAEjB,qBAAqB;AACrB;AACE;IACE,0BAA0B;IAC1B,YAAY;CAAE;AAChB;IACE,cAAc;IACd,YAAY;CAAE;CAAE;AAEpB;AACE;IACE,0BAA0B;IAC1B,YAAY;CAAE;AAChB;IACE,cAAc;IACd,YAAY;CAAE;CAAE;AAEpB;AACE;IACE,6BAA6B;IAC7B,YAAY;CAAE;CAAE;AAEpB;EACE,YAAY;EACZ,0BAA0B;EAC1B,cAAc;EACd,mBAAmB;EACnB,oBAAoB;EACpB,wBAAwB;EACxB,YAAY;EACZ,gBAAgB;EAChB,mBAAmB;EACnB,mCAA2B;EAA3B,2BAA2B;CAAE;AAC7B;IACE,uBAAuB;IACvB,eAAe;IACf,2BAA2B;CAAE;AAC7B;MACE,0BAA0B;MAC1B,YAAY;CAAE;AAClB;IACE,gBAAgB;CAAE;AACpB;IACE,aAAa;IACb,aAAa;IACb,aAAa;IACb,mBAAmB;CAAE;AACrB;;MAEE,uBAAuB;MACvB,eAAe;MACf,YAAY;MACZ,mBAAmB;MACnB,QAAQ;MACR,OAAO;MACP,aAAa;MACb,mBAAmB;MACnB,gBAAgB;MAChB,gBAAgB;MAChB,mCAA2B;MAA3B,2BAA2B;CAAE;AAC7B;;QAEE,0BAA0B;QAC1B,YAAY;CAAE;AAClB;MACE,WAAW;MACX,aAAa;CAAE;AAErB;EACE,qBAAc;EAAd,qBAAc;EAAd,cAAc;EACd,oBAAgB;MAAhB,gBAAgB;EAChB,iBAAiB;EACjB,0BAA8B;MAA9B,8BAA8B;CAAE;AAChC;IACE,YAAY;IACZ,qBAAc;IAAd,qBAAc;IAAd,cAAc;IACd,6BAAuB;IAAvB,8BAAuB;QAAvB,2BAAuB;YAAvB,uBAAuB;IACvB,aAAa;IACb,kBAAkB;IAClB,0BAA+B;QAA/B,uBAA+B;YAA/B,+BAA+B;IAC/B,kBAAkB;IAClB,uBAAuB;IACvB,yCAAiC;YAAjC,iCAAiC;IACjC,mBAAmB;IACnB,WAAW;IACX,qCAA6B;IAA7B,6BAA6B;CAAE;AAC/B;MACE,kBAAkB;MAClB,uBAAoB;SAApB,oBAAoB;CAAE;AACxB;MACE,qBAAc;MAAd,qBAAc;MAAd,cAAc;MACd,6BAAuB;MAAvB,8BAAuB;UAAvB,2BAAuB;cAAvB,uBAAuB;MACvB,0BAAoB;UAApB,uBAAoB;cAApB,oBAAoB;MACpB,iBAAiB;MACjB,gBAAgB;MAChB,uBAAuB;MACvB,eAAe;CAAE;AACjB;QACE,iBAAiB;QACjB,aAAa;CAAE;AACnB;MACE,mBAAmB;MACnB,OAAO;MACP,SAAS;MACT,YAAY;MACZ,gBAAgB;MAChB,iDAAiC;MAAjC,yCAAiC;MAAjC,iCAAiC;MAAjC,+DAAiC;MACjC,gBAAgB;MAChB,aAAa;MACb,kBAAkB;MAClB,gBAAgB;CAAE;AAClB;QACE,kCAA0B;gBAA1B,0BAA0B;CAAE;AAEpC;EACE,mBAAmB;EACnB,OAAO;EACP,QAAQ;EACR,YAAY;EACZ,uBAAuB;EACvB,4BAA4B;EAC5B,6BAA6B;EAC7B,cAAc;EACd,oBAAoB;EACpB,kBAAkB;EAClB,oBAAoB;CAAE;AACtB;IACE,0BAA0B;IAC1B,0BAA0B;IAC1B,mBAAmB;IACnB,YAAY;IACZ,gBAAgB;IAChB,aAAa;IACb,gBAAgB;IAChB,mCAA2B;IAA3B,2BAA2B;CAAE;AAC7B;MACE,uBAAuB;MACvB,uBAAuB;MACvB,mBAAmB;MACnB,eAAe;CAAE;AAEvB;AACE;IACE,sBAAsB;CAAE;CAAE;AAE9B;AACE;IACE,sBAAsB;CAAE;CAAE","file":"GalleryComponent.vue","sourcesContent":[".toast-title {\n  font-weight: bold; }\n\n.toast-message {\n  -ms-word-wrap: break-word;\n  word-wrap: break-word; }\n  .toast-message a,\n  .toast-message label {\n    color: #FFFFFF; }\n  .toast-message a:hover {\n    color: #CCCCCC;\n    text-decoration: none; }\n\n.toast-close-button {\n  position: relative;\n  right: -0.3em;\n  top: -0.3em;\n  float: right;\n  font-size: 20px;\n  font-weight: bold;\n  color: #FFFFFF;\n  -webkit-text-shadow: 0 1px 0 white;\n  text-shadow: 0 1px 0 white;\n  opacity: 0.8; }\n  .toast-close-button:hover, .toast-close-button:focus {\n    color: #000000;\n    text-decoration: none;\n    cursor: pointer;\n    opacity: 0.4; }\n\n/*Additional properties for button version\n iOS requires the button element instead of an anchor tag.\n If you want the anchor version, it requires `href=\"#\"`.*/\nbutton.toast-close-button {\n  padding: 0;\n  cursor: pointer;\n  background: transparent;\n  border: 0;\n  -webkit-appearance: none; }\n\n.toast-top-center {\n  top: 0;\n  right: 0;\n  width: 100%; }\n\n.toast-bottom-center {\n  bottom: 0;\n  right: 0;\n  width: 100%; }\n\n.toast-top-full-width {\n  top: 0;\n  right: 0;\n  width: 100%; }\n\n.toast-bottom-full-width {\n  bottom: 0;\n  right: 0;\n  width: 100%; }\n\n.toast-top-left {\n  top: 12px;\n  left: 12px; }\n\n.toast-top-right {\n  top: 12px;\n  right: 12px; }\n\n.toast-bottom-right {\n  right: 12px;\n  bottom: 12px; }\n\n.toast-bottom-left {\n  bottom: 12px;\n  left: 12px; }\n\n.toast-container {\n  position: fixed;\n  z-index: 999999;\n  pointer-events: none;\n  /*overrides*/ }\n  .toast-container * {\n    -moz-box-sizing: border-box;\n    -webkit-box-sizing: border-box;\n    box-sizing: border-box; }\n  .toast-container > div {\n    position: relative;\n    pointer-events: auto;\n    overflow: hidden;\n    margin: 0 0 6px;\n    padding: 15px 15px 15px 50px;\n    width: 300px;\n    -moz-border-radius: 3px 3px 3px 3px;\n    -webkit-border-radius: 3px 3px 3px 3px;\n    border-radius: 3px 3px 3px 3px;\n    background-position: 15px center;\n    background-repeat: no-repeat;\n    -moz-box-shadow: 0 0 12px #999999;\n    -webkit-box-shadow: 0 0 12px #999999;\n    box-shadow: 0 0 12px #999999;\n    color: #FFFFFF;\n    opacity: 0.8; }\n  .toast-container > :hover {\n    -moz-box-shadow: 0 0 12px #000000;\n    -webkit-box-shadow: 0 0 12px #000000;\n    box-shadow: 0 0 12px #000000;\n    opacity: 1;\n    cursor: pointer; }\n  .toast-container > .toast-info {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=\") !important; }\n  .toast-container > .toast-error {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=\") !important; }\n  .toast-container > .toast-success {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==\") !important; }\n  .toast-container > .toast-warning {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=\") !important; }\n  .toast-container.toast-top-center > div,\n  .toast-container.toast-bottom-center > div {\n    width: 300px;\n    margin-left: auto;\n    margin-right: auto; }\n  .toast-container.toast-top-full-width > div,\n  .toast-container.toast-bottom-full-width > div {\n    width: 96%;\n    margin-left: auto;\n    margin-right: auto; }\n\n.toast {\n  background-color: #030303; }\n\n.toast-success {\n  background-color: #51A351; }\n\n.toast-error {\n  background-color: #BD362F; }\n\n.toast-info {\n  background-color: #2F96B4; }\n\n.toast-warning {\n  background-color: #F89406; }\n\n.toast-progress {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  height: 4px;\n  background-color: #000000;\n  opacity: 0.4; }\n\n/*Responsive Design*/\n@media all and (max-width: 240px) {\n  .toast-container > div {\n    padding: 8px 8px 8px 50px;\n    width: 11em; }\n  .toast-container .toast-close-button {\n    right: -0.2em;\n    top: -0.2em; } }\n\n@media all and (min-width: 241px) and (max-width: 480px) {\n  .toast-container > div {\n    padding: 8px 8px 8px 50px;\n    width: 18em; }\n  .toast-container .toast-close-button {\n    right: -0.2em;\n    top: -0.2em; } }\n\n@media all and (min-width: 481px) and (max-width: 768px) {\n  .toast-container > div {\n    padding: 15px 15px 15px 50px;\n    width: 25em; } }\n\n.uploader {\n  width: 100%;\n  background-color: #2C3E50;\n  padding: 10px;\n  text-align: center;\n  border-radius: 10px;\n  border: 3px dashed #fff;\n  color: #fff;\n  font-size: 20px;\n  position: relative;\n  transition: all .3s linear; }\n  .uploader.dragging {\n    background-color: #fff;\n    color: #2C3E50;\n    border: 3px dashed #2C3E50; }\n    .uploader.dragging .file-input label {\n      background-color: #2C3E50;\n      color: #fff; }\n  .uploader i {\n    font-size: 55px; }\n  .uploader .file-input {\n    width: 200px;\n    margin: auto;\n    height: 70px;\n    position: relative; }\n    .uploader .file-input label,\n    .uploader .file-input input {\n      background-color: #fff;\n      color: #2C3E50;\n      width: 100%;\n      position: absolute;\n      left: 0;\n      top: 0;\n      padding: 4px;\n      border-radius: 4px;\n      margin-top: 7px;\n      cursor: pointer;\n      transition: all .3s linear; }\n      .uploader .file-input label:hover,\n      .uploader .file-input input:hover {\n        background-color: #2C3E50;\n        color: #fff; }\n    .uploader .file-input input {\n      opacity: 0;\n      z-index: -10; }\n\n.images-preview {\n  display: flex;\n  flex-wrap: wrap;\n  margin-top: 70px;\n  justify-content: space-around; }\n  .images-preview .img-wrapper {\n    width: 100%;\n    display: flex;\n    flex-direction: column;\n    margin: 10px;\n    min-height: 100px;\n    justify-content: space-between;\n    padding-top: 10px;\n    background-color: #fff;\n    box-shadow: 5px 5px 20px #3e3737;\n    position: relative;\n    opacity: 1;\n    transition: all 300ms linear; }\n    .images-preview .img-wrapper img {\n      max-height: 150px;\n      object-fit: contain; }\n    .images-preview .img-wrapper .details {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      padding: 3px 6px;\n      font-size: 12px;\n      background-color: #fff;\n      color: #2C3E50; }\n      .images-preview .img-wrapper .details .name {\n        overflow: hidden;\n        height: 18px; }\n    .images-preview .img-wrapper .delete-from-preview {\n      position: absolute;\n      top: 0;\n      right: 0;\n      color: #d00;\n      cursor: pointer;\n      transition: transform .2s linear;\n      padding: 0 10px;\n      height: 40px;\n      font-weight: bold;\n      font-size: 25px; }\n      .images-preview .img-wrapper .delete-from-preview:hover {\n        transform: rotate(180deg); }\n\n.upload-control {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  background-color: #fff;\n  border-top-left-radius: 7px;\n  border-top-right-radius: 7px;\n  padding: 10px;\n  padding-bottom: 4px;\n  text-align: right;\n  margin-bottom: 10px; }\n  .upload-control button, .upload-control label {\n    background-color: #2C3E50;\n    border: 2px solid #2C3E50;\n    border-radius: 3px;\n    color: #fff;\n    font-size: 15px;\n    padding: 5px;\n    cursor: pointer;\n    transition: all .3s linear; }\n    .upload-control button:hover, .upload-control label:hover {\n      background-color: #fff;\n      border: 2px solid #fff;\n      border-radius: 3px;\n      color: #2C3E50; }\n\n@media only screen and (min-width: 768px) {\n  .img-wrapper {\n    width: 30% !important; } }\n\n@media only screen and (min-width: 450px) and (max-width: 768px) {\n  .img-wrapper {\n    width: 45% !important; } }\n"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'GalleryComponent',
+    props: {
+        url: {
+            type: String,
+            required: true
+        },
+        userId: {
+            type: String,
+            required: true
+        },
+        userName: {
+            type: String,
+            required: true
+        },
+        authUserId: {
+            type: String,
+            required: true
+        },
+        storagePath: {
+            type: String,
+            required: true
+        }
+    },
+    data: function data() {
+        return {
+            isDragging: false,
+            dragCount: 0,
+            files: [], // for uploading files to a server
+            images: [], // for presenting images to users
+            gallery: [],
+            imagesCountFromDB: 0
+        };
+    },
+    methods: {
+        onInputChange: function onInputChange(e) {
+            var _this = this;
+
+            var files = e.target.files;
+            Array.from(files).forEach(function (file) {
+                _this.addImage(file);
+            });
+
+            // If you select an image, then remove it, without this you can not select the same image again
+            e.target.value = '';
+        },
+        onDragEnter: function onDragEnter(e) {
+            e.preventDefault();
+
+            this.dragCount++;
+            this.isDragging = true;
+        },
+        onDragLeave: function onDragLeave(e) {
+            e.preventDefault();
+
+            this.dragCount--;
+
+            if (this.dragCount <= 0) {
+                this.isDragging = false;
+            }
+        },
+        onDrop: function onDrop(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.isDragging = false;
+
+            var files = e.dataTransfer.files;
+            Array.from(files).forEach(function (file) {
+                _this2.addImage(file);
+            });
+        },
+        addImage: function addImage(file) {
+            var _this3 = this;
+
+            if (!file.type.match('image.*')) {
+                this.$toastr.e(file.name + ' is not a image');
+                return;
+            }
+
+            if (file.name.length > 60) {
+                this.$toastr.e(file.name + ' name is too long');
+                return;
+            }
+
+            this.files.push(file);
+
+            var img = new Image();
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                _this3.images.push(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        },
+        upload: function upload() {
+            var _this4 = this;
+
+            var formData = new FormData();
+
+            this.files.forEach(function (file) {
+                formData.append('images[]', file, file.name);
+                formData.append('id', _this4.userId);
+            });
+
+            axios.post(this.url + '/gallery/add', formData).then(function (response) {
+
+                if (response.data.gallery) {
+
+                    _this4.gallery = response.data.gallery;
+                    _this4.imagesCountFromDB = response.data.gallery.length;
+
+                    var fromServerDiv = _this4.$parent.$refs.fromServer;
+
+                    if (fromServerDiv) {
+                        fromServerDiv.remove();
+                    }
+                }
+
+                var message = '';
+                if (_this4.images.length == 1) {
+                    message = 'The image successfully uploaded';
+                } else {
+                    message = 'All images successfully uploaded';
+                }
+                _this4.$toastr.s(message);
+                _this4.files = [];
+                _this4.images = [];
+            });
+        },
+        getFileSize: function getFileSize(size) {
+            var fSExt = ['Bytes', 'KB', 'MB', 'GB'];
+            var i = 0;
+
+            while (size > 900) {
+                size /= 1024;
+                i++;
+            }
+
+            return Math.round(size * 100) / 100 + ' ' + fSExt[i];
+        },
+        deleteFromPreview: function deleteFromPreview(event, index) {
+            var _this5 = this;
+
+            //let res = event.currentTarget.parentElement;
+            var res = event.target.parentElement;
+            res.style.opacity = '0';
+
+            setTimeout(function () {
+                _this5.files.splice(index, 1);
+                _this5.images.splice(index, 1);
+
+                /* 
+                    After deleting the element the value of the index and the opacity style will be passed 
+                    to the next element. So to show the next element again opacity must be 1.
+                */
+                res.style.opacity = '1';
+            }, 300);
+        },
+        deleteFromGallery: function deleteFromGallery(event, id) {
+            var _this6 = this;
+
+            event.target.parentNode.classList.add("hide-gallery-pic");
+
+            setTimeout(function () {
+                event.target.parentNode.remove();
+            }, 300);
+
+            axios.post(this.url + '/gallery/delete', { id: id }).then(function (response) {
+                if (response.data.gallery) {
+                    _this6.imagesCountFromDB = response.data.gallery.length;
+                }
+            });
+        }
+    },
+    mounted: function mounted() {
+        var _this7 = this;
+
+        var userId = this.userId;
+        axios.get(this.url + '/gallery/get/all/' + userId).then(function (response) {
+
+            if (response.data.galleryCount) {
+                _this7.imagesCountFromDB = response.data.galleryCount;
+            }
+        });
+
+        var deleteFromGallery = document.querySelectorAll(".delete-from-gallery");
+
+        deleteFromGallery.forEach(function (btn) {
+            btn.addEventListener("click", function (event) {
+                event.stopPropagation();
+                var userId = event.target.getAttribute("data-id");
+                _this7.deleteFromGallery(event, userId);
+            });
+        });
+    }
+});
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "d-flex justify-content-between align-items-center" },
+      [
+        _c("h5", {
+          staticClass: "gallery-h5",
+          domProps: {
+            textContent: _vm._s(
+              _vm.imagesCountFromDB
+                ? _vm.userName + "`s Gallery"
+                : "Gallery is empty"
+            )
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.authUserId === _vm.userId,
+                expression: "authUserId === userId"
+              }
+            ],
+            staticClass: "btn btn-outline-primary float-right",
+            attrs: {
+              "data-toggle": "collapse",
+              href: "#collapseExample",
+              role: "button",
+              "aria-expanded": "false",
+              "aria-controls": "collapseExample"
+            }
+          },
+          [_vm._v("\n            Toggle for upload\n        ")]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "collapse mt-3", attrs: { id: "collapseExample" } },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "uploader",
+            class: { dragging: _vm.isDragging },
+            on: {
+              dragenter: _vm.onDragEnter,
+              dragleave: _vm.onDragLeave,
+              dragover: function($event) {
+                $event.preventDefault()
+              },
+              drop: _vm.onDrop
+            }
+          },
+          [
+            _c(
+              "form",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.images.length,
+                    expression: "images.length"
+                  }
+                ],
+                staticClass: "upload-control",
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.upload($event)
+                  }
+                }
+              },
+              [
+                _c("label", { attrs: { for: "file" } }, [
+                  _vm._v("Select a file")
+                ]),
+                _vm._v(" "),
+                _c("button", { attrs: { type: "submit" } }, [_vm._v("Upload")])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.images.length,
+                    expression: "!images.length"
+                  }
+                ]
+              },
+              [
+                _c("i", { staticClass: "fas fa-cloud-upload-alt" }),
+                _vm._v(" "),
+                _c("p", [_vm._v("Drag your images here")]),
+                _vm._v(" "),
+                _c("div", [_vm._v("OR")]),
+                _vm._v(" "),
+                _c("form", { staticClass: "file-input" }, [
+                  _c("label", { attrs: { for: "file" } }, [
+                    _vm._v("Select a file")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    attrs: { type: "file", id: "file", multiple: "" },
+                    on: { change: _vm.onInputChange }
+                  })
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.images.length,
+                    expression: "images.length"
+                  }
+                ],
+                staticClass: "images-preview"
+              },
+              _vm._l(_vm.images, function(image, index) {
+                return _c("div", { key: index, staticClass: "img-wrapper" }, [
+                  _c("img", {
+                    staticClass: "img-responsive",
+                    attrs: { src: image, alt: "Image uploader " + index }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "details" }, [
+                    _c("span", {
+                      staticClass: "name",
+                      domProps: { textContent: _vm._s(_vm.files[index].name) }
+                    }),
+                    _vm._v(" "),
+                    _c("span", {
+                      staticClass: "size",
+                      domProps: {
+                        textContent: _vm._s(
+                          _vm.getFileSize(_vm.files[index].size)
+                        )
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "delete-from-preview",
+                      on: {
+                        click: function($event) {
+                          $event.stopPropagation()
+                          _vm.deleteFromPreview($event, index)
+                        }
+                      }
+                    },
+                    [_vm._v("×")]
+                  )
+                ])
+              })
+            )
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.gallery.length,
+            expression: "gallery.length"
+          }
+        ],
+        staticClass: "user-gallery mt-4"
+      },
+      _vm._l(_vm.gallery, function(item, index) {
+        return _c(
+          "div",
+          { key: index, staticClass: "gallery-image-wrap hover-zoomin" },
+          [
+            _c(
+              "a",
+              {
+                attrs: {
+                  "data-fancybox": "gallery",
+                  href: _vm.storagePath + "/" + item.image
+                }
+              },
+              [
+                _c("img", {
+                  attrs: { src: _vm.storagePath + "/" + item.image }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-danger delete-from-gallery",
+                on: {
+                  click: function($event) {
+                    $event.stopPropagation()
+                    _vm.deleteFromGallery($event, item.id)
+                  }
+                }
+              },
+              [_vm._v("×")]
+            )
+          ]
+        )
+      })
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a13cd294", module.exports)
+  }
+}
+
+/***/ }),
+/* 64 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

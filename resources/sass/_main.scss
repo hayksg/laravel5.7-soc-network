@@ -8,6 +8,7 @@ body {
     margin-bottom: 100px; /* Margin bottom by footer height */
 }
 
+/* In order page loading worked properly in Google Chrome */
 body.preload * {
     transition: none !important;
     -webkit-transition: none !important;
@@ -259,6 +260,89 @@ div.custom-file .custom-file-input{
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px white inset !important;
     background-color: transparent;
+}
+
+.gallery-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-gallery {
+    column-count: 3;    
+    -webkit-column-count: 3;    
+    -o-column-count: 3;    
+    -moz-column-count: 3;    
+    -ms-column-count: 3; 
+    
+    column-gap: 0px;
+    -webkit-column-gap: 0px;
+    -o-column-gap: 0px;
+    -moz-column-gap: 0px;
+    -ms-column-gap: 0px;
+
+    .gallery-image-wrap {
+        margin-right: auto;    
+        margin-left: auto; 
+        padding: 5px;
+        position: relative;
+
+        a {
+            display: inline-block;
+        }
+
+        &:hover button.delete-from-gallery {
+            opacity: 1;
+        }
+    }
+}
+
+/* ZoomIn Hover Effect */
+.hover-zoomin a {
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+.hover-zoomin img {
+    width: 100%;
+    height: auto;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+.hover-zoomin:hover img {
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+}
+/* End block */
+
+h5.gallery-h5 {
+    color: white;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: 1px 1px #2C3E50, 1px -1px #2C3E50, -1px 1px #2C3E50, -1px -1px #2C3E50, 3px 3px 6px rgba(0,0,0,.5);
+}
+
+button.delete-from-gallery {
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transition: opacity 300ms linear;
+}
+
+.hide-gallery-pic {
+    transform: translateX(-5000px);
+    transition: all 1.5s linear;
 }
 
 

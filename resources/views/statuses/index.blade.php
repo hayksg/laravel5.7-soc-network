@@ -25,7 +25,7 @@
 
                                     <div class="form-group">
                                         <textarea
-                                            placeholder="What's up {{ onlyName(false) }}?"
+                                            placeholder="What's up {{ onlyName(Auth::user()->name, false) }}?"
                                             name="status"
                                             class="form-control{{ $errors->has('status') ? ' is-invalid' : '' }}"
                                             rows="3"></textarea>

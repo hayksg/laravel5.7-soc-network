@@ -13,10 +13,10 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('storage/favicon/favicon.ico') }}">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="preload">
+<body class="preload" style="visibility: hidden" onload="setTimeout ('document.body.style.visibility = \'visible\'', 0)">

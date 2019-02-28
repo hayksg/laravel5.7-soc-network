@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Search extends Model
 {
-    public static function decodingFronJS($id)
+    public static function decodingFromJS($id)
     {
         /*
             We need this function to decrypt value from js (for user id in address bar)

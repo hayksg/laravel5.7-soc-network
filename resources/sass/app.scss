@@ -1,3 +1,6 @@
+// Bootswatch Flatly
+@import '~bootswatch/dist/flatly/bootstrap'; /* npm package */
+
 // Variables
 @import 'variables';
 // Mixins
@@ -5,11 +8,9 @@
 // Animation
 @import 'keyframes';
 
-// Bootswatch Flatly
-@import '~bootswatch/dist/flatly/bootstrap'; /* npm package */
-
 /* Front */
 @import '../css/j-confirm-action.css';
+@import '../css/jquery.fancybox.min.css';
 
 /* For Admin Panel */
 @import '../css/sb-admin.min.css';
@@ -17,6 +18,6 @@
 @import "~@fortawesome/fontawesome-free/css/all.min.css"; /* npm package */
 
 /* Main Styles */
-@import 'admin';
 @import 'main';
+@import 'admin';
 @import 'media';

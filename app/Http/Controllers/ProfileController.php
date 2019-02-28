@@ -110,7 +110,7 @@ class ProfileController extends Controller
         if (request()->hasFile('image')) {
 
             $extension = request('image')->getClientOriginalExtension();
-            $imageName = onlyName() . '-' . $user->id . '.' . $extension;
+            $imageName = onlyName(Auth::user()->name) . '-' . $user->id . '.' . $extension;
 
             Storage::delete('public/users-images/' . $user->pic);
 

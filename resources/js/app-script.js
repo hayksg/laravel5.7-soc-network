@@ -70,13 +70,11 @@ $(function(){
         $('span.upload-img-name').text(filename);
     })
 
-
-
 });
 
 $(window).on('load', function() {
 
-    /* In order a thumbnail of any size to be displayed normally */
+    // In order a thumbnail of any size to be displayed normally
     if ($(document).width() > 767) {
 
         var thumbnail = $('.app-thubnail-nav-link .app-thubnail-wrapper');
@@ -87,8 +85,7 @@ $(window).on('load', function() {
         }
     }
 
-    /* In order, a CSS transition work properly in google-chrome */
+    // In order, a CSS transition work properly in google-chrome
     $("body").removeClass("preload");
-    $("#current-password").val("");
     
 });

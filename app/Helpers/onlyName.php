@@ -1,9 +1,7 @@
 <?php
 
-function onlyName($lowercase = true) {
-    if (Auth::user()) {
-        $name = Auth::user()->name;
-
+function onlyName($name, $lowercase = true) {
+    if ($name) {
         if (strpos($name, ' ')) {
             $name = substr($name, 0, strpos($name, ' '));
         }

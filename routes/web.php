@@ -30,6 +30,9 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
 
 	Route::get('/gallery/{id}/{slug}', 'GalleryController@index')->name('gallery');
+	Route::get('/gallery/get/all/{id}',    'GalleryController@all')->name('gallery.all');
+	Route::post('/gallery/add',        'GalleryController@add')->name('gallery.add');
+	Route::post('/gallery/delete',     'GalleryController@delete')->name('gallery.delete');
 
     Route::get('/statuses', 'StatusController@index')->name('statuses');
 	Route::post('/statuses', 'StatusController@postStatus')->name('post.status');
