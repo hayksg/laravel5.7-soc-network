@@ -11320,12 +11320,12 @@ input:-webkit-autofill {
 .user-gallery .gallery-image-wrap {
   margin-right: auto;
   margin-left: auto;
-  padding: 5px;
   position: relative;
 }
 
 .user-gallery .gallery-image-wrap a {
   display: inline-block;
+  padding: 5px;
 }
 
 .user-gallery .gallery-image-wrap:hover button.delete-from-gallery {
@@ -11359,6 +11359,7 @@ h5.gallery-h5 {
   letter-spacing: 2px;
   font-weight: bold;
   font-size: 20px;
+  margin-bottom: 0;
   text-shadow: 1px 1px #2C3E50, 1px -1px #2C3E50, -1px 1px #2C3E50, -1px -1px #2C3E50, 3px 3px 6px rgba(0, 0, 0, 0.5);
 }
 

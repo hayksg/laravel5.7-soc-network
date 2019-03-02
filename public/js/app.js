@@ -14331,7 +14331,7 @@ window.Vue = __webpack_require__(47);
 Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_toastr___default.a, {
     defaultPosition: 'toast-bottom-right',
     defaultType: 'info',
-    defaultTimeout: 4000
+    defaultTimeout: 6000
 });
 
 Vue.component('vue-message', __webpack_require__(50));
@@ -39716,7 +39716,7 @@ $(window).on('load', function () {
         }
     }
 
-    // In order, a CSS transition work properly in google-chrome
+    // In order, a CSS transition work properly in Google Chrome
     $("body").removeClass("preload");
 });
 
@@ -53123,6 +53123,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'GalleryComponent',
@@ -53136,6 +53142,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             required: true
         },
         userName: {
+            type: String,
+            required: true
+        },
+        profilePath: {
             type: String,
             required: true
         },
@@ -53158,20 +53168,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             imagesCountFromDB: 0
         };
     },
+    computed: {
+        filesCount: function filesCount() {
+            return this.files.length;
+        }
+    },
     methods: {
         onInputChange: function onInputChange(e) {
             var _this = this;
 
             var files = e.target.files;
+
             Array.from(files).forEach(function (file) {
                 _this.addImage(file);
             });
+
+            this.imagesMaxCount();
 
             // If you select an image, then remove it, without this you can not select the same image again
             e.target.value = '';
         },
         onDragEnter: function onDragEnter(e) {
             e.preventDefault();
+
+            var files = e.dataTransfer.files;
 
             this.dragCount++;
             this.isDragging = true;
@@ -53194,9 +53214,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.isDragging = false;
 
             var files = e.dataTransfer.files;
+
             Array.from(files).forEach(function (file) {
                 _this2.addImage(file);
             });
+
+            this.imagesMaxCount();
         },
         addImage: function addImage(file) {
             var _this3 = this;
@@ -53213,7 +53236,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.files.push(file);
 
-            var img = new Image();
             var reader = new FileReader();
 
             reader.onload = function (e) {
@@ -53230,6 +53252,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 formData.append('images[]', file, file.name);
                 formData.append('id', _this4.userId);
             });
+
+            if (this.imagesMaxCount()) {
+                return;
+            }
 
             axios.post(this.url + '/gallery/add', formData).then(function (response) {
 
@@ -53270,7 +53296,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteFromPreview: function deleteFromPreview(event, index) {
             var _this5 = this;
 
-            //let res = event.currentTarget.parentElement;
             var res = event.target.parentElement;
             res.style.opacity = '0';
 
@@ -53299,6 +53324,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this6.imagesCountFromDB = response.data.gallery.length;
                 }
             });
+        },
+        imagesMaxCount: function imagesMaxCount() {
+            var max = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+
+            if (this.filesCount > max) {
+                this.$toastr.e('Max count of images for simultaneously uploading is ' + max);
+                return true;
+            }
+            return false;
         }
     },
     mounted: function mounted() {
@@ -53348,28 +53382,25 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _c(
-          "a",
-          {
-            directives: [
+        _vm.authUserId === _vm.userId
+          ? _c(
+              "a",
               {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.authUserId === _vm.userId,
-                expression: "authUserId === userId"
-              }
-            ],
-            staticClass: "btn btn-outline-primary float-right",
-            attrs: {
-              "data-toggle": "collapse",
-              href: "#collapseExample",
-              role: "button",
-              "aria-expanded": "false",
-              "aria-controls": "collapseExample"
-            }
-          },
-          [_vm._v("\n            Toggle for upload\n        ")]
-        )
+                staticClass: "btn btn-outline-primary float-right",
+                attrs: {
+                  "data-toggle": "collapse",
+                  href: "#collapseExample",
+                  role: "button",
+                  "aria-expanded": "false",
+                  "aria-controls": "collapseExample"
+                }
+              },
+              [_vm._v("\n            Toggle for upload\n        ")]
+            )
+          : _c("a", { attrs: { href: _vm.profilePath } }, [
+              _c("i", { staticClass: "fas fa-fw fa-backward mr-1" }),
+              _vm._v(" Back To Profile\n        ")
+            ])
       ]
     ),
     _vm._v(" "),
@@ -53413,7 +53444,7 @@ var render = function() {
               },
               [
                 _c("label", { attrs: { for: "file" } }, [
-                  _vm._v("Select a file")
+                  _vm._v("Select files")
                 ]),
                 _vm._v(" "),
                 _c("button", { attrs: { type: "submit" } }, [_vm._v("Upload")])
@@ -53441,7 +53472,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("form", { staticClass: "file-input" }, [
                   _c("label", { attrs: { for: "file" } }, [
-                    _vm._v("Select a file")
+                    _vm._v("Select files")
                   ]),
                   _vm._v(" "),
                   _c("input", {
@@ -53468,7 +53499,7 @@ var render = function() {
               _vm._l(_vm.images, function(image, index) {
                 return _c("div", { key: index, staticClass: "img-wrapper" }, [
                   _c("img", {
-                    staticClass: "img-responsive",
+                    staticClass: "img-fluid",
                     attrs: { src: image, alt: "Image uploader " + index }
                   }),
                   _vm._v(" "),
@@ -53537,7 +53568,11 @@ var render = function() {
               },
               [
                 _c("img", {
-                  attrs: { src: _vm.storagePath + "/" + item.image }
+                  staticClass: "img-fluid",
+                  attrs: {
+                    src: _vm.storagePath + "/" + item.image,
+                    alt: "Image from gallery"
+                  }
                 })
               ]
             ),

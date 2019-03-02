@@ -7,7 +7,7 @@
             ></h5>
 
             <a class="btn btn-outline-primary float-right" 
-               v-show="authUserId === userId" 
+               v-if="authUserId === userId"
                data-toggle="collapse" 
                href="#collapseExample" 
                role="button" 
@@ -15,6 +15,12 @@
                aria-controls="collapseExample"
             >
                 Toggle for upload
+            </a>
+
+            <a :href="profilePath"
+                v-else
+            >
+                <i class="fas fa-fw fa-backward mr-1"></i> Back To Profile
             </a>
 
         </div>
@@ -30,7 +36,7 @@
             >
 
                 <form class="upload-control" v-show="images.length" @submit.prevent="upload">
-                    <label for="file">Select a file</label>
+                    <label for="file">Select files</label>
                     <button type="submit">Upload</button>
                 </form>
 
@@ -39,14 +45,14 @@
                     <p>Drag your images here</p>
                     <div>OR</div>
                     <form class="file-input">
-                        <label for="file">Select a file</label>
+                        <label for="file">Select files</label>
                         <input type="file" id="file" @change="onInputChange" multiple>
                     </form>
                 </div>
 
                 <div class="images-preview" v-show="images.length">
                     <div class="img-wrapper" v-for="(image, index) in images" :key="index">
-                        <img :src="image" :alt="'Image uploader ' + index" class="img-responsive">
+                        <img :src="image" :alt="'Image uploader ' + index" class="img-fluid">
                         <div class="details">
                             <span class="name" v-text="files[index].name"></span>
                             <span class="size" v-text="getFileSize(files[index].size)"></span>
@@ -62,7 +68,7 @@
         <div class="user-gallery mt-4" v-show="gallery.length">
             <div class="gallery-image-wrap hover-zoomin" v-for="(item, index) in gallery" :key="index">
                 <a data-fancybox="gallery" :href="storagePath + '/' + item.image">
-                    <img :src="storagePath + '/' + item.image">
+                    <img :src="storagePath + '/' + item.image" alt="Image from gallery" class="img-fluid">
                 </a>
                 <button class="btn btn-outline-danger delete-from-gallery" @click.stop="deleteFromGallery($event, item.id)">&times;</button>
             </div>
@@ -86,6 +92,10 @@
                 type: String,
                 required: true
             },
+            profilePath: {
+                type: String,
+                required: true
+            },
             authUserId: {
                 type: String,
                 required: true
@@ -103,18 +113,28 @@
             gallery: [],
             imagesCountFromDB: 0
         }),
+        computed: {
+            filesCount () {
+                return this.files.length;
+            }
+        },
         methods: {
             onInputChange(e) {
                 const files = e.target.files;
+
                 Array.from(files).forEach(file => {
                     this.addImage(file)
                 });
+
+                this.imagesMaxCount();
 
                 // If you select an image, then remove it, without this you can not select the same image again
                 e.target.value = '';
             },
             onDragEnter(e) {
                 e.preventDefault();
+
+                const files = e.dataTransfer.files;
 
                 this.dragCount++;
                 this.isDragging = true;
@@ -135,9 +155,12 @@
                 this.isDragging = false;
 
                 const files = e.dataTransfer.files;
+                
                 Array.from(files).forEach(file => {
                     this.addImage(file)
                 });
+
+                this.imagesMaxCount();
             },
             addImage(file) {
                 if (!file.type.match('image.*')) {
@@ -152,7 +175,6 @@
 
                 this.files.push(file);
 
-                const img = new Image(); 
                 const reader = new FileReader(); 
 
                 reader.onload = (e) => {
@@ -167,6 +189,10 @@
                     formData.append('images[]', file, file.name);
                     formData.append('id', this.userId);
                 });
+
+                if(this.imagesMaxCount()) {
+                    return;
+                }
 
                 axios.post(this.url + '/gallery/add', formData)
                      .then(response => {
@@ -206,7 +232,6 @@
                 return `${(Math.round(size * 100) / 100)} ${fSExt[i]}`;
             },
             deleteFromPreview(event, index) {
-                //let res = event.currentTarget.parentElement;
                 let res = event.target.parentElement;
                 res.style.opacity = '0';
   
@@ -233,6 +258,13 @@
                         this.imagesCountFromDB = response.data.gallery.length;
                     }
                 });
+            },
+            imagesMaxCount(max = 10) {
+                if (this.filesCount > max) {
+                    this.$toastr.e('Max count of images for simultaneously uploading is ' + max);
+                    return true;
+                }
+                return false;
             }
         },
         mounted() {

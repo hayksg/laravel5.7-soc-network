@@ -16,7 +16,7 @@ window.Vue = require('vue');
 Vue.use(VueToastr, {
     defaultPosition: 'toast-bottom-right',
     defaultType: 'info',
-    defaultTimeout: 4000
+    defaultTimeout: 6000
 })
 
 Vue.component('vue-message', require('./components/MessageComponent.vue'));

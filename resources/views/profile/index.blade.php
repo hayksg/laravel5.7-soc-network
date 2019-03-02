@@ -44,6 +44,8 @@
                                     <div class="text-center mt-1">
                                         @if(isGalleryAccessible($user))
                                             <a href="{{ route('gallery', ['id' => Hashids::encode($user->id), 'slug' => $user->slug]) }}">Show gallery</a>
+                                        @else   
+                                            <span class="text-muted">Private Gallery<br>Only for friends</span>
                                         @endif
                                     </div>
 

@@ -14,6 +14,7 @@
                 <vue-gallery 
                     url="{{ url('/') }}" 
                     user-id="{{ $user->id }}"
+                    profile-path="{{ route('getWithSlug', ['id' => Hashids::encode($user->id), 'slug' => $user->slug]) }}"
                     user-name="{{ strip_tags(shortName(onlyName($user->name, false))) }}"
                     auth-user-id="{{ auth()->user()->id }}"
                     storage-path="{{ asset('storage/gallery/') }}"
@@ -27,7 +28,7 @@
                 @foreach($gallery as $key => $item)
                     <div class="gallery-image-wrap hover-zoomin">
                         <a data-fancybox="gallery" href="{{ asset('storage/gallery/' . $item->image) }}">
-                            <img src="{{ asset('storage/gallery/' . $item->image) }}">
+                            <img src="{{ asset('storage/gallery/' . $item->image) }}" alt="Image from gallery" class="img-fluid">
                         </a>
                         @if(auth()->user()->id === $user->id)
                             <button class="btn btn-outline-danger delete-from-gallery" data-id="{{ $item->id }}">&times;</button>

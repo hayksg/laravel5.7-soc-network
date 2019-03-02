@@ -85,7 +85,7 @@ $(window).on('load', function() {
         }
     }
 
-    // In order, a CSS transition work properly in google-chrome
+    // In order, a CSS transition work properly in Google Chrome
     $("body").removeClass("preload");
     
 });
