@@ -11,15 +11,9 @@ class StatusController extends Controller
 {
     public function index()
     {
-        /* if (auth()->check()) {
-            $statuses = Status::where(function($query) {
-                return $query->where('user_id', auth()->id())
-                             ->orWhereIn('user_id', Auth::user()->friends()->pluck('id'));
-            })->orderBy('created_at', 'desc')->get();
-        } */
-
         $user = auth()->user();
-        $statuses = Status::where('user_id', $user->id)->orderBy('created_at', 'DESC')->get();
+        $statuses = Status::NotReply()->where('user_id', $user->id)->orderBy('created_at', 'DESC')->get();
+        
         return view('statuses.index', compact('user', 'statuses'));
     }
 
@@ -27,7 +21,8 @@ class StatusController extends Controller
     {
         $this->validate(request(), [
             'status' => 'required|max:1000',
-            'image'   => 'image|max:2000',
+            'image'  => 'image|max:2000',
+            'video'  => 'nullable|string|max:1000',
         ]);
 
         if (request()->hasFile('image')) {
@@ -36,6 +31,7 @@ class StatusController extends Controller
         }
 
         $requestData['body'] = request('status');
+        $requestData['video_url'] = request('video');
         $requestData['user_id'] = auth()->id();
 
         Status::create($requestData);
@@ -52,7 +48,36 @@ class StatusController extends Controller
             return abort(404);
         }
 
-        $statuses = Status::where('user_id', $user->id)->orderBy('created_at', 'DESC')->get();
+        $statuses = Status::NotReply()->where('user_id', $user->id)->orderBy('created_at', 'DESC')->get();
         return view('statuses.index', compact('user', 'statuses'));
+    }
+
+    public function postReply($statusId)
+    {
+        $this->validate(request(), [
+            "reply-{$statusId}" => 'required|max:1000',
+        ], [
+            "reply-{$statusId}.required" => 'The message field is required',
+            "reply-{$statusId}.max" => 'The max length of the message is :max characters',
+        ]);
+
+        $statusId = abs((int)$statusId);
+        $status = Status::notReply()->find($statusId);
+
+        if (!$status) {
+            return redirect()->route('home');
+        }
+
+        if (!auth()->user()->isFriendsWith($status->user) && auth()-user()->id !== $status->user->id) {
+            return redirect()->route('home');
+        }
+
+        $reply = Status::create([
+            'body' => request("reply-{$statusId}"),
+            'user_id' => auth()->user()->id
+        ]);
+
+        $status->replies()->save($reply);
+        return back();
     }
 }

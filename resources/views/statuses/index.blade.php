@@ -22,17 +22,31 @@
                             <div class="card-body">
                                 <form action="{{ route('post.status') }}" method="post" enctype="multipart/form-data">
                                     @csrf
-
                                     <div class="form-group">
                                         <textarea
                                             placeholder="What's up {{ onlyName(Auth::user()->name, false) }}?"
                                             name="status"
                                             class="form-control{{ $errors->has('status') ? ' is-invalid' : '' }}"
+                                            required
                                             rows="3"></textarea>
 
                                         @if ($errors->has('status'))
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $errors->first('status') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input 
+                                            type="text" 
+                                            name="video" 
+                                            class="form-control{{ $errors->has('video') ? ' is-invalid' : '' }}"
+                                            placeholder="URL for video">
+                                        
+                                        @if ($errors->has('video'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('video') }}</strong>
                                             </span>
                                         @endif
                                     </div>
@@ -50,6 +64,7 @@
                                     @endif
 
                                     <button type="submit" class="btn btn-outline-primary btn-sm float-right">Submit</button>
+                                    
                                 </form>
                             </div>
                         </div>
@@ -74,7 +89,7 @@
                 @else
                     @foreach($statuses as $key => $status)
 
-                        <div class="card">
+                        <div class="card mb-3">
                             <div class="card-body">
                                 <div class="user-profile-in-messages">
                                     <span class="user-img-in-messages">@include('layouts.profile-pic')</span>
@@ -90,13 +105,24 @@
                                 </div>
                                 @endif
 
-                                <p>{{ $status->body }}</p>
+                                @if($status->video_url)
+                                <div class="mb-3">
+                                
+                                    <video class="mejs__player video-container img-fluid" preload="preload">
+                                        <source type="video/youtube" src="{{ $status->video_url }}" />
+                                    </video>
+                                    
+                                </div>
+                                @endif
+
+                                <div>{!! replaceForbiddenWords(app_nl2br($status->body)) !!}</div>
 
                             </div>
 
                             <div class="px-3 pb-3">
                                 <hr>
-                                <span>Likes</span>
+                                <span>Likes: <span class="badge badge-primary app-badge">0</span>
+                                @if(auth()->user()->isFriendsWith($user))
                                 <button
                                     class="btn btn-outline-info btn-sm float-right"
                                     data-toggle="collapse"
@@ -106,13 +132,26 @@
                                 >
                                     Leave a comment
                                 </button>
+                                @endif
                             </div>
 
-                            <div class="collapse" id="collapseExample-{{ $key }}">
+                            <div class="collapse{{ $errors->has('reply-' . $status->id) ? ' show' : '' }}" id="collapseExample-{{ $key }}">
                                 <div class="card card-body">
-                                    <form action="#">
+                                    <form action="{{ route('status.reply', ['statusId' => $status->id]) }}" method="post">
+                                        @csrf
                                         <div class="form-group">
-                                            <textarea class="message-textarea form-control" name="" id="" rows="3"></textarea>
+                                            <textarea 
+                                                class="message-textarea form-control{{ $errors->has('reply-' . $status->id) ? ' is-invalid' : '' }}"
+                                                name="reply-{{ $status->id }}" 
+                                                placeholder="Reply to this status"
+                                                required
+                                                rows="3"></textarea>
+
+                                                @if ($errors->has("reply-{$status->id}" ))
+                                                    <span class="invalid-feedback d-inline" role="alert">
+                                                        <strong>{{ $errors->first("reply-{$status->id}" ) }}</strong>
+                                                    </span>
+                                                @endif
                                         </div>
 
                                         <button class="btn btn-block btn-outline-primary btn-sm">Send</button>
@@ -120,6 +159,32 @@
                                 </div>
                             </div>
 
+                            @if($status->replies->count())
+                            <div class="card-body">
+                                <div class="mb-3">Comments: <span class="badge badge-primary app-badge">{{ $status->replies->count() }}</span></div>
+                                <ul class="list-group">
+                                @foreach($status->replies as $reply)
+                                    <li class="list-group-item mb-2">
+                                        <div class="reply-user-img">
+                                            <a href="{{ route('get.status', ['id' => Hashids::encode($reply->user->id), 'slug' => $reply->user->slug]) }}">
+                                                @include('layouts.profile-pic', ['user' => $reply->user])
+                                            </a>
+                                            <div>
+                                                <div>
+                                                    <a href="{{ route('get.status', ['id' => Hashids::encode($reply->user->id), 'slug' => $reply->user->slug]) }}">
+                                                        {{ $reply->user->name }}
+                                                    </a>
+                                                </div>
+                                                <span class="message-time">{{ $reply->created_at->diffForHumans() }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-3">{!! replaceForbiddenWords(app_nl2br($reply->body)) !!}</div>
+                                    </li>
+                                @endforeach
+                                </ul>
+                            </div>
+                            @endif
                         </div>
 
                     @endforeach

@@ -32,7 +32,9 @@
             "app/Helpers/onlyName.php",
             "app/Helpers/cityAndCountry.php",
             "app/Helpers/shortName.php",
-            "app/Helpers/isGalleryAccessible.php"
+            "app/Helpers/isGalleryAccessible.php",
+            "app/Helpers/appNl2br.php",
+            "app/Helpers/replaceForbiddenWords.php"
         ]
     },
     "autoload-dev": {

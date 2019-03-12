@@ -19,7 +19,6 @@ class FriendController extends Controller
     {
         $userId = Auth::user()->id;
         $allFriends = User::with('profile')->where('id', '!=', $userId)->get();
-        //$allFriends = DB::table('users')->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')->where('users.id', '!=', $userId)->get();
 
         return view('friends.find-friends', compact('allFriends'));
     }

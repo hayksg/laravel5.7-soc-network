@@ -19,4 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="preload" style="visibility: hidden" onload="setTimeout ('document.body.style.visibility = \'visible\'', 0)">
+<body class="preload">
+
+    <div id="load_screen"></div>
+    

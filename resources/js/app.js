@@ -6,6 +6,7 @@ require('./bootstrap');
 require('./app-script');
 require('./j-confirm-action');
 require('./jquery.fancybox.min');
+require('./mediaelement-and-player.min');
 
 // For Admin Panel
 require('./sb-admin');

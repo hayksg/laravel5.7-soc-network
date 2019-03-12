@@ -17,6 +17,17 @@ body.preload * {
     -o-transition: none !important;
 }
 
+
+div#load_screen{
+	background: #fff;
+	opacity: 1;
+	position: fixed;
+    z-index:10;
+	top: 0px;
+	width: 100%;
+	height: 1600px;
+}
+
 #app {
     margin-bottom: 200px;
 }
@@ -93,11 +104,9 @@ div.custom-file .custom-file-input{
 	display:none;
 }
 
-.app-edit-user-profile {
-    textarea {
-        resize: vertical;
-        min-height: 200px;
-    }
+textarea {
+    resize: vertical;
+    min-height: 200px;
 }
 
 .app-user-profile {
@@ -230,12 +239,12 @@ div.custom-file .custom-file-input{
     .name-and-message-time {
         display: flex;
         flex-direction: column;
-
-        .message-time {
-            font-size: 14px;
-            color: #888;
-        }
     }
+}
+
+.message-time {
+    font-size: 14px;
+    color: #888;
 }
 
 .message-textarea {
@@ -344,6 +353,36 @@ button.delete-from-gallery {
 .hide-gallery-pic {
     transform: translateX(-5000px);
     transition: all 1.5s linear;
+}
+
+.video-container {
+    margin: auto;
+    max-width: 100%;
+    height: 100%;
+
+    iframe, .mejs__container, .mejs__overlay {
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+
+.badge-pill {
+    padding-left: 0.5em !important;
+}
+
+.reply-user-img {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    img {
+        width: 40px;
+        margin-right: 10px;
+    }
+}
+
+.app-badge {
+    font-size: 14px;
 }
 
 

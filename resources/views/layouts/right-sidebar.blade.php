@@ -1,7 +1,7 @@
 @if(!auth()->check())
-<div class="col-lg-3 order-lg-3 col-md-12 order-1 feature-item rounded py-3 px-1">
+<div class="col-lg-3 order-lg-3 col-md-12 order-1 feature-item rounded py-3 px-1 app-right-sidebar">
 @else
-<div class="col-lg-3 order-lg-3 col-md-12 order-2 feature-item rounded py-3 px-1">
+<div class="col-lg-3 order-lg-3 col-md-12 order-2 feature-item rounded py-3 px-1 app-right-sidebar">
 @endif
     <div class="shadow pt-1 pb-4 px-4">
         @if(!$user || !$user->count())
@@ -11,9 +11,9 @@
         </div>
         @else
             @if(isset($page) && $page === 'main')
-                <h6 class="text-center">Your friends</h6>
+                <h6 class="mt-2 text-center">Your friends</h6>
             @else
-                <h6 class="text-center">{!! shortName($user->name) !!}'s friends</h6>
+                <h6 class="mt-2 text-center">{!! shortName($user->name) !!}'s friends</h6>
             @endif
 
             <hr>

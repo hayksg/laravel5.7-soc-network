@@ -44,6 +44,15 @@
                 </a>
             </li>
 
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Forbidden words">
+                <a class="nav-link" href="{{ route('admin.forbidden.words') }}">
+                    <i class="fas fa-fw fa-skull-crossbones"></i>
+                    <span class="nav-link-text">Forbidden words</span>
+                </a>
+            </li>
+
+            
+
         </ul>
 
         <ul class="navbar-nav sidenav-toggler">

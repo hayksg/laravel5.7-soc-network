@@ -18,7 +18,7 @@ Route::get('/locale/{name}', 'LocaleController@index')->name('locale');
 
 Route::get('/search', 'SearchController@index')->name('search');
 
-Route::group(['middleware' => ['auth', 'web']], function () {
+Route::group(['middleware' => ['auth', 'web', 'revalidate']], function () {
 	Route::get('/friend',                 'FriendController@index')->name('friends');
 	Route::get('/find-friends',           'FriendController@findFriends')->name('findFriends');
 	Route::get('/friend-requests',        'FriendController@requests')->name('requests');
@@ -29,19 +29,20 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 	Route::resource('/profile',        'ProfileController');
 	Route::get('/profile/{id}/{slug}', 'ProfileController@getWithSlug')->name('getWithSlug');
 
-	Route::get('/gallery/{id}/{slug}', 'GalleryController@index')->name('gallery');
-	Route::get('/gallery/get/all/{id}',    'GalleryController@all')->name('gallery.all');
-	Route::post('/gallery/add',        'GalleryController@add')->name('gallery.add');
-	Route::post('/gallery/delete',     'GalleryController@delete')->name('gallery.delete');
+	Route::get('/gallery/{id}/{slug}',  'GalleryController@index')->name('gallery');
+	Route::get('/gallery/get/all/{id}', 'GalleryController@all')->name('gallery.all');
+	Route::post('/gallery/add',         'GalleryController@add')->name('gallery.add');
+	Route::post('/gallery/delete',      'GalleryController@delete')->name('gallery.delete');
 
-    Route::get('/statuses', 'StatusController@index')->name('statuses');
-	Route::post('/statuses', 'StatusController@postStatus')->name('post.status');
-	Route::get('/statuses/{id}/{slug}', 'StatusController@getStatus')->name('get.status');
+    Route::get('/statuses',                   'StatusController@index')->name('statuses');
+	Route::post('/statuses',                  'StatusController@postStatus')->name('post.status');
+	Route::get('/statuses/{id}/{slug}',       'StatusController@getStatus')->name('get.status');
+	Route::post('/statuses/{statusId}/reply', 'StatusController@postReply')->name('status.reply');
 
 	Route::get('/search/{id}/{slug}', 'SearchController@selectedUser');
 });
 
-Route::group(['middleware' => ['auth', 'admin', 'web']], function () {
+Route::group(['middleware' => ['auth', 'admin', 'web', 'revalidate']], function () {
 	Route::get('/admin', 'Admin\AdminController@index')->name('admin');
 
 	Route::get('/admin/favicon',        'Admin\FaviconController@index')->name('admin.favicon');
@@ -49,4 +50,7 @@ Route::group(['middleware' => ['auth', 'admin', 'web']], function () {
 
 	Route::get('/admin/role-user',  'Admin\PeopleController@users')->name('admin.role.user');
 	Route::get('/admin/role-admin', 'Admin\PeopleController@admins')->name('admin.role.admin');
+
+	Route::get('/admin/forbidden-words',      'Admin\ForbiddenWordsController@index')->name('admin.forbidden.words');
+	Route::post('/admin/forbidden-words/add', 'Admin\ForbiddenWordsController@add')->name('admin.forbidden.words.add');
 });

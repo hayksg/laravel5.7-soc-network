@@ -70,10 +70,23 @@ $(function(){
         $('span.upload-img-name').text(filename);
     })
 
+    // Youtube player
+    player = new MediaElementPlayer('.video-player', {
+        features: ['playpause', 'fullscreen'],
+        success: function (mediaElement, domObject) {
+            mediaElement.load();
+            mediaElement.play();
+        }
+    });
+ 
 });
 
 $(window).on('load', function() {
-
+    setTimeout(() => {
+		var load_screen = document.getElementById("load_screen");
+		document.body.removeChild(load_screen);
+	}, 200);
+    
     // In order a thumbnail of any size to be displayed normally
     if ($(document).width() > 767) {
 
@@ -87,5 +100,20 @@ $(window).on('load', function() {
 
     // In order, a CSS transition work properly in Google Chrome
     $("body").removeClass("preload");
+
+    // Position fixed and with for left and right sidebars
+    if ($(document).width() > 991) {
+        var leftSidbarWidth = $('.app-left-sidebar').width();
+        $('.app-left-sidebar div:first-child').css({
+            position: 'fixed',
+            width: leftSidbarWidth,
+        });
+
+        var rightSidbarWidth = $('.app-right-sidebar').width();
+        $('.app-right-sidebar > div:first-child').css({
+            position: 'fixed',
+            width: rightSidbarWidth,
+        });
+    }
     
 });
