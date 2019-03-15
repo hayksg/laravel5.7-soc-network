@@ -36,8 +36,9 @@ Route::group(['middleware' => ['auth', 'web', 'revalidate']], function () {
 
     Route::get('/statuses',                   'StatusController@index')->name('statuses');
 	Route::post('/statuses',                  'StatusController@postStatus')->name('post.status');
-	Route::get('/statuses/{id}/{slug}',       'StatusController@getStatus')->name('get.status');
 	Route::post('/statuses/{statusId}/reply', 'StatusController@postReply')->name('status.reply');
+	Route::get('/statuses/{statusId}/like',   'StatusController@getLike')->name('status.like');
+	Route::get('/statuses/{id}/{slug}',       'StatusController@getStatus')->name('get.status');
 
 	Route::get('/search/{id}/{slug}', 'SearchController@selectedUser');
 });

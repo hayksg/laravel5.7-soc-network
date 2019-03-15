@@ -11763,16 +11763,6 @@ body.preload * {
   -o-transition: none !important;
 }
 
-div#load_screen {
-  background: #fff;
-  opacity: 1;
-  position: fixed;
-  z-index: 10;
-  top: 0px;
-  width: 100%;
-  height: 1600px;
-}
-
 #app {
   margin-bottom: 200px;
 }
@@ -12090,11 +12080,12 @@ input:-webkit-autofill {
   margin-right: auto;
   margin-left: auto;
   position: relative;
+  margin: 5px;
+  margin-top: 0;
 }
 
 .user-gallery .gallery-image-wrap a {
   display: inline-block;
-  padding: 5px;
 }
 
 .user-gallery .gallery-image-wrap:hover button.delete-from-gallery {
@@ -12187,6 +12178,10 @@ button.delete-from-gallery {
   font-size: 14px;
 }
 
+.app-users-comments-block li {
+  background-color: #FAFAFA;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -12202,6 +12197,10 @@ button.delete-from-gallery {
 
 .footer div {
   margin: auto;
+}
+
+#loadOverlay {
+  display: none;
 }
 
 #mainNav .navbar-collapse .navbar-sidenav .nav-link-collapse:after {

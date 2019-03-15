@@ -80,4 +80,44 @@ class StatusController extends Controller
         $status->replies()->save($reply);
         return back();
     }
+
+    public function getLike($statusId)
+    {
+        $liked = false;
+        $error = false;
+        $likesCount = 0;
+
+        $status = Status::find($statusId);
+
+        if ($status) {
+            $likesCount = $status->likes->count();
+        }
+
+        if (!$status) {
+            $error = true;
+        }
+
+        if (!auth()->user()->isFriendsWith($status->user)) {
+            $error = true;
+        }
+
+        if (auth()->user()->hasLikedStatus($status)) {
+            $liked = true;
+        }
+
+        if (!$liked && !$error) {
+            $like = $status->likes()->create(['user_id' => auth()->user()->id]);
+            auth()->user()->likes()->save($like);
+            
+            $updatedStatus = Status::find($statusId);
+            if ($updatedStatus) {
+                $likesCount = $updatedStatus->likes->count();
+            }
+        }
+
+        return response()->json([
+            'likesCount' => $likesCount,
+            'liked' => $liked
+        ]);
+    }
 }

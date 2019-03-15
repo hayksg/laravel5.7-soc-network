@@ -82,10 +82,6 @@ $(function(){
 });
 
 $(window).on('load', function() {
-    setTimeout(() => {
-		var load_screen = document.getElementById("load_screen");
-		document.body.removeChild(load_screen);
-	}, 200);
     
     // In order a thumbnail of any size to be displayed normally
     if ($(document).width() > 767) {

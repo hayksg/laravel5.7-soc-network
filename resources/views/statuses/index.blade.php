@@ -121,17 +121,31 @@
 
                             <div class="px-3 pb-3">
                                 <hr>
-                                <span>Likes: <span class="badge badge-primary app-badge">0</span>
                                 @if(auth()->user()->isFriendsWith($user))
-                                <button
-                                    class="btn btn-outline-info btn-sm float-right"
-                                    data-toggle="collapse"
-                                    data-target="#collapseExample-{{ $key }}"
-                                    aria-expanded="false"
-                                    aria-controls="collapseExample"
-                                >
-                                    Leave a comment
-                                </button>
+
+                                    <vue-like
+                                        path="{{ route('status.like', ['statusId' => $status->id]) }}"
+                                        status-id="{{ $status->id }}"
+                                    >
+                                    </vue-like>
+                                    
+                                @endif
+                                <span ref="likesCount{{$status->id}}" class="badge badge-primary app-badge">
+                                    {{ $status->likes->count() }}
+                                </span>
+                                @if(auth()->user()->id === $user->id)
+                                    <span>{{ str_plural('Like', $status->likes->count()) }}</span>
+                                @endif
+                                @if(auth()->user()->isFriendsWith($user))
+                                    <button
+                                        class="btn btn-outline-info btn-sm float-right"
+                                        data-toggle="collapse"
+                                        data-target="#collapseExample-{{ $key }}"
+                                        aria-expanded="false"
+                                        aria-controls="collapseExample"
+                                    >
+                                        Leave a comment
+                                    </button>
                                 @endif
                             </div>
 
@@ -161,8 +175,11 @@
 
                             @if($status->replies->count())
                             <div class="card-body">
-                                <div class="mb-3">Comments: <span class="badge badge-primary app-badge">{{ $status->replies->count() }}</span></div>
-                                <ul class="list-group">
+                                <div class="mb-3">
+                                    <span>{{ str_plural('Comment', $status->replies->count()) }}:</span>
+                                    <span class="badge badge-primary app-badge">{{ $status->replies->count() }}</span>
+                                </div>
+                                <ul class="list-group app-users-comments-block">
                                 @foreach($status->replies as $reply)
                                     <li class="list-group-item mb-2">
                                         <div class="reply-user-img">

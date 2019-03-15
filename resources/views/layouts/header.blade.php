@@ -17,9 +17,10 @@
     <link rel="shortcut icon" href="{{ asset('storage/favicon/favicon.ico') }}">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="preload" href="{{ asset('css/app.css') }}" as="style">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
 </head>
 <body class="preload">
-
-    <div id="load_screen"></div>
+    <!-- Force browsers to load CSS before showing the page (especially firefox) -->
+    <div id="loadOverlay" style="background-color:#fff; position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:2000;"></div>
     
