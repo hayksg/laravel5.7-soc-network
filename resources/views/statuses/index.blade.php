@@ -17,7 +17,7 @@
 
                         <div class="card">
                             <div class="card-header find-friends-card-header">
-                                <h5 class="d-inline-block">Type your message here</h5>
+                                <h5 class="d-inline-block">Type your status here</h5>
                             </div>
                             <div class="card-body">
                                 <form action="{{ route('post.status') }}" method="post" enctype="multipart/form-data">

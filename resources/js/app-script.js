@@ -78,6 +78,16 @@ $(function(){
             mediaElement.play();
         }
     });
+
+    // Filter statuses (Admin Area)
+    $("#status-filter").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#admin-statuses-table tr").not(':first').filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+      
  
 });
 

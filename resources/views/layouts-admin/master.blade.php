@@ -25,7 +25,7 @@
                 <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePeople"
                     data-parent="#exampleAccordion">
                     <i class="fas fa-fw fa-users"></i>
-                    <span class="nav-link-text">People</span>
+                    <span class="nav-link-text">Roles</span>
                 </a>
                 <ul class="sidenav-second-level collapse" id="collapsePeople">
                     <li>
@@ -51,7 +51,12 @@
                 </a>
             </li>
 
-            
+            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="statuses">
+                <a class="nav-link" href="{{ route('admin.statuses') }}">
+                    <i class="far fa-fw fa-comment"></i>
+                    <span class="nav-link-text">Statuses</span>
+                </a>
+            </li>
 
         </ul>
 
