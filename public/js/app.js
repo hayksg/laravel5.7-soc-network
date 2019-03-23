@@ -14409,6 +14409,7 @@ Vue.component('vue-message', __webpack_require__(51));
 Vue.component('vue-search', __webpack_require__(54));
 Vue.component('vue-gallery', __webpack_require__(60));
 Vue.component('vue-like', __webpack_require__(65));
+Vue.component('vue-change-role', __webpack_require__(96));
 
 var app = new Vue({
     el: '#app'
@@ -39790,6 +39791,14 @@ $(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
+
+    // Filter users (Admin Area)
+    $("#users-filter").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#admin-users-table tr").not(':first').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
 });
 
 $(window).on('load', function () {
@@ -56289,6 +56298,216 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(99)
+/* template */
+var __vue_template__ = __webpack_require__(101)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/ChangeRoleComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f0d75488", Component.options)
+  } else {
+    hotAPI.reload("data-v-f0d75488", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 97 */,
+/* 98 */,
+/* 99 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        route: {
+            type: String,
+            required: true
+        }
+    },
+    data: function data() {
+        return {
+            role: false,
+            refRole: ''
+        };
+    },
+
+    methods: {
+        changeRole: function changeRole() {
+            var _this = this;
+
+            axios.put(this.route, {
+                role: this.role
+            }).then(function (response) {
+                if (response.data.role) {
+                    _this.refRole.innerText = response.data.role;
+                }
+            }).catch(function (error) {
+                // console.log(error);
+            });
+        }
+    },
+    mounted: function mounted() {
+        this.refRole = this.$parent.$refs.userRole;
+        if (this.refRole.innerText == 'admin') {
+            this.role = true;
+        }
+    }
+});
+
+/***/ }),
+/* 100 */,
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "form",
+      {
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+          }
+        }
+      },
+      [
+        _c("span", [_vm._v("Change role:")]),
+        _vm._v("  \n        "),
+        _c("label", { staticClass: "switch" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.role,
+                expression: "role"
+              }
+            ],
+            attrs: { type: "checkbox" },
+            domProps: {
+              checked: Array.isArray(_vm.role)
+                ? _vm._i(_vm.role, null) > -1
+                : _vm.role
+            },
+            on: {
+              change: [
+                function($event) {
+                  var $$a = _vm.role,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 && (_vm.role = $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        (_vm.role = $$a
+                          .slice(0, $$i)
+                          .concat($$a.slice($$i + 1)))
+                    }
+                  } else {
+                    _vm.role = $$c
+                  }
+                },
+                _vm.changeRole
+              ]
+            }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "slider round" })
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f0d75488", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

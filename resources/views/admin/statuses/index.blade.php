@@ -1,5 +1,5 @@
 @extends('layouts-admin.master')
-@section('title', "| Statuses")
+@section('title', "| Admin | Statuses")
 
 @section('content')
 

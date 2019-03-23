@@ -24,6 +24,7 @@ Vue.component('vue-message', require('./components/MessageComponent.vue'));
 Vue.component('vue-search', require('./components/SearchComponent.vue'));
 Vue.component('vue-gallery', require('./components/GalleryComponent.vue'));
 Vue.component('vue-like', require('./components/LikeComponent.vue'));
+Vue.component('vue-change-role', require('./components/ChangeRoleComponent.vue'));
 
 const app = new Vue({
     el: '#app'
