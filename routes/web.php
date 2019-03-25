@@ -49,13 +49,14 @@ Route::group(['middleware' => ['auth', 'admin', 'web', 'revalidate']], function 
 	Route::get('/admin/favicon',        'Admin\FaviconController@index')->name('admin.favicon');
 	Route::post('/admin/favicon/store', 'Admin\FaviconController@store')->name('admin.favicon.store');
 
-	Route::get('/admin/role-user',               'Admin\UserRoleController@index')->name('admin.role.user');
-	Route::get('/admin/role-user/edit/{user}',   'Admin\UserRoleController@edit')->name('admin.role.user.edit');
-	Route::put('/admin/role-user/update/{user}', 'Admin\UserRoleController@update')->name('admin.role.user.update');
+	Route::get('/admin/role-user',                'Admin\UserRoleController@index')->name('admin.role.user');
+	Route::get('/admin/role-user/edit/{user}',    'Admin\UserRoleController@edit')->name('admin.role.user.edit');
+	Route::put('/admin/role-user/update/{user}',  'Admin\UserRoleController@update')->name('admin.role.user.update');
+	Route::post('/admin/role-user/delete/{user}', 'Admin\UserRoleController@delete')->name('admin.role.user.delete');
 
-	Route::get('/admin/role-admin',                'Admin\AdminRoleController@index')->name('admin.role.admin');
-	Route::get('/admin/role-admin/edit/{admin}',   'Admin\AdminRoleController@edit')->name('admin.role.admin.edit');
-	Route::put('/admin/role-admin/update/{admin}', 'Admin\AdminRoleController@update')->name('admin.role.admin.update');
+	Route::get('/admin/role-admin',                 'Admin\AdminRoleController@index')->name('admin.role.admin');
+	Route::get('/admin/role-admin/edit/{admin}',    'Admin\AdminRoleController@edit')->name('admin.role.admin.edit');
+	Route::put('/admin/role-admin/update/{admin}',  'Admin\AdminRoleController@update')->name('admin.role.admin.update');
 
 	Route::get('/admin/forbidden-words',      'Admin\ForbiddenWordsController@index')->name('admin.forbidden.words');
 	Route::post('/admin/forbidden-words/add', 'Admin\ForbiddenWordsController@add')->name('admin.forbidden.words.add');

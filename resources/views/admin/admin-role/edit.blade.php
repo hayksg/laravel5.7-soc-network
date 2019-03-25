@@ -24,7 +24,12 @@
 
         <hr>
 
-        <form action="">
+        <form
+            action="{{ route('admin.role.user.delete', ['id' => $admin->id]) }}" 
+            method="post" 
+            onsubmit="return confirm('Are you sure?')"
+        >
+            @csrf
             <button class="btn btn-danger">Delete account</button>
         </form>
     @endif

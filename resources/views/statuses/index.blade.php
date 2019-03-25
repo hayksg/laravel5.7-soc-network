@@ -100,7 +100,7 @@
                                 </div>
 
                                 @if($status->image)
-                                <div class="mb-3">
+                                <div class="mb-3 text-center">
                                     <img src="{{ asset('storage/status-images/' . $status->image) }}" alt="status-img" class="img-fluid">
                                 </div>
                                 @endif
