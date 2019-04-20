@@ -21,7 +21,7 @@ class StatusController extends Controller
     {
         $this->validate(request(), [
             'status' => 'required|max:1000',
-            'image'  => 'image|max:2000',
+            'image'  => 'image|max:5000',
             'video'  => 'nullable|string|max:1000',
         ]);
 

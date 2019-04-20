@@ -3,8 +3,6 @@
 
 @section('content')
 
-
-
 <div class="row">
 
 @include('layouts.left-sidebar')

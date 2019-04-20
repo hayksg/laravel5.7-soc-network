@@ -65,6 +65,14 @@ class UserRoleController extends Controller
             Storage::delete('public/users-images/' . $user->pic);
         }
 
+        $gallery = Gallery::where('user_id', $user->id)->get();
+
+        foreach ($gallery as $item) {
+            if ($item->image) {
+                Storage::delete('public/gallery/' . $item->image);
+            }
+        }
+
         Gallery::where('user_id', $user->id)->delete();
         Profile::where('user_id', $user->id)->delete();
 

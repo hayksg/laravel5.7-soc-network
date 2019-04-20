@@ -1,6 +1,6 @@
 @php $langs = ['en', 'ru', 'am'] @endphp
 
-<div class="flags-box">
+<div class="flags-box mx-auto">
     @foreach($langs as $lang)
 
         <a href="{{ route('locale', ['locale' => $lang]) }}">

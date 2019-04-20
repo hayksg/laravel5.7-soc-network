@@ -20,13 +20,13 @@
                 @guest
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">
-                            <i class="fas fa-fw fa-sign-in-alt mr-1"></i>{{ __('Login') }}
+                            <i class="fas fa-fw fa-sign-in-alt mr-1"></i>@lang('main.login')
                         </a>
                     </li>
                     <li class="nav-item">
                         @if (Route::has('register'))
                             <a class="nav-link" href="{{ route('register') }}">
-                                <i class="fas fa-fw fa-user-plus mr-1 app-user-plus-icon"></i>{{ __('Register') }}
+                                <i class="fas fa-fw fa-user-plus mr-1 app-user-plus-icon"></i>@lang('main.register')
                             </a>
                         @endif
                     </li>
@@ -45,16 +45,16 @@
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="{{ route('getWithSlug', ['id' => Hashids::encode(Auth::user()->id), 'slug' => Auth::user()->slug]) }}">
-                                <i class="fas fa-fw fa-user mr-2"></i>{{ __('Profile') }}
+                                <i class="fas fa-fw fa-user mr-2"></i>@lang('main.profile')
                             </a>
 
                             <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->slug]) }}">
-                                <i class="fas fa-fw fa-user-edit mr-2"></i>{{ __('Edit Profile') }}
+                                <i class="fas fa-fw fa-user-edit mr-2"></i>@lang('main.profile_edit')
                             </a>
 
                             @if( (auth()->user() && auth()->user()->role === 'superadmin') || (auth()->user() && auth()->user()->role === 'admin') )
                                 <a class="dropdown-item" href="{{ route('admin') }}">
-                                    <i class="fas fa-fw fa-user-cog mr-2"></i>{{ __('Admin') }}</a>
+                                    <i class="fas fa-fw fa-user-cog mr-2"></i>@lang('main.admin')</a>
                                 </a>
                             @endif
 
@@ -62,7 +62,7 @@
 
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-fw fa-sign-out-alt mr-2"></i>{{ __('Logout') }}
+                                <i class="fas fa-fw fa-sign-out-alt mr-2"></i>@lang('main.logout')
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

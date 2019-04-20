@@ -55761,11 +55761,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
 
                 var message = '';
+
                 if (_this4.images.length == 1) {
                     message = 'The image successfully uploaded';
                 } else {
                     message = 'All images successfully uploaded';
                 }
+
                 _this4.$toastr.s(message);
                 _this4.files = [];
                 _this4.images = [];
@@ -55794,7 +55796,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 /* 
                     After deleting the element the value of the index and the opacity style will be passed 
-                    to the next element. So to show the next element again opacity must be 1.
+                    to the next element. So, to show the next element again opacity must be 1.
                 */
                 res.style.opacity = '1';
             }, 300);

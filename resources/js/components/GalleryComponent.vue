@@ -209,16 +209,18 @@
                             }
                         }
                         
-                         let message = '';
-                         if (this.images.length == 1) {
+                        let message = '';
+
+                        if (this.images.length == 1) {
                             message = 'The image successfully uploaded';
-                         } else {
+                        } else {
                             message = 'All images successfully uploaded';
-                         }
-                         this.$toastr.s(message);
-                         this.files = [];
-                         this.images = [];
-                     })
+                        }
+
+                        this.$toastr.s(message);
+                        this.files = [];
+                        this.images = [];
+                    })
             },
             getFileSize(size) {
                 const fSExt = ['Bytes', 'KB', 'MB', 'GB'];
@@ -241,7 +243,7 @@
 
                     /* 
                         After deleting the element the value of the index and the opacity style will be passed 
-                        to the next element. So to show the next element again opacity must be 1.
+                        to the next element. So, to show the next element again opacity must be 1.
                     */
                     res.style.opacity = '1';
                 }, 300);

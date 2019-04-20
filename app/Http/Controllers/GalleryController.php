@@ -30,12 +30,10 @@ class GalleryController extends Controller
 
     public function all($id)
     {                                 
-        //$gallery = Gallery::where('user_id', $id)->orderBy('created_at', 'desc')->get();
         $galleryCount = Gallery::where('user_id', $id)->get()->count();
 
         return response()->json([
             'galleryCount' => $galleryCount,
-            
         ]); 
     }
 

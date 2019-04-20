@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Storage;
 use App\User;
 use App\Profile;
+use App\Status;
+use App\Like;
+use App\Gallery;
+
 use Illuminate\Http\Request;
 use App\Rules\PasswordsMatch;
 use Illuminate\Support\Facades\DB;
@@ -176,16 +180,43 @@ class ProfileController extends Controller
     {
         $id = abs((int)$id);
         $user = User::find($id);
-        $profile = Profile::where('user_id', $id)->firstOrFail();
 
         if ($id !== Auth::user()->id) {
             return abort(404);
         }
 
         if ($user) {
-            Storage::delete('public/users-images/' . $user->pic);
+            $statuses = Status::where('user_id', $user->id)->get();
+
+            if ($statuses) {
+                foreach ($statuses as $status) {
+                    if ($status->image) {
+                        Storage::delete('public/status-images/' . $status->image);
+                    }
+            
+                    Status::where('parent_id', $status->id)->delete();
+                    Like::where('likeable_id', $status->id)->delete();
+            
+                    $status->delete();
+                }
+            }
+
+            if ($user->pic) {
+                Storage::delete('public/users-images/' . $user->pic);
+            }
+
+            $gallery = Gallery::where('user_id', $user->id)->get();
+
+            foreach ($gallery as $item) {
+                if ($item->image) {
+                    Storage::delete('public/gallery/' . $item->image);
+                }
+            }
+
+            Gallery::where('user_id', $user->id)->delete();
+            Profile::where('user_id', $user->id)->delete();
+
             $user->delete();
-            $profile->delete();
         }
         
         return redirect('/');

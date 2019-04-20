@@ -12279,6 +12279,15 @@ input:checked + .slider:before {
 
 /* Switch button, block end */
 
+.shadow-text {
+  color: white;
+  letter-spacing: 2px;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px #2C3E50, 1px -1px #2C3E50, -1px 1px #2C3E50, -1px -1px #2C3E50, 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
 .footer {
   position: absolute;
   bottom: 0;
