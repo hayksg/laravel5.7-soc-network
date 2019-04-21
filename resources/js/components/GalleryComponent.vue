@@ -489,5 +489,4 @@
             width: 45% !important;
         }
     }
-
 </style>
