@@ -21,7 +21,6 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => NULL,
             'remember_token' => NULL,
             'password' => Hash::make('annaanna'),
-            'role' => 'admin',
         	'created_at' => date('Y-m-d H:m:s'),
         	'updated_at' => date('Y-m-d H:m:s')
         ]);
