@@ -1,5 +1,5 @@
 <?php
 
 return [
-  'please_login' => "Please <a href=':path'>login</a> to meet your friends",
+  'please_register' => "Please <a href=':path'>register</a> to meet new friends.",
 ];

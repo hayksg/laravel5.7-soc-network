@@ -12,7 +12,7 @@
             <div class="p-2">
                 <h4 class="pt-3 text-center shadow-text">@lang('main.welcome')</h4>
                 <p class="p-2">
-                    Social networking is the use of internet-based social media sites to stay connected with friends, family, colleagues, customers, or clients. Social networking can have a social purpose, a business purpose, or both. Try our website to achieve that. Social networking has become a significant base for marketers seeking to engage customers.
+                    Social networking is the use of internet-based social media sites to stay connected with friends, family, colleagues, customers, or clients. Social networking can have a social purpose, a business purpose, or both. Social networking has become a significant base for marketers seeking to engage customers.
                 </p>
                 <div class="text-center">
                     <img src="{{ asset('storage/main/soc-net2.png') }}" alt="main-pic-1" class="img-fluid">
@@ -22,7 +22,7 @@
                     <br>
                     Customers may complement the company’s offerings and encourage others to buy the products or services. The more customers are talking about a company on social networking, the more valuable the brand authority becomes. As a brand grows stronger, more sales result. Increased company posts rank the company higher in search engines. Social networking can help establish a brand as legitimate, credible, and trustworthy.
                     <br>
-                    A company may use social networking to demonstrate its customer service level and enrich its relationships with consumers. For example, if a customer complains about a product or service on Twitter, the company may address the issue immediately, apologize, and take action to make it right. However, criticism of a brand can spread very quickly on social media. This can create a virtual headache for a company's public relations department.
+                    A company may use social networking to demonstrate its customer service level and enrich its relationships with consumers.
                 </p>
                 <div class="text-center">
                     <img src="{{ asset('storage/main/soc-net1.jpg') }}" alt="main-pic-1" class="img-fluid">

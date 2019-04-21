@@ -42,7 +42,7 @@
                                             type="text" 
                                             name="video" 
                                             class="form-control{{ $errors->has('video') ? ' is-invalid' : '' }}"
-                                            placeholder="URL for video">
+                                            placeholder="Type YouTube video url here">
                                         
                                         @if ($errors->has('video'))
                                             <span class="invalid-feedback" role="alert">

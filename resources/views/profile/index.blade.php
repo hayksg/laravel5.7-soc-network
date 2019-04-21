@@ -16,7 +16,7 @@
                         <div class="card-header find-friends-card-header">
                             <h5 class="d-inline-block">
                                 <a href="{{ route('get.status', ['id' => Hashids::encode($user->id), 'slug' => $user->slug]) }}">
-                                    {!! shortName($user->name) !!}
+                                    {!! shortName($user->name, 30) !!}
                                 </a>
                             </h5>
                             @include('layouts.friend-status', ['user' => $user, 'delete' => false])

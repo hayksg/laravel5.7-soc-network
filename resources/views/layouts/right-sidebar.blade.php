@@ -7,7 +7,7 @@
         @if(!$user || !$user->count())
         <div class="text-center">
             <div class="locale-right-sidebar mb-2">@include('layouts.locale')</div>
-            <div>{!! trans('right-menu.please_login', [ 'path' => route('login') ]) !!}</div>
+            <div>{!! trans('right-menu.please_register', [ 'path' => route('register') ]) !!}</div>
         </div>
         @else
             @if(isset($page) && $page === 'main')
@@ -28,7 +28,7 @@
                             <span class="user-friend-thumbnail">
                                 @include('layouts.profile-pic', ['user' => $friend])
                             </span>
-                            <span class="user-friend-name">{!! shortName($friend->name) !!}</span>
+                            <span class="user-friend-name">{!! shortName($friend->name, 18) !!}</span>
                             @if($friend->isOnline())
                                 <span class="badge badge-pill badge-success">&nbsp;&nbsp;</span>
                             @else
