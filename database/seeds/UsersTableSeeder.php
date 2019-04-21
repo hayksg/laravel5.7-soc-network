@@ -13,23 +13,6 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-        	'name' => 'Anna Smith',
-        	'gender' => 'female',
-            'slug' => 'anna-smith',
-            'pic' => 'girl.png',
-            'email' => 'anna@test.com',
-            'email_verified_at' => NULL,
-            'remember_token' => NULL,
-            'password' => Hash::make('annaanna'),
-        	'created_at' => date('Y-m-d H:m:s'),
-        	'updated_at' => date('Y-m-d H:m:s')
-        ]);
-
-        DB::table('profiles')->insert([
-        	'user_id' => 2
-        ]);
-
-        DB::table('users')->insert([
         	'name' => 'Emma Hall',
         	'gender' => 'female',
             'slug' => 'emma-hall',
