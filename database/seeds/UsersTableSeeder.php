@@ -13,42 +13,6 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-        	'name' => 'John Smith',
-        	'gender' => 'male',
-            'slug' => 'john-smith',
-            'pic' => 'boy.png',
-            'email' => 'john@test.com',
-            'email_verified_at' => NULL,
-            'remember_token' => NULL,
-        	'password' => Hash::make('john_superadmin'),
-        	'role' => 'superadmin',
-        	'created_at' => date('Y-m-d H:m:s'),
-        	'updated_at' => date('Y-m-d H:m:s')
-        ]);
-
-        DB::table('profiles')->insert([
-        	'user_id' => 1
-        ]);
-
-        DB::table('users')->insert([
-        	'name' => 'Anna Smith',
-        	'gender' => 'female',
-            'slug' => 'anna-smith',
-            'pic' => 'girl.png',
-            'email' => 'anna@test.com',
-            'email_verified_at' => NULL,
-            'remember_token' => NULL,
-            'password' => Hash::make('annaanna'),
-            'role' => 'admin',
-        	'created_at' => date('Y-m-d H:m:s'),
-        	'updated_at' => date('Y-m-d H:m:s')
-        ]);
-
-        DB::table('profiles')->insert([
-        	'user_id' => 2
-        ]);
-
-        DB::table('users')->insert([
         	'name' => 'Emma Hall',
         	'gender' => 'female',
             'slug' => 'emma-hall',
