@@ -36,10 +36,11 @@
             >
 
                 <form class="upload-control" v-show="images.length" @submit.prevent="upload">
+                    <span class="loader" v-if="loading"></span>
                     <label for="file">Select files</label>
                     <button type="submit">Upload</button>
                 </form>
-
+                
                 <div v-show="!images.length">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <p>Drag your images here</p>
@@ -111,7 +112,8 @@
             files: [], // for uploading files to a server
             images: [], // for presenting images to users
             gallery: [],
-            imagesCountFromDB: 0
+            imagesCountFromDB: 0,
+            loading: false
         }),
         computed: {
             filesCount () {
@@ -183,6 +185,7 @@
                 reader.readAsDataURL(file);
             },
             upload() {
+                this.loading = true;
                 const formData = new FormData();
 
                 this.files.forEach(file => {
@@ -195,32 +198,33 @@
                 }
 
                 axios.post(this.url + '/gallery/add', formData)
-                     .then(response => {
+                    .then(response => {
 
-                        if (response.data.gallery) {    
+                    if (response.data.gallery) {    
 
-                            this.gallery = response.data.gallery;
-                            this.imagesCountFromDB = response.data.gallery.length;
+                        this.gallery = response.data.gallery;
+                        this.imagesCountFromDB = response.data.gallery.length;
 
-                            let fromServerDiv = this.$parent.$refs.fromServer;
+                        let fromServerDiv = this.$parent.$refs.fromServer;
 
-                            if (fromServerDiv) {
-                                fromServerDiv.remove();
-                            }
+                        if (fromServerDiv) {
+                            fromServerDiv.remove();
                         }
-                        
-                        let message = '';
+                    }
+                    
+                    let message = '';
 
-                        if (this.images.length == 1) {
-                            message = 'The image successfully uploaded';
-                        } else {
-                            message = 'All images successfully uploaded';
-                        }
+                    if (this.images.length == 1) {
+                        message = 'The image successfully uploaded';
+                    } else {
+                        message = 'All images successfully uploaded';
+                    }
 
-                        this.$toastr.s(message);
-                        this.files = [];
-                        this.images = [];
-                    })
+                    this.$toastr.s(message);
+                    this.files = [];
+                    this.images = [];
+                    this.loading = false;
+                })
             },
             getFileSize(size) {
                 const fSExt = ['Bytes', 'KB', 'MB', 'GB'];
@@ -445,6 +449,32 @@
         }
     }
 
+    .loader {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        border: 8px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 8px solid #18BC9C;
+        border-bottom: 8px solid #18BC9C;
+        border-right: 8px solid lighten(#2C3E50, 10%);
+        border-left: 8px solid lighten(#2C3E50, 10%);
+        width: 40px;
+        height: 40px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     @media only screen 
     and (min-width: 768px) {
         .img-wrapper {
@@ -459,4 +489,5 @@
             width: 45% !important;
         }
     }
+
 </style>
