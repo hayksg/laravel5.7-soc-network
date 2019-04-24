@@ -84,7 +84,7 @@ class GalleryController extends Controller
 
         $userId = auth()->user()->id;
        
-        if ($userId !== $gallery->user_id) {
+        if ($userId != $gallery->user_id) {
             return abort(404);
         }
 
